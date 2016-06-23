@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `drop_null_ptr` fn in crate `safe_core`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, drop_null_ptr">
+    <meta name="description" content="API documentation for the Rust `FfiHandle` struct in crate `safe_core`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, FfiHandle">
 
-    <title>safe_core::ffi::drop_null_ptr - Rust</title>
+    <title>safe_core::ffi::FfiHandle - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
@@ -28,7 +28,7 @@
 
     <nav class="sidebar">
         <a href='../../safe_core/index.html'><img src='https://raw.githubusercontent.com/maidsafe/QA/master/Images/maidsafe_logo.png' alt='logo' width='100'></a>
-        <p class='location'><a href='../index.html'>safe_core</a>::<wbr><a href='index.html'>ffi</a></p><script>window.sidebarCurrent = {name: 'drop_null_ptr', ty: 'fn', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'><a href='../index.html'>safe_core</a>::<wbr><a href='index.html'>ffi</a></p><script>window.sidebarCurrent = {name: 'FfiHandle', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -42,13 +42,16 @@
         </form>
     </nav>
 
-    <section id='main' class="content fn">
-<h1 class='fqn'><span class='in-band'>Function <a href='../index.html'>safe_core</a>::<wbr><a href='index.html'>ffi</a>::<wbr><a class='fn' href=''>drop_null_ptr</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>safe_core</a>::<wbr><a href='index.html'>ffi</a>::<wbr><a class='struct' href=''>FfiHandle</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-7439' class='srclink' href='../../src/safe_core/src/ffi/mod.rs.html#358-360' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub fn drop_null_ptr(ptr: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>)</pre><div class='docblock'><p>Drop the null pointer returned as error from the execute_for_content fn</p>
+               </span><a id='src-7044' class='srclink' href='../../src/safe_core/src/ffi/mod.rs.html#111-116' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct FfiHandle {
+    // some fields omitted
+}</pre><div class='docblock'><p>A handle, passed through the FFI.</p>
+</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html' title='core::ops::Drop'>Drop</a> for <a class='struct' href='../../safe_core/ffi/struct.FfiHandle.html' title='safe_core::ffi::FfiHandle'>FfiHandle</a></code></h3><div class='impl-items'><h4 id='method.drop' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html#tymethod.drop' class='fnname'>drop</a>(&amp;mut self)</code></h4>
 </div></section>
     <section id='search' class="content hidden"></section>
 
