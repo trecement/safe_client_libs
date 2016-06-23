@@ -600,6 +600,42 @@
 <span id="556">556</span>
 <span id="557">557</span>
 <span id="558">558</span>
+<span id="559">559</span>
+<span id="560">560</span>
+<span id="561">561</span>
+<span id="562">562</span>
+<span id="563">563</span>
+<span id="564">564</span>
+<span id="565">565</span>
+<span id="566">566</span>
+<span id="567">567</span>
+<span id="568">568</span>
+<span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+<span id="574">574</span>
+<span id="575">575</span>
+<span id="576">576</span>
+<span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+<span id="586">586</span>
+<span id="587">587</span>
+<span id="588">588</span>
+<span id="589">589</span>
+<span id="590">590</span>
+<span id="591">591</span>
+<span id="592">592</span>
+<span id="593">593</span>
+<span id="594">594</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -958,6 +994,42 @@
 <span class='doccomment'>/// Drop the vector returned as a result of the execute_for_content fn</span>
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>drop_vector</span>(<span class='ident'>ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>, <span class='ident'>size</span>: <span class='ident'>int32_t</span>, <span class='ident'>capacity</span>: <span class='ident'>int32_t</span>) {
     <span class='kw'>let</span> _ <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>Vec</span>::<span class='ident'>from_raw_parts</span>(<span class='ident'>ptr</span>, <span class='ident'>size</span> <span class='kw'>as</span> <span class='ident'>usize</span>, <span class='ident'>capacity</span> <span class='kw'>as</span> <span class='ident'>usize</span>) };
+}
+
+<span class='doccomment'>/// Return the amount of calls that were done to `get`</span>
+<span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
+<span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>unsafe_code</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>client_issued_gets</span>(<span class='ident'>ffi_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FfiHandle</span>) <span class='op'>-&gt;</span> <span class='ident'>u64</span> {
+    <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='ident'>cast_from_ffi_handle</span>(<span class='ident'>ffi_handle</span>);
+    <span class='kw'>let</span> <span class='ident'>guard</span> <span class='op'>=</span> <span class='ident'>client</span>.<span class='ident'>lock</span>().<span class='ident'>unwrap</span>();
+    <span class='ident'>guard</span>.<span class='ident'>issued_gets</span>()
+}
+
+<span class='doccomment'>/// Return the amount of calls that were done to `put`</span>
+<span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
+<span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>unsafe_code</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>client_issued_puts</span>(<span class='ident'>ffi_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FfiHandle</span>) <span class='op'>-&gt;</span> <span class='ident'>u64</span> {
+    <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='ident'>cast_from_ffi_handle</span>(<span class='ident'>ffi_handle</span>);
+    <span class='kw'>let</span> <span class='ident'>guard</span> <span class='op'>=</span> <span class='ident'>client</span>.<span class='ident'>lock</span>().<span class='ident'>unwrap</span>();
+    <span class='ident'>guard</span>.<span class='ident'>issued_puts</span>()
+}
+
+<span class='doccomment'>/// Return the amount of calls that were done to `post`</span>
+<span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
+<span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>unsafe_code</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>client_issued_posts</span>(<span class='ident'>ffi_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FfiHandle</span>) <span class='op'>-&gt;</span> <span class='ident'>u64</span> {
+    <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='ident'>cast_from_ffi_handle</span>(<span class='ident'>ffi_handle</span>);
+    <span class='kw'>let</span> <span class='ident'>guard</span> <span class='op'>=</span> <span class='ident'>client</span>.<span class='ident'>lock</span>().<span class='ident'>unwrap</span>();
+    <span class='ident'>guard</span>.<span class='ident'>issued_posts</span>()
+}
+
+<span class='doccomment'>/// Return the amount of calls that were done to `delete`</span>
+<span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
+<span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>unsafe_code</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>client_issued_deletes</span>(<span class='ident'>ffi_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FfiHandle</span>) <span class='op'>-&gt;</span> <span class='ident'>u64</span> {
+    <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='ident'>cast_from_ffi_handle</span>(<span class='ident'>ffi_handle</span>);
+    <span class='kw'>let</span> <span class='ident'>guard</span> <span class='op'>=</span> <span class='ident'>client</span>.<span class='ident'>lock</span>().<span class='ident'>unwrap</span>();
+    <span class='ident'>guard</span>.<span class='ident'>issued_deletes</span>()
 }
 
 <span class='kw'>fn</span> <span class='ident'>get_parameter_packet</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span>(<span class='ident'>client</span>: <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>Mutex</span><span class='op'>&lt;</span><span class='ident'>Client</span><span class='op'>&gt;&gt;</span>,
