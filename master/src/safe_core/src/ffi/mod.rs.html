@@ -635,7 +635,6 @@
 <span id="591">591</span>
 <span id="592">592</span>
 <span id="593">593</span>
-<span id="594">594</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -690,10 +689,10 @@
 <span class='kw'>use</span> <span class='ident'>rustc_serialize</span>::<span class='ident'>Decoder</span>;
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>client</span>::<span class='ident'>Client</span>;
 <span class='kw'>use</span> <span class='ident'>rustc_serialize</span>::<span class='ident'>Decodable</span>;
-<span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>int32_t</span>, <span class='ident'>c_char</span>};
+<span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>c_char</span>, <span class='ident'>int32_t</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
 <span class='kw'>use</span> <span class='ident'>rustc_serialize</span>::<span class='ident'>base64</span>::<span class='ident'>FromBase64</span>;
-<span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::{<span class='ident'>serialise</span>, <span class='ident'>deserialise</span>};
+<span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::{<span class='ident'>deserialise</span>, <span class='ident'>serialise</span>};
 <span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>thread</span>::<span class='ident'>RaiiThreadJoiner</span>;
 <span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>log</span> <span class='kw'>as</span> <span class='ident'>safe_log</span>;
 <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>metadata</span>::<span class='ident'>directory_key</span>::<span class='ident'>DirectoryKey</span>;
@@ -830,9 +829,7 @@
 <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>unsafe_code</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>register_network_event_observer</span>(<span class='ident'>ffi_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FfiHandle</span>,
                                                   <span class='ident'>callback</span>: <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span>(<span class='ident'>i32</span>)) {
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ffi_handle</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
-        <span class='ident'>Box</span>::<span class='ident'>from_raw</span>(<span class='ident'>ffi_handle</span>)
-    };
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ffi_handle</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>Box</span>::<span class='ident'>from_raw</span>(<span class='ident'>ffi_handle</span>) };
 
     <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>ffi_handle</span>.<span class='ident'>network_event_observers</span>.<span class='ident'>lock</span>()).<span class='ident'>push</span>(<span class='ident'>callback</span>);
 
@@ -844,9 +841,12 @@
         <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>ffi_handle</span>.<span class='ident'>client</span>.<span class='ident'>lock</span>()).<span class='ident'>add_network_event_observer</span>(<span class='ident'>tx</span>);
 
         <span class='kw'>let</span> <span class='ident'>raii_joiner</span> <span class='op'>=</span> <span class='ident'>RaiiThreadJoiner</span>::<span class='ident'>new</span>(<span class='macro'>thread</span><span class='macro'>!</span>(<span class='string'>&quot;FfiNetworkEventObserver&quot;</span>, <span class='kw'>move</span> <span class='op'>||</span> {
-            <span class='kw'>for</span> <span class='ident'>it</span> <span class='kw'>in</span> <span class='ident'>rx</span>.<span class='ident'>iter</span>() {
+            <span class='kw'>while</span> <span class='kw'>let</span> <span class='prelude-val'>Ok</span>(<span class='ident'>event</span>) <span class='op'>=</span> <span class='ident'>rx</span>.<span class='ident'>recv</span>() {
+                <span class='kw'>if</span> <span class='kw'>let</span> <span class='ident'>NetworkEvent</span>::<span class='ident'>Terminated</span> <span class='op'>=</span> <span class='ident'>event</span> {
+                    <span class='kw'>break</span>;
+                }
                 <span class='kw'>let</span> <span class='kw-2'>ref</span> <span class='ident'>cbs</span> <span class='op'>=</span> <span class='op'>*</span><span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>callbacks</span>.<span class='ident'>lock</span>());
-                <span class='kw'>let</span> <span class='ident'>event_ffi_val</span> <span class='op'>=</span> <span class='ident'>it</span>.<span class='ident'>into</span>();
+                <span class='kw'>let</span> <span class='ident'>event_ffi_val</span> <span class='op'>=</span> <span class='ident'>event</span>.<span class='ident'>into</span>();
                 <span class='kw'>for</span> <span class='ident'>cb</span> <span class='kw'>in</span> <span class='ident'>cbs</span> {
                     <span class='ident'>cb</span>(<span class='ident'>event_ffi_val</span>);
                 }
@@ -1115,9 +1115,7 @@
 
 <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>unsafe_code</span>)]</span>
 <span class='kw'>fn</span> <span class='ident'>cast_from_ffi_handle</span>(<span class='ident'>ffi_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FfiHandle</span>) <span class='op'>-&gt;</span> <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>Mutex</span><span class='op'>&lt;</span><span class='ident'>Client</span><span class='op'>&gt;&gt;</span> {
-    <span class='kw'>unsafe</span> {
-        (<span class='op'>*</span><span class='ident'>ffi_handle</span>).<span class='ident'>client</span>.<span class='ident'>clone</span>()
-    }
+    <span class='kw'>unsafe</span> { (<span class='op'>*</span><span class='ident'>ffi_handle</span>).<span class='ident'>client</span>.<span class='ident'>clone</span>() }
 }
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
