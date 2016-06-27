@@ -298,7 +298,7 @@
                                                         <span class='ident'>prev_owner_keys</span>.<span class='ident'>clone</span>())) {
         <span class='ident'>DataFitResult</span>::<span class='ident'>DataFits</span> <span class='op'>=&gt;</span> {
             <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='ident'>Data</span>::<span class='ident'>Immutable</span>(<span class='ident'>immutable_data</span>);
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>put</span>(<span class='ident'>data</span>, <span class='prelude-val'>None</span>)).<span class='ident'>get</span>());
+            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>put_recover</span>(<span class='ident'>data</span>, <span class='prelude-val'>None</span>));
 
             <span class='prelude-val'>Ok</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>StructuredData</span>::<span class='ident'>new</span>(<span class='ident'>tag_type</span>,
                                         <span class='ident'>identifier</span>,
