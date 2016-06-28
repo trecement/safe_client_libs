@@ -499,7 +499,7 @@
             <span class='comment'>// create</span>
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>writer</span> <span class='op'>=</span>
                 <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>file_helper</span>.<span class='ident'>create</span>(<span class='ident'>file_name</span>.<span class='ident'>clone</span>(), <span class='ident'>Vec</span>::<span class='ident'>new</span>(), <span class='ident'>directory</span>));
-            <span class='ident'>writer</span>.<span class='ident'>write</span>(<span class='kw-2'>&amp;</span><span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>0u8</span>; <span class='number'>100</span>], <span class='number'>0</span>).<span class='ident'>expect</span>(<span class='string'>&quot;&quot;</span>);
+            <span class='ident'>writer</span>.<span class='ident'>write</span>(<span class='kw-2'>&amp;</span>[<span class='number'>0u8</span>; <span class='number'>100</span>], <span class='number'>0</span>).<span class='ident'>expect</span>(<span class='string'>&quot;&quot;</span>);
             <span class='kw'>let</span> (<span class='ident'>updated_directory</span>, _) <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>writer</span>.<span class='ident'>close</span>());
             <span class='ident'>directory</span> <span class='op'>=</span> <span class='ident'>updated_directory</span>;
             <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>directory</span>.<span class='ident'>find_file</span>(<span class='kw-2'>&amp;</span><span class='ident'>file_name</span>).<span class='ident'>is_some</span>());
@@ -513,12 +513,12 @@
         }
         {
             <span class='comment'>// update - full rewrite</span>
-            <span class='kw'>let</span> <span class='ident'>file</span> <span class='op'>=</span> <span class='macro'>unwrap_option</span><span class='macro'>!</span>(<span class='ident'>directory</span>.<span class='ident'>find_file</span>(<span class='kw-2'>&amp;</span><span class='ident'>file_name</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>file</span><span class='op'>|</span> <span class='ident'>file</span>.<span class='ident'>clone</span>()),
+            <span class='kw'>let</span> <span class='ident'>file</span> <span class='op'>=</span> <span class='macro'>unwrap_option</span><span class='macro'>!</span>(<span class='ident'>directory</span>.<span class='ident'>find_file</span>(<span class='kw-2'>&amp;</span><span class='ident'>file_name</span>).<span class='ident'>cloned</span>(),
                                       <span class='string'>&quot;File not found&quot;</span>);
             {
                 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>writer</span> <span class='op'>=</span>
                     <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>file_helper</span>.<span class='ident'>update_content</span>(<span class='ident'>file</span>, <span class='ident'>Mode</span>::<span class='ident'>Overwrite</span>, <span class='ident'>directory</span>));
-                <span class='ident'>writer</span>.<span class='ident'>write</span>(<span class='kw-2'>&amp;</span><span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1u8</span>; <span class='number'>50</span>], <span class='number'>0</span>).<span class='ident'>expect</span>(<span class='string'>&quot;&quot;</span>);
+                <span class='ident'>writer</span>.<span class='ident'>write</span>(<span class='kw-2'>&amp;</span>[<span class='number'>1u8</span>; <span class='number'>50</span>], <span class='number'>0</span>).<span class='ident'>expect</span>(<span class='string'>&quot;&quot;</span>);
                 <span class='kw'>let</span> (<span class='ident'>updated_directory</span>, _) <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>writer</span>.<span class='ident'>close</span>());
                 <span class='ident'>directory</span> <span class='op'>=</span> <span class='ident'>updated_directory</span>;
             }
@@ -529,12 +529,12 @@
         }
         {
             <span class='comment'>// update - partial rewrite</span>
-            <span class='kw'>let</span> <span class='ident'>file</span> <span class='op'>=</span> <span class='macro'>unwrap_option</span><span class='macro'>!</span>(<span class='ident'>directory</span>.<span class='ident'>find_file</span>(<span class='kw-2'>&amp;</span><span class='ident'>file_name</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>file</span><span class='op'>|</span> <span class='ident'>file</span>.<span class='ident'>clone</span>()),
+            <span class='kw'>let</span> <span class='ident'>file</span> <span class='op'>=</span> <span class='macro'>unwrap_option</span><span class='macro'>!</span>(<span class='ident'>directory</span>.<span class='ident'>find_file</span>(<span class='kw-2'>&amp;</span><span class='ident'>file_name</span>).<span class='ident'>cloned</span>(),
                                       <span class='string'>&quot;File not found&quot;</span>);
             {
                 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>writer</span> <span class='op'>=</span>
                     <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>file_helper</span>.<span class='ident'>update_content</span>(<span class='ident'>file</span>, <span class='ident'>Mode</span>::<span class='ident'>Modify</span>, <span class='ident'>directory</span>));
-                <span class='ident'>writer</span>.<span class='ident'>write</span>(<span class='kw-2'>&amp;</span><span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>2u8</span>; <span class='number'>10</span>], <span class='number'>0</span>).<span class='ident'>expect</span>(<span class='string'>&quot;&quot;</span>);
+                <span class='ident'>writer</span>.<span class='ident'>write</span>(<span class='kw-2'>&amp;</span>[<span class='number'>2u8</span>; <span class='number'>10</span>], <span class='number'>0</span>).<span class='ident'>expect</span>(<span class='string'>&quot;&quot;</span>);
                 <span class='kw'>let</span> (<span class='ident'>updated_directory</span>, _) <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>writer</span>.<span class='ident'>close</span>());
                 <span class='ident'>directory</span> <span class='op'>=</span> <span class='ident'>updated_directory</span>;
             }
@@ -547,18 +547,18 @@
         }
         {
             <span class='comment'>// versions</span>
-            <span class='kw'>let</span> <span class='ident'>file</span> <span class='op'>=</span> <span class='macro'>unwrap_option</span><span class='macro'>!</span>(<span class='ident'>directory</span>.<span class='ident'>find_file</span>(<span class='kw-2'>&amp;</span><span class='ident'>file_name</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>file</span><span class='op'>|</span> <span class='ident'>file</span>.<span class='ident'>clone</span>()),
+            <span class='kw'>let</span> <span class='ident'>file</span> <span class='op'>=</span> <span class='macro'>unwrap_option</span><span class='macro'>!</span>(<span class='ident'>directory</span>.<span class='ident'>find_file</span>(<span class='kw-2'>&amp;</span><span class='ident'>file_name</span>).<span class='ident'>cloned</span>(),
                                       <span class='string'>&quot;File not found&quot;</span>);
             <span class='kw'>let</span> <span class='ident'>versions</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>file_helper</span>.<span class='ident'>get_versions</span>(<span class='kw-2'>&amp;</span><span class='ident'>file</span>, <span class='kw-2'>&amp;</span><span class='ident'>directory</span>));
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>versions</span>.<span class='ident'>len</span>(), <span class='number'>3</span>);
         }
         {
             <span class='comment'>// Update Metadata</span>
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>file</span> <span class='op'>=</span> <span class='macro'>unwrap_option</span><span class='macro'>!</span>(<span class='ident'>directory</span>.<span class='ident'>find_file</span>(<span class='kw-2'>&amp;</span><span class='ident'>file_name</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>file</span><span class='op'>|</span> <span class='ident'>file</span>.<span class='ident'>clone</span>()),
+            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>file</span> <span class='op'>=</span> <span class='macro'>unwrap_option</span><span class='macro'>!</span>(<span class='ident'>directory</span>.<span class='ident'>find_file</span>(<span class='kw-2'>&amp;</span><span class='ident'>file_name</span>).<span class='ident'>cloned</span>(),
                                           <span class='string'>&quot;File not found&quot;</span>);
             <span class='ident'>file</span>.<span class='ident'>get_mut_metadata</span>().<span class='ident'>set_user_metadata</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>12u8</span>; <span class='number'>10</span>]);
             <span class='kw'>let</span> _ <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>file_helper</span>.<span class='ident'>update_metadata</span>(<span class='ident'>file</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>directory</span>));
-            <span class='kw'>let</span> <span class='ident'>file</span> <span class='op'>=</span> <span class='macro'>unwrap_option</span><span class='macro'>!</span>(<span class='ident'>directory</span>.<span class='ident'>find_file</span>(<span class='kw-2'>&amp;</span><span class='ident'>file_name</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>file</span><span class='op'>|</span> <span class='ident'>file</span>.<span class='ident'>clone</span>()),
+            <span class='kw'>let</span> <span class='ident'>file</span> <span class='op'>=</span> <span class='macro'>unwrap_option</span><span class='macro'>!</span>(<span class='ident'>directory</span>.<span class='ident'>find_file</span>(<span class='kw-2'>&amp;</span><span class='ident'>file_name</span>).<span class='ident'>cloned</span>(),
                                       <span class='string'>&quot;File not found&quot;</span>);
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='op'>*</span><span class='ident'>file</span>.<span class='ident'>get_metadata</span>().<span class='ident'>get_user_metadata</span>(), [<span class='number'>12u8</span>; <span class='number'>10</span>][..]);
         }

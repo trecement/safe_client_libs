@@ -440,6 +440,7 @@
 <span id="396">396</span>
 <span id="397">397</span>
 <span id="398">398</span>
+<span id="399">399</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -481,6 +482,7 @@
 <span class='doccomment'>/// Create StructuredData in accordance with data-encoding rules abstracted from user. For</span>
 <span class='doccomment'>/// StructuredData created with create, data must be obtained using the complementary function</span>
 <span class='doccomment'>/// defined in this module to get_data()</span>
+<span class='attribute'>#[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;clippy&quot;</span>, <span class='ident'>allow</span>(<span class='ident'>too_many_arguments</span>))]</span>
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>create</span>(<span class='ident'>client</span>: <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>Mutex</span><span class='op'>&lt;</span><span class='ident'>Client</span><span class='op'>&gt;&gt;</span>,
               <span class='ident'>tag_type</span>: <span class='ident'>u64</span>,
               <span class='ident'>id</span>: <span class='ident'>XorName</span>,

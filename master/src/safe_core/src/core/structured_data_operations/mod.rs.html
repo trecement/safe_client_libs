@@ -436,11 +436,11 @@
                                                                         <span class='ident'>keys</span>.<span class='ident'>clone</span>(),
                                                                         <span class='ident'>Vec</span>::<span class='ident'>new</span>())));
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>DataFitResult</span>::<span class='ident'>DataDoesNotFit</span>,
-                       <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>check_if_data_can_fit_in_structured_data</span>(<span class='kw-2'>&amp;</span><span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1u8</span>; <span class='number'>102400</span>],
+                       <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>check_if_data_can_fit_in_structured_data</span>(<span class='kw-2'>&amp;</span>[<span class='number'>1u8</span>; <span class='number'>102400</span>],
                                                                                <span class='ident'>keys</span>.<span class='ident'>clone</span>(),
                                                                                <span class='ident'>Vec</span>::<span class='ident'>new</span>())));
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>DataFitResult</span>::<span class='ident'>DataDoesNotFit</span>,
-                       <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>check_if_data_can_fit_in_structured_data</span>(<span class='kw-2'>&amp;</span><span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1u8</span>; <span class='number'>103424</span>],
+                       <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>check_if_data_can_fit_in_structured_data</span>(<span class='kw-2'>&amp;</span>[<span class='number'>1u8</span>; <span class='number'>103424</span>],
                                                                                <span class='ident'>keys</span>.<span class='ident'>clone</span>(),
                                                                                <span class='ident'>Vec</span>::<span class='ident'>new</span>())));
             <span class='ident'>keys</span>.<span class='ident'>extend</span>(<span class='ident'>test_utils</span>::<span class='ident'>get_max_sized_public_keys</span>(<span class='number'>902</span>));
@@ -449,7 +449,7 @@
                                                                          <span class='ident'>keys</span>.<span class='ident'>clone</span>(),
                                                                          <span class='ident'>Vec</span>::<span class='ident'>new</span>())));
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>DataFitResult</span>::<span class='ident'>DataDoesNotFit</span>,
-                       <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>check_if_data_can_fit_in_structured_data</span>(<span class='kw-2'>&amp;</span><span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>0u8</span>; <span class='number'>102400</span>],
+                       <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>check_if_data_can_fit_in_structured_data</span>(<span class='kw-2'>&amp;</span>[<span class='number'>0u8</span>; <span class='number'>102400</span>],
                                                                                <span class='ident'>keys</span>.<span class='ident'>clone</span>(),
                                                                                <span class='ident'>Vec</span>::<span class='ident'>new</span>())));
             <span class='ident'>keys</span>.<span class='ident'>extend</span>(<span class='ident'>test_utils</span>::<span class='ident'>get_max_sized_public_keys</span>(<span class='number'>1</span>));

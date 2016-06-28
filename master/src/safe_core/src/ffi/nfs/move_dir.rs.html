@@ -241,7 +241,7 @@
                                                      <span class='ident'>access_level</span>,
                                                      <span class='ident'>src_dir</span>.<span class='ident'>get_metadata</span>()
                                                          .<span class='ident'>get_parent_dir_key</span>()
-                                                         .<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>key</span><span class='op'>|</span> <span class='ident'>key</span>.<span class='ident'>clone</span>())));
+                                                         .<span class='ident'>cloned</span>()));
             <span class='ident'>src_dir</span>.<span class='ident'>get_files</span>().<span class='ident'>iter</span>().<span class='ident'>all</span>(<span class='op'>|</span><span class='ident'>file</span><span class='op'>|</span> {
                 <span class='ident'>dir</span>.<span class='ident'>get_mut_files</span>().<span class='ident'>push</span>(<span class='ident'>file</span>.<span class='ident'>clone</span>());
                 <span class='boolval'>true</span>
