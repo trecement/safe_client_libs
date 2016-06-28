@@ -360,7 +360,6 @@
 <span id="316">316</span>
 <span id="317">317</span>
 <span id="318">318</span>
-<span id="319">319</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -380,12 +379,11 @@
 <span class='comment'>// relating to use of the SAFE Network Software.</span>
 
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>errors</span>::<span class='ident'>CoreError</span>;
-<span class='kw'>use</span> <span class='ident'>routing</span>::{<span class='ident'>XOR_NAME_LEN</span>, <span class='ident'>XorName</span>};
-<span class='kw'>use</span> <span class='ident'>sodiumoxide</span>::<span class='ident'>crypto</span>::<span class='ident'>pwhash</span>;
-<span class='kw'>use</span> <span class='ident'>sodiumoxide</span>::<span class='ident'>crypto</span>::<span class='ident'>secretbox</span>;
-<span class='kw'>use</span> <span class='ident'>sodiumoxide</span>::<span class='ident'>crypto</span>::<span class='ident'>hash</span>::<span class='ident'>sha256</span>;
-<span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::{<span class='ident'>deserialise</span>, <span class='ident'>serialise</span>};
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>id</span>::{<span class='ident'>IdType</span>, <span class='ident'>MaidTypeTags</span>, <span class='ident'>MpidTypeTags</span>, <span class='ident'>PublicIdType</span>, <span class='ident'>RevocationIdType</span>};
+<span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::{<span class='ident'>deserialise</span>, <span class='ident'>serialise</span>};
+<span class='kw'>use</span> <span class='ident'>routing</span>::{<span class='ident'>XOR_NAME_LEN</span>, <span class='ident'>XorName</span>};
+<span class='kw'>use</span> <span class='ident'>sodiumoxide</span>::<span class='ident'>crypto</span>::<span class='ident'>hash</span>::<span class='ident'>sha256</span>;
+<span class='kw'>use</span> <span class='ident'>sodiumoxide</span>::<span class='ident'>crypto</span>::{<span class='ident'>pwhash</span>, <span class='ident'>secretbox</span>};
 
 <span class='doccomment'>/// Represents a Session Packet for the user. It is necessary to fetch and decode this via user</span>
 <span class='doccomment'>/// supplied credentials to retrieve all the Maid/Mpid etc keys of the user and also their Root</span>

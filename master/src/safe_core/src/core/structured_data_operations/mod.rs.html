@@ -282,6 +282,7 @@
 <span id="238">238</span>
 <span id="239">239</span>
 <span id="240">240</span>
+<span id="241">241</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -305,11 +306,12 @@
 <span class='doccomment'>/// Versioned-Structured Data</span>
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>versioned</span>;
 
+<span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>u8</span>, <span class='ident'>u64</span>};
+
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>errors</span>::<span class='ident'>CoreError</span>;
+<span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::<span class='ident'>serialise</span>;
 <span class='kw'>use</span> <span class='ident'>routing</span>::{<span class='ident'>StructuredData</span>, <span class='ident'>XorName</span>, <span class='ident'>XOR_NAME_LEN</span>};
 <span class='kw'>use</span> <span class='ident'>sodiumoxide</span>::<span class='ident'>crypto</span>::<span class='ident'>sign</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>u8</span>, <span class='ident'>u64</span>};
-<span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::<span class='ident'>serialise</span>;
 
 <span class='kw'>const</span> <span class='ident'>PADDING_SIZE_IN_BYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>1024</span>;
 <span class='kw'>const</span> <span class='ident'>MIN_RESIDUAL_SPACE_FOR_VALID_STRUCTURED_DATA_IN_BYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>70</span>;

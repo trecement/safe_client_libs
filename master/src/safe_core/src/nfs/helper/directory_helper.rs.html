@@ -659,7 +659,6 @@
 <span id="615">615</span>
 <span id="616">616</span>
 <span id="617">617</span>
-<span id="618">618</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -680,16 +679,15 @@
 
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::{<span class='ident'>Arc</span>, <span class='ident'>Mutex</span>};
 
-<span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>errors</span>::<span class='ident'>NfsError</span>;
-<span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>directory_listing</span>::<span class='ident'>DirectoryListing</span>;
-<span class='kw'>use</span> <span class='ident'>routing</span>::<span class='ident'>XorName</span>;
-<span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::{<span class='ident'>serialise</span>, <span class='ident'>deserialise</span>};
-<span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>metadata</span>::<span class='ident'>directory_key</span>::<span class='ident'>DirectoryKey</span>;
-<span class='kw'>use</span> <span class='ident'>routing</span>::{<span class='ident'>ImmutableData</span>, <span class='ident'>StructuredData</span>, <span class='ident'>Data</span>, <span class='ident'>DataIdentifier</span>};
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>client</span>::<span class='ident'>Client</span>;
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>errors</span>::<span class='ident'>CoreError</span>;
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>structured_data_operations</span>::{<span class='ident'>unversioned</span>, <span class='ident'>versioned</span>};
+<span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::{<span class='ident'>serialise</span>, <span class='ident'>deserialise</span>};
 <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>AccessLevel</span>;
+<span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>errors</span>::<span class='ident'>NfsError</span>;
+<span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>directory_listing</span>::<span class='ident'>DirectoryListing</span>;
+<span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>metadata</span>::<span class='ident'>directory_key</span>::<span class='ident'>DirectoryKey</span>;
+<span class='kw'>use</span> <span class='ident'>routing</span>::{<span class='ident'>ImmutableData</span>, <span class='ident'>StructuredData</span>, <span class='ident'>Data</span>, <span class='ident'>DataIdentifier</span>, <span class='ident'>XorName</span>};
 
 <span class='doccomment'>/// DirectoryHelper provides helper functions to perform Operations on Directory</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>DirectoryHelper</span> {

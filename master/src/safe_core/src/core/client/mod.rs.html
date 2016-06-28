@@ -1088,19 +1088,19 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>mpsc</span>::<span class='ident'>Sender</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::{<span class='ident'>Arc</span>, <span class='ident'>Mutex</span>, <span class='ident'>mpsc</span>};
 
-<span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>user_account</span>::<span class='ident'>Account</span>;
 <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>message_queue</span>::<span class='ident'>MessageQueue</span>;
 <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>response_getter</span>::{<span class='ident'>GetResponseGetter</span>, <span class='ident'>MutationResponseGetter</span>};
+<span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>user_account</span>::<span class='ident'>Account</span>;
 
-<span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>utility</span>;
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>errors</span>::<span class='ident'>CoreError</span>;
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>translated_events</span>::<span class='ident'>NetworkEvent</span>;
+<span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>utility</span>;
 
-<span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>thread</span>::<span class='ident'>RaiiThreadJoiner</span>;
 <span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::<span class='ident'>serialise</span>;
-<span class='kw'>use</span> <span class='ident'>safe_network_common</span>::<span class='ident'>TYPE_TAG_SESSION_PACKET</span>;
+<span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>thread</span>::<span class='ident'>RaiiThreadJoiner</span>;
 <span class='kw'>use</span> <span class='ident'>safe_network_common</span>::<span class='ident'>client_errors</span>::<span class='ident'>MutationError</span>;
 <span class='kw'>use</span> <span class='ident'>safe_network_common</span>::<span class='ident'>messaging</span>::{<span class='ident'>MpidMessage</span>, <span class='ident'>MpidMessageWrapper</span>};
+<span class='kw'>use</span> <span class='ident'>safe_network_common</span>::<span class='ident'>TYPE_TAG_SESSION_PACKET</span>;
 <span class='kw'>use</span> <span class='ident'>routing</span>::{<span class='ident'>Authority</span>, <span class='ident'>Data</span>, <span class='ident'>DataIdentifier</span>, <span class='ident'>FullId</span>, <span class='ident'>MessageId</span>, <span class='ident'>PlainData</span>, <span class='ident'>StructuredData</span>,
               <span class='ident'>XorName</span>};
 
@@ -1789,9 +1789,9 @@
 <span class='kw'>mod</span> <span class='ident'>test</span> {
     <span class='kw'>use</span> <span class='ident'>super</span>::<span class='op'>*</span>;
 
-    <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>utility</span>;
-    <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>errors</span>::<span class='ident'>CoreError</span>;
     <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>client</span>::<span class='ident'>response_getter</span>::<span class='ident'>GetResponseGetter</span>;
+    <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>errors</span>::<span class='ident'>CoreError</span>;
+    <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>utility</span>;
 
     <span class='kw'>use</span> <span class='ident'>rand</span>;
     <span class='kw'>use</span> <span class='ident'>routing</span>::{<span class='ident'>Data</span>, <span class='ident'>DataIdentifier</span>, <span class='ident'>ImmutableData</span>, <span class='ident'>StructuredData</span>, <span class='ident'>XOR_NAME_LEN</span>, <span class='ident'>XorName</span>};

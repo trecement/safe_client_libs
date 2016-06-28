@@ -225,10 +225,10 @@
 <span class='doccomment'>/// Common utility functions for writting test cases</span>
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>test_utils</span>;
 
-<span class='kw'>use</span> <span class='ident'>rand</span>::<span class='ident'>Rng</span>;
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>errors</span>::<span class='ident'>CoreError</span>;
-<span class='kw'>use</span> <span class='ident'>sodiumoxide</span>::<span class='ident'>crypto</span>::{<span class='ident'>box_</span>, <span class='ident'>secretbox</span>};
 <span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::{<span class='ident'>serialise</span>, <span class='ident'>deserialise</span>};
+<span class='kw'>use</span> <span class='ident'>rand</span>::<span class='ident'>Rng</span>;
+<span class='kw'>use</span> <span class='ident'>sodiumoxide</span>::<span class='ident'>crypto</span>::{<span class='ident'>box_</span>, <span class='ident'>secretbox</span>};
 
 <span class='doccomment'>/// Combined Asymmetric and Symmetric encryption. The data is encrypted using random Key and</span>
 <span class='doccomment'>/// IV with Xsalsa-symmetric encryption. Random IV ensures that same plain text produces different</span>

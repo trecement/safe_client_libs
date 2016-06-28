@@ -161,7 +161,6 @@
 <span id="117">117</span>
 <span id="118">118</span>
 <span id="119">119</span>
-<span id="120">120</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -181,10 +180,9 @@
 <span class='comment'>// relating to use of the SAFE Network Software.</span>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
 
-<span class='kw'>use</span> <span class='ident'>rustc_serialize</span>::<span class='ident'>Decoder</span>;
-<span class='kw'>use</span> <span class='ident'>rustc_serialize</span>::<span class='ident'>Decodable</span>;
 <span class='kw'>use</span> <span class='ident'>ffi</span>::{<span class='ident'>Action</span>, <span class='ident'>ParameterPacket</span>, <span class='ident'>ResponseType</span>};
 <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>errors</span>::<span class='ident'>FfiError</span>;
+<span class='kw'>use</span> <span class='ident'>rustc_serialize</span>::{<span class='ident'>Decodable</span>, <span class='ident'>Decoder</span>};
 
 <span class='kw'>mod</span> <span class='ident'>create_dir</span>;
 <span class='kw'>mod</span> <span class='ident'>create_file</span>;
