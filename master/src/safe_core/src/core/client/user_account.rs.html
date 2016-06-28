@@ -359,8 +359,6 @@
 <span id="315">315</span>
 <span id="316">316</span>
 <span id="317">317</span>
-<span id="318">318</span>
-<span id="319">319</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -612,10 +610,8 @@
                                                                    .<span class='ident'>as_bytes</span>())));
 
         <span class='kw'>let</span> <span class='ident'>keyword2</span> <span class='op'>=</span> <span class='string'>&quot;user2&quot;</span>.<span class='ident'>to_owned</span>();
-        <span class='kw'>let</span> <span class='ident'>gen_id1</span> <span class='op'>=</span> <span class='ident'>Account</span>::<span class='ident'>generate_network_id</span>(<span class='ident'>keyword1</span>.<span class='ident'>as_bytes</span>(),
-                                                   <span class='number'>248</span>.<span class='ident'>to_string</span>().<span class='ident'>as_bytes</span>());
-        <span class='kw'>let</span> <span class='ident'>gen_id2</span> <span class='op'>=</span> <span class='ident'>Account</span>::<span class='ident'>generate_network_id</span>(<span class='ident'>keyword2</span>.<span class='ident'>as_bytes</span>(),
-                                                   <span class='number'>248</span>.<span class='ident'>to_string</span>().<span class='ident'>as_bytes</span>());
+        <span class='kw'>let</span> <span class='ident'>gen_id1</span> <span class='op'>=</span> <span class='ident'>Account</span>::<span class='ident'>generate_network_id</span>(<span class='ident'>keyword1</span>.<span class='ident'>as_bytes</span>(), <span class='number'>248</span>.<span class='ident'>to_string</span>().<span class='ident'>as_bytes</span>());
+        <span class='kw'>let</span> <span class='ident'>gen_id2</span> <span class='op'>=</span> <span class='ident'>Account</span>::<span class='ident'>generate_network_id</span>(<span class='ident'>keyword2</span>.<span class='ident'>as_bytes</span>(), <span class='number'>248</span>.<span class='ident'>to_string</span>().<span class='ident'>as_bytes</span>());
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>gen_id1</span>) <span class='op'>!=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>gen_id2</span>));
     }
 
