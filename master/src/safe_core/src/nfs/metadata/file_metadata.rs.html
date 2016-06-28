@@ -265,7 +265,7 @@
 
     <span class='doccomment'>/// Get name associated with the structure (file or directory) that this metadata is a part</span>
     <span class='doccomment'>/// of</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_name</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>String</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_name</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>str</span> {
         <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>name</span>
     }
 
@@ -275,7 +275,7 @@
     }
 
     <span class='doccomment'>/// Get user setteble custom metadata</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_user_metadata</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_user_metadata</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>] {
         <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>user_metadata</span>
     }
 

@@ -288,7 +288,7 @@
     <span class='doccomment'>/// An instanstance of the PublicIdType can be created using the new()</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>id_type</span>: <span class='kw-2'>&amp;</span><span class='ident'>IdType</span>, <span class='ident'>revocation_id</span>: <span class='kw-2'>&amp;</span><span class='ident'>RevocationIdType</span>) <span class='op'>-&gt;</span> <span class='ident'>PublicIdType</span> {
         <span class='kw'>let</span> <span class='ident'>type_tag</span> <span class='op'>=</span> <span class='ident'>revocation_id</span>.<span class='ident'>type_tags</span>().<span class='number'>2</span>;
-        <span class='kw'>let</span> <span class='ident'>public_keys</span> <span class='op'>=</span> <span class='ident'>id_type</span>.<span class='ident'>public_keys</span>().<span class='ident'>clone</span>();
+        <span class='kw'>let</span> <span class='ident'>public_keys</span> <span class='op'>=</span> <span class='ident'>id_type</span>.<span class='ident'>public_keys</span>();
         <span class='kw'>let</span> <span class='ident'>revocation_public_key</span> <span class='op'>=</span> <span class='ident'>revocation_id</span>.<span class='ident'>public_key</span>();
         <span class='kw'>let</span> <span class='ident'>combined_iter</span> <span class='op'>=</span> (<span class='ident'>public_keys</span>.<span class='number'>0</span>)
             .<span class='number'>0</span>
@@ -318,8 +318,8 @@
 
         <span class='ident'>PublicIdType</span> {
             <span class='ident'>type_tag</span>: <span class='ident'>type_tag</span>,
-            <span class='ident'>public_keys</span>: <span class='ident'>public_keys</span>,
-            <span class='ident'>revocation_public_key</span>: <span class='ident'>revocation_id</span>.<span class='ident'>public_key</span>().<span class='ident'>clone</span>(),
+            <span class='ident'>public_keys</span>: <span class='op'>*</span><span class='ident'>public_keys</span>,
+            <span class='ident'>revocation_public_key</span>: <span class='op'>*</span><span class='ident'>revocation_id</span>.<span class='ident'>public_key</span>(),
             <span class='ident'>signature</span>: <span class='ident'>sign</span>::<span class='ident'>Signature</span>(<span class='ident'>signature_arr</span>),
         }
     }

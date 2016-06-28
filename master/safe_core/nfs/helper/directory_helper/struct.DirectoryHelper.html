@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-2681' class='srclink' href='../../../../src/safe_core/src/nfs/helper/directory_helper.rs.html#32-34' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-2677' class='srclink' href='../../../../src/safe_core/src/nfs/helper/directory_helper.rs.html#32-34' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct DirectoryHelper {
     // some fields omitted
 }</pre><div class='docblock'><p>DirectoryHelper provides helper functions to perform Operations on Directory</p>
@@ -60,7 +60,7 @@ Then the parent directory is updated.
 If the parent_directory passed has a parent, then the parent_directory&#39;s parent
 is also updated and the same is returned
 Returns (created_directory, Option<parent_directory's parent>)</p>
-</div><h4 id='method.delete' class='method'><code>fn <a href='#method.delete' class='fnname'>delete</a>(&amp;self, parent_directory: &amp;mut <a class='struct' href='../../../../safe_core/nfs/directory_listing/struct.DirectoryListing.html' title='safe_core::nfs::directory_listing::DirectoryListing'>DirectoryListing</a>, directory_to_delete: &amp;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../../../../safe_core/nfs/directory_listing/struct.DirectoryListing.html' title='safe_core::nfs::directory_listing::DirectoryListing'>DirectoryListing</a>&gt;, <a class='enum' href='../../../../safe_core/nfs/errors/enum.NfsError.html' title='safe_core::nfs::errors::NfsError'>NfsError</a>&gt;</code></h4>
+</div><h4 id='method.delete' class='method'><code>fn <a href='#method.delete' class='fnname'>delete</a>(&amp;self, parent_directory: &amp;mut <a class='struct' href='../../../../safe_core/nfs/directory_listing/struct.DirectoryListing.html' title='safe_core::nfs::directory_listing::DirectoryListing'>DirectoryListing</a>, directory_to_delete: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../../../../safe_core/nfs/directory_listing/struct.DirectoryListing.html' title='safe_core::nfs::directory_listing::DirectoryListing'>DirectoryListing</a>&gt;, <a class='enum' href='../../../../safe_core/nfs/errors/enum.NfsError.html' title='safe_core::nfs::errors::NfsError'>NfsError</a>&gt;</code></h4>
 <div class='docblock'><p>Deletes a sub directory
 The parent_directory&#39;s parent is also updated if present
 Returns Option<parent_directory's parent></p>

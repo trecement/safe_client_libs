@@ -272,7 +272,7 @@
     <span class='ident'>create_impl</span>(<span class='ident'>client</span>,
                 <span class='kw-2'>&amp;</span><span class='ident'>versions</span>,
                 <span class='ident'>struct_data</span>.<span class='ident'>get_type_tag</span>(),
-                <span class='ident'>struct_data</span>.<span class='ident'>get_identifier</span>().<span class='ident'>clone</span>(),
+                <span class='op'>*</span><span class='ident'>struct_data</span>.<span class='ident'>get_identifier</span>(),
                 <span class='ident'>struct_data</span>.<span class='ident'>get_version</span>() <span class='op'>+</span> <span class='number'>1</span>,
                 <span class='ident'>struct_data</span>.<span class='ident'>get_owner_keys</span>().<span class='ident'>clone</span>(),
                 <span class='ident'>struct_data</span>.<span class='ident'>get_previous_owner_keys</span>().<span class='ident'>clone</span>(),
@@ -280,7 +280,7 @@
 }
 
 <span class='kw'>fn</span> <span class='ident'>create_impl</span>(<span class='ident'>client</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Client</span>,
-               <span class='ident'>version_names_to_store</span>: <span class='kw-2'>&amp;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>XorName</span><span class='op'>&gt;</span>,
+               <span class='ident'>version_names_to_store</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>XorName</span>],
                <span class='ident'>tag_type</span>: <span class='ident'>u64</span>,
                <span class='ident'>identifier</span>: <span class='ident'>XorName</span>,
                <span class='ident'>version</span>: <span class='ident'>u64</span>,
@@ -288,7 +288,7 @@
                <span class='ident'>prev_owner_keys</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>sign</span>::<span class='ident'>PublicKey</span><span class='op'>&gt;</span>,
                <span class='ident'>private_signing_key</span>: <span class='kw-2'>&amp;</span><span class='ident'>sign</span>::<span class='ident'>SecretKey</span>)
                <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>StructuredData</span>, <span class='ident'>CoreError</span><span class='op'>&gt;</span> {
-    <span class='kw'>let</span> <span class='ident'>immutable_data</span> <span class='op'>=</span> <span class='ident'>ImmutableData</span>::<span class='ident'>new</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>serialise</span>(<span class='ident'>version_names_to_store</span>)));
+    <span class='kw'>let</span> <span class='ident'>immutable_data</span> <span class='op'>=</span> <span class='ident'>ImmutableData</span>::<span class='ident'>new</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>serialise</span>(<span class='kw-2'>&amp;</span><span class='ident'>version_names_to_store</span>)));
     <span class='kw'>let</span> <span class='ident'>name_of_immutable_data</span> <span class='op'>=</span> <span class='ident'>immutable_data</span>.<span class='ident'>name</span>();
 
     <span class='kw'>let</span> <span class='ident'>encoded_name</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>serialise</span>(<span class='kw-2'>&amp;</span><span class='ident'>name_of_immutable_data</span>));
@@ -345,7 +345,7 @@
         <span class='kw'>let</span> <span class='ident'>version_0</span>: <span class='ident'>XorName</span> <span class='op'>=</span> <span class='ident'>rand</span>::<span class='ident'>random</span>();
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>structured_data_result</span> <span class='op'>=</span> <span class='ident'>create</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>client</span>,
-                                                <span class='ident'>version_0</span>.<span class='ident'>clone</span>(),
+                                                <span class='ident'>version_0</span>,
                                                 <span class='ident'>TAG_ID</span>,
                                                 <span class='ident'>id</span>,
                                                 <span class='number'>0</span>,
@@ -361,7 +361,7 @@
         <span class='kw'>let</span> <span class='ident'>version_1</span>: <span class='ident'>XorName</span> <span class='op'>=</span> <span class='ident'>rand</span>::<span class='ident'>random</span>();
 
         <span class='ident'>structured_data_result</span> <span class='op'>=</span>
-            <span class='ident'>append_version</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>client</span>, <span class='ident'>structured_data</span>, <span class='ident'>version_1</span>.<span class='ident'>clone</span>(), <span class='ident'>secret_key</span>);
+            <span class='ident'>append_version</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>client</span>, <span class='ident'>structured_data</span>, <span class='ident'>version_1</span>, <span class='ident'>secret_key</span>);
         <span class='ident'>structured_data</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>structured_data_result</span>);
         <span class='ident'>versions_res</span> <span class='op'>=</span> <span class='ident'>get_all_versions</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>client</span>, <span class='kw-2'>&amp;</span><span class='ident'>structured_data</span>);
         <span class='ident'>versions</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>versions_res</span>);
