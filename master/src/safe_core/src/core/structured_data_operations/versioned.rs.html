@@ -229,8 +229,8 @@
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>client</span>::<span class='ident'>Client</span>;
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>errors</span>::<span class='ident'>CoreError</span>;
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>structured_data_operations</span>::{<span class='ident'>DataFitResult</span>, <span class='ident'>check_if_data_can_fit_in_structured_data</span>};
-<span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::{<span class='ident'>serialise</span>, <span class='ident'>deserialise</span>};
-<span class='kw'>use</span> <span class='ident'>routing</span>::{<span class='ident'>StructuredData</span>, <span class='ident'>ImmutableData</span>, <span class='ident'>Data</span>, <span class='ident'>DataIdentifier</span>, <span class='ident'>XorName</span>};
+<span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::{<span class='ident'>deserialise</span>, <span class='ident'>serialise</span>};
+<span class='kw'>use</span> <span class='ident'>routing</span>::{<span class='ident'>Data</span>, <span class='ident'>DataIdentifier</span>, <span class='ident'>ImmutableData</span>, <span class='ident'>StructuredData</span>, <span class='ident'>XorName</span>};
 <span class='kw'>use</span> <span class='ident'>sodiumoxide</span>::<span class='ident'>crypto</span>::<span class='ident'>sign</span>;
 
 <span class='doccomment'>/// Create the StructuredData to manage versioned data.</span>
@@ -339,12 +339,12 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>save_and_retrieve_immutable_data</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>get_client</span>());
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>get_client</span>());
 
         <span class='kw'>let</span> <span class='ident'>id</span>: <span class='ident'>XorName</span> <span class='op'>=</span> <span class='ident'>rand</span>::<span class='ident'>random</span>();
         <span class='kw'>let</span> <span class='ident'>owners</span> <span class='op'>=</span> <span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>generate_public_keys</span>(<span class='number'>1</span>);
         <span class='kw'>let</span> <span class='ident'>prev_owners</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>new</span>();
-        <span class='kw'>let</span> <span class='kw-2'>ref</span> <span class='ident'>secret_key</span> <span class='op'>=</span> <span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>generate_secret_keys</span>(<span class='number'>1</span>)[<span class='number'>0</span>];
+        <span class='kw'>let</span> <span class='ident'>secret_key</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>generate_secret_keys</span>(<span class='number'>1</span>)[<span class='number'>0</span>];
 
         <span class='kw'>let</span> <span class='ident'>version_0</span>: <span class='ident'>XorName</span> <span class='op'>=</span> <span class='ident'>rand</span>::<span class='ident'>random</span>();
 
@@ -357,18 +357,18 @@
                                                 <span class='ident'>prev_owners</span>,
                                                 <span class='ident'>secret_key</span>);
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>structured_data</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>structured_data_result</span>);
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>structured_data</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>structured_data_result</span>);
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>versions_res</span> <span class='op'>=</span> <span class='ident'>get_all_versions</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>client</span>, <span class='kw-2'>&amp;</span><span class='ident'>structured_data</span>);
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>versions</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>versions_res</span>);
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>versions</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>versions_res</span>);
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>versions</span>.<span class='ident'>len</span>(), <span class='number'>1</span>);
 
         <span class='kw'>let</span> <span class='ident'>version_1</span>: <span class='ident'>XorName</span> <span class='op'>=</span> <span class='ident'>rand</span>::<span class='ident'>random</span>();
 
         <span class='ident'>structured_data_result</span> <span class='op'>=</span>
             <span class='ident'>append_version</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>client</span>, <span class='ident'>structured_data</span>, <span class='ident'>version_1</span>, <span class='ident'>secret_key</span>);
-        <span class='ident'>structured_data</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>structured_data_result</span>);
+        <span class='ident'>structured_data</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>structured_data_result</span>);
         <span class='ident'>versions_res</span> <span class='op'>=</span> <span class='ident'>get_all_versions</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>client</span>, <span class='kw-2'>&amp;</span><span class='ident'>structured_data</span>);
-        <span class='ident'>versions</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>versions_res</span>);
+        <span class='ident'>versions</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>versions_res</span>);
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>versions</span>.<span class='ident'>len</span>(), <span class='number'>2</span>);
 
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>versions</span>[<span class='number'>0</span>], <span class='ident'>version_0</span>);

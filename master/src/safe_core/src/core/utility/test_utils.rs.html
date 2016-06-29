@@ -107,6 +107,9 @@
 <span id="63">63</span>
 <span id="64">64</span>
 <span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>// This SAFE Network Software is licensed to you under (1) the MaidSafe.net Commercial License,</span>
@@ -164,13 +167,16 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>random_client</span>() {
-        <span class='kw'>let</span> <span class='ident'>client0</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>get_client</span>());
-        <span class='kw'>let</span> <span class='ident'>client1</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>get_client</span>());
+        <span class='kw'>let</span> <span class='ident'>client_0</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>get_client</span>());
+        <span class='kw'>let</span> <span class='ident'>client_1</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>get_client</span>());
 
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>client0</span>.<span class='ident'>get_public_signing_key</span>()) <span class='op'>!=</span>
-                <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>client1</span>.<span class='ident'>get_public_signing_key</span>()));
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>client0</span>.<span class='ident'>get_public_encryption_key</span>()) <span class='op'>!=</span>
-                <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>client1</span>.<span class='ident'>get_public_encryption_key</span>()));
+        <span class='kw'>let</span> <span class='ident'>sign_key_0</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client_0</span>.<span class='ident'>get_public_signing_key</span>());
+        <span class='kw'>let</span> <span class='ident'>sign_key_1</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client_1</span>.<span class='ident'>get_public_signing_key</span>());
+        <span class='kw'>let</span> <span class='ident'>pub_key_0</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client_0</span>.<span class='ident'>get_public_encryption_key</span>());
+        <span class='kw'>let</span> <span class='ident'>pub_key_1</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client_1</span>.<span class='ident'>get_public_encryption_key</span>());
+
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>sign_key_0</span> <span class='op'>!=</span> <span class='ident'>sign_key_1</span>);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>pub_key_0</span> <span class='op'>!=</span> <span class='ident'>pub_key_1</span>);
     }
 }
 </pre>

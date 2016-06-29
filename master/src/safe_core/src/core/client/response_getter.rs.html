@@ -211,7 +211,7 @@
                 <span class='ident'>ResponseEvent</span>::<span class='ident'>GetResp</span>(<span class='ident'>result</span>) <span class='op'>=&gt;</span> {
                     <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>result</span>);
                     <span class='kw'>if</span> <span class='kw'>let</span> <span class='ident'>DataIdentifier</span>::<span class='ident'>Immutable</span>(..) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>requested_id</span> {
-                        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>msg_queue</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>message_queue</span>.<span class='ident'>lock</span>());
+                        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>msg_queue</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>message_queue</span>.<span class='ident'>lock</span>());
                         <span class='ident'>msg_queue</span>.<span class='ident'>local_cache_insert</span>(<span class='self'>self</span>.<span class='ident'>requested_name</span>, <span class='ident'>data</span>.<span class='ident'>clone</span>());
                     }
 
@@ -221,7 +221,7 @@
                 _ <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='ident'>CoreError</span>::<span class='ident'>ReceivedUnexpectedData</span>),
             }
         } <span class='kw'>else</span> {
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>msg_queue</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>message_queue</span>.<span class='ident'>lock</span>());
+            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>msg_queue</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>message_queue</span>.<span class='ident'>lock</span>());
             <span class='ident'>msg_queue</span>.<span class='ident'>local_cache_get</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>requested_name</span>)
         }
     }

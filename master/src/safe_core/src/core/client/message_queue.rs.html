@@ -286,7 +286,7 @@
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>translated_events</span>::{<span class='ident'>NetworkEvent</span>, <span class='ident'>ResponseEvent</span>};
 
 <span class='kw'>use</span> <span class='ident'>lru_time_cache</span>::<span class='ident'>LruCache</span>;
-<span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>thread</span>::<span class='ident'>RaiiThreadJoiner</span>;
+<span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>thread</span>::{<span class='self'>self</span>, <span class='ident'>RaiiThreadJoiner</span>};
 <span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::<span class='ident'>deserialise</span>;
 <span class='kw'>use</span> <span class='ident'>routing</span>::{<span class='ident'>Data</span>, <span class='ident'>Event</span>, <span class='ident'>MessageId</span>, <span class='ident'>Response</span>, <span class='ident'>XorName</span>};
 <span class='kw'>use</span> <span class='ident'>safe_network_common</span>::<span class='ident'>client_errors</span>::{<span class='ident'>GetError</span>, <span class='ident'>MutationError</span>};
@@ -410,15 +410,15 @@
         }));
 
         <span class='kw'>let</span> <span class='ident'>message_queue_cloned</span> <span class='op'>=</span> <span class='ident'>message_queue</span>.<span class='ident'>clone</span>();
-        <span class='kw'>let</span> <span class='ident'>receiver_joiner</span> <span class='op'>=</span> <span class='macro'>thread</span><span class='macro'>!</span>(<span class='ident'>EVENT_RECEIVER_THREAD_NAME</span>, <span class='kw'>move</span> <span class='op'>||</span> {
+        <span class='kw'>let</span> <span class='ident'>receiver_joiner</span> <span class='op'>=</span> <span class='ident'>thread</span>::<span class='ident'>named</span>(<span class='ident'>EVENT_RECEIVER_THREAD_NAME</span>, <span class='kw'>move</span> <span class='op'>||</span> {
             <span class='kw'>for</span> <span class='ident'>it</span> <span class='kw'>in</span> <span class='ident'>routing_event_receiver</span>.<span class='ident'>iter</span>() {
                 <span class='kw'>match</span> <span class='ident'>it</span> {
                     <span class='ident'>Event</span>::<span class='ident'>Response</span> { <span class='ident'>response</span>, .. } <span class='op'>=&gt;</span> {
-                        <span class='ident'>handle_response</span>(<span class='ident'>response</span>, <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>message_queue_cloned</span>.<span class='ident'>lock</span>()));
+                        <span class='ident'>handle_response</span>(<span class='ident'>response</span>, <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>message_queue_cloned</span>.<span class='ident'>lock</span>()));
                     }
                     <span class='ident'>Event</span>::<span class='ident'>Connected</span> <span class='op'>=&gt;</span> {
                         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>dead_sender_positions</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span>::<span class='ident'>new</span>();
-                        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>queue_guard</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>message_queue_cloned</span>.<span class='ident'>lock</span>());
+                        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>queue_guard</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>message_queue_cloned</span>.<span class='ident'>lock</span>());
                         <span class='kw'>for</span> <span class='ident'>it</span> <span class='kw'>in</span> <span class='ident'>queue_guard</span>.<span class='ident'>network_event_observers</span>.<span class='ident'>iter</span>().<span class='ident'>enumerate</span>() {
                             <span class='kw'>if</span> <span class='ident'>it</span>.<span class='number'>1</span>.<span class='ident'>send</span>(<span class='ident'>NetworkEvent</span>::<span class='ident'>Connected</span>).<span class='ident'>is_err</span>() {
                                 <span class='ident'>dead_sender_positions</span>.<span class='ident'>push</span>(<span class='ident'>it</span>.<span class='number'>0</span>);
@@ -430,7 +430,7 @@
                     }
                     <span class='ident'>Event</span>::<span class='ident'>Terminate</span> <span class='op'>=&gt;</span> {
                         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>dead_sender_positions</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span>::<span class='ident'>new</span>();
-                        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>queue_guard</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>message_queue_cloned</span>.<span class='ident'>lock</span>());
+                        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>queue_guard</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>message_queue_cloned</span>.<span class='ident'>lock</span>());
                         <span class='kw'>for</span> <span class='ident'>it</span> <span class='kw'>in</span> <span class='ident'>queue_guard</span>.<span class='ident'>network_event_observers</span>.<span class='ident'>iter</span>().<span class='ident'>enumerate</span>() {
                             <span class='kw'>if</span> <span class='ident'>it</span>.<span class='number'>1</span>.<span class='ident'>send</span>(<span class='ident'>NetworkEvent</span>::<span class='ident'>Disconnected</span>).<span class='ident'>is_err</span>() {
                                 <span class='ident'>dead_sender_positions</span>.<span class='ident'>push</span>(<span class='ident'>it</span>.<span class='number'>0</span>);
@@ -448,7 +448,7 @@
             }
         });
 
-        (<span class='ident'>message_queue</span>, <span class='ident'>RaiiThreadJoiner</span>::<span class='ident'>new</span>(<span class='ident'>receiver_joiner</span>))
+        (<span class='ident'>message_queue</span>, <span class='ident'>receiver_joiner</span>)
     }
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>register_response_observer</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>,

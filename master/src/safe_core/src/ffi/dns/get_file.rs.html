@@ -194,8 +194,6 @@
 <span id="150">150</span>
 <span id="151">151</span>
 <span id="152">152</span>
-<span id="153">153</span>
-<span id="154">154</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -215,7 +213,7 @@
 <span class='comment'>// relating to use of the SAFE Network Software.</span>
 
 <span class='kw'>use</span> <span class='ident'>dns</span>::<span class='ident'>dns_operations</span>::<span class='ident'>DnsOperations</span>;
-<span class='kw'>use</span> <span class='ident'>ffi</span>::{<span class='ident'>helper</span>, <span class='ident'>ParameterPacket</span>, <span class='ident'>ResponseType</span>, <span class='ident'>Action</span>};
+<span class='kw'>use</span> <span class='ident'>ffi</span>::{<span class='ident'>Action</span>, <span class='ident'>ParameterPacket</span>, <span class='ident'>ResponseType</span>, <span class='ident'>helper</span>};
 <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>errors</span>::<span class='ident'>FfiError</span>;
 <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>nfs</span>::<span class='ident'>file_response</span>::<span class='ident'>get_response</span>;
 <span class='kw'>use</span> <span class='ident'>rustc_serialize</span>::<span class='ident'>json</span>;
@@ -262,7 +260,7 @@
     <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>utility</span>;
     <span class='kw'>use</span> <span class='ident'>sodiumoxide</span>::<span class='ident'>crypto</span>::<span class='ident'>box_</span>;
     <span class='kw'>use</span> <span class='ident'>dns</span>::<span class='ident'>dns_operations</span>::<span class='ident'>DnsOperations</span>;
-    <span class='kw'>use</span> <span class='ident'>ffi</span>::{<span class='ident'>Action</span>, <span class='ident'>test_utils</span>, <span class='ident'>ParameterPacket</span>, <span class='ident'>errors</span>};
+    <span class='kw'>use</span> <span class='ident'>ffi</span>::{<span class='ident'>Action</span>, <span class='ident'>ParameterPacket</span>, <span class='ident'>errors</span>, <span class='ident'>test_utils</span>};
     <span class='kw'>use</span> <span class='ident'>nfs</span>::{<span class='ident'>AccessLevel</span>, <span class='ident'>UNVERSIONED_DIRECTORY_LISTING_TAG</span>};
     <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>metadata</span>::<span class='ident'>directory_key</span>::<span class='ident'>DirectoryKey</span>;
     <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>helper</span>::<span class='ident'>file_helper</span>::<span class='ident'>FileHelper</span>;
@@ -301,10 +299,9 @@
                         <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>errors</span>::<span class='ident'>FfiError</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> (<span class='ident'>msg_public_key</span>, <span class='ident'>msg_secret_key</span>) <span class='op'>=</span> <span class='ident'>box_</span>::<span class='ident'>gen_keypair</span>();
         <span class='kw'>let</span> <span class='ident'>services</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[(<span class='ident'>service_name</span>.<span class='ident'>clone</span>(), (<span class='ident'>directory_key</span>.<span class='ident'>clone</span>()))];
-        <span class='kw'>let</span> <span class='ident'>public_signing_key</span> <span class='op'>=</span> <span class='op'>*</span><span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>params</span>.<span class='ident'>client</span>.<span class='ident'>lock</span>())
-            .<span class='ident'>get_public_signing_key</span>());
-        <span class='kw'>let</span> <span class='ident'>secret_signing_key</span> <span class='op'>=</span>
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>params</span>.<span class='ident'>client</span>.<span class='ident'>lock</span>()).<span class='ident'>get_secret_signing_key</span>()).<span class='ident'>clone</span>();
+        <span class='kw'>let</span> <span class='ident'>public_signing_key</span> <span class='op'>=</span> <span class='op'>*</span><span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>params</span>.<span class='ident'>client</span>.<span class='ident'>lock</span>()).<span class='ident'>get_public_signing_key</span>());
+        <span class='kw'>let</span> <span class='ident'>secret_signing_key</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>params</span>.<span class='ident'>client</span>.<span class='ident'>lock</span>()).<span class='ident'>get_secret_signing_key</span>())
+            .<span class='ident'>clone</span>();
         <span class='kw'>let</span> <span class='ident'>dns_operation</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>DnsOperations</span>::<span class='ident'>new</span>(<span class='ident'>params</span>.<span class='ident'>client</span>
             .<span class='ident'>clone</span>()));
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dns_operation</span>.<span class='ident'>register_dns</span>(<span class='ident'>public_name</span>.<span class='ident'>clone</span>(),
@@ -319,18 +316,18 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>get_public_file_using_registerd_client</span>() {
-        <span class='kw'>let</span> <span class='ident'>parameter_packet</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>test_utils</span>::<span class='ident'>get_parameter_packet</span>(<span class='boolval'>false</span>));
+        <span class='kw'>let</span> <span class='ident'>parameter_packet</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>test_utils</span>::<span class='ident'>get_parameter_packet</span>(<span class='boolval'>false</span>));
         <span class='kw'>let</span> <span class='ident'>file_name</span> <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>from</span>(<span class='string'>&quot;index.html&quot;</span>);
         <span class='kw'>let</span> <span class='ident'>file_content</span> <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>from</span>(<span class='string'>&quot;&lt;html&gt;&lt;title&gt;Home&lt;/title&gt;&lt;/html&gt;&quot;</span>);
-        <span class='kw'>let</span> <span class='ident'>public_directory_key</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>create_public_file</span>(<span class='kw-2'>&amp;</span><span class='ident'>parameter_packet</span>,
-                                                                     <span class='ident'>file_name</span>.<span class='ident'>clone</span>(),
-                                                                     <span class='ident'>file_content</span>.<span class='ident'>into_bytes</span>()));
+        <span class='kw'>let</span> <span class='ident'>public_directory_key</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>create_public_file</span>(<span class='kw-2'>&amp;</span><span class='ident'>parameter_packet</span>,
+                                                              <span class='ident'>file_name</span>.<span class='ident'>clone</span>(),
+                                                              <span class='ident'>file_content</span>.<span class='ident'>into_bytes</span>()));
         <span class='kw'>let</span> <span class='ident'>service_name</span> <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>from</span>(<span class='string'>&quot;www&quot;</span>);
-        <span class='kw'>let</span> <span class='ident'>public_name</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
-        <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>register_service</span>(<span class='kw-2'>&amp;</span><span class='ident'>parameter_packet</span>,
-                                        <span class='ident'>service_name</span>.<span class='ident'>clone</span>(),
-                                        <span class='ident'>public_name</span>.<span class='ident'>clone</span>(),
-                                        <span class='ident'>public_directory_key</span>));
+        <span class='kw'>let</span> <span class='ident'>public_name</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
+        <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>register_service</span>(<span class='kw-2'>&amp;</span><span class='ident'>parameter_packet</span>,
+                                 <span class='ident'>service_name</span>.<span class='ident'>clone</span>(),
+                                 <span class='ident'>public_name</span>.<span class='ident'>clone</span>(),
+                                 <span class='ident'>public_directory_key</span>));
 
         <span class='comment'>// Fecth the file using the same client</span>
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>request</span> <span class='op'>=</span> <span class='ident'>GetFile</span> {
@@ -343,11 +340,10 @@
         };
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>request</span>.<span class='ident'>execute</span>(<span class='ident'>parameter_packet</span>).<span class='ident'>is_ok</span>());
         <span class='comment'>// Fetch the file using a new client</span>
-        <span class='kw'>let</span> <span class='ident'>new_parameter_packet</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>test_utils</span>::<span class='ident'>get_parameter_packet</span>(<span class='boolval'>false</span>));
+        <span class='kw'>let</span> <span class='ident'>new_parameter_packet</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>test_utils</span>::<span class='ident'>get_parameter_packet</span>(<span class='boolval'>false</span>));
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>request</span>.<span class='ident'>execute</span>(<span class='ident'>new_parameter_packet</span>).<span class='ident'>is_ok</span>());
         <span class='comment'>// Fetch the file using an unregisterd client</span>
-        <span class='kw'>let</span> <span class='ident'>unreg_parameter_packet</span> <span class='op'>=</span>
-            <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>test_utils</span>::<span class='ident'>get_unregistered_parameter_packet</span>());
+        <span class='kw'>let</span> <span class='ident'>unreg_parameter_packet</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>test_utils</span>::<span class='ident'>get_unregistered_parameter_packet</span>());
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>request</span>.<span class='ident'>execute</span>(<span class='ident'>unreg_parameter_packet</span>).<span class='ident'>is_ok</span>());
     }
 }

@@ -226,7 +226,7 @@
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>test_utils</span>;
 
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>errors</span>::<span class='ident'>CoreError</span>;
-<span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::{<span class='ident'>serialise</span>, <span class='ident'>deserialise</span>};
+<span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::{<span class='ident'>deserialise</span>, <span class='ident'>serialise</span>};
 <span class='kw'>use</span> <span class='ident'>rand</span>::<span class='ident'>Rng</span>;
 <span class='kw'>use</span> <span class='ident'>sodiumoxide</span>::<span class='ident'>crypto</span>::{<span class='ident'>box_</span>, <span class='ident'>secretbox</span>};
 
@@ -324,9 +324,9 @@
 
         <span class='comment'>// Encrypt</span>
         <span class='kw'>let</span> <span class='ident'>cipher_text_0</span> <span class='op'>=</span>
-            <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>hybrid_encrypt</span>(<span class='kw-2'>&amp;</span><span class='ident'>plain_text_0</span>[..], <span class='kw-2'>&amp;</span><span class='ident'>nonce</span>, <span class='kw-2'>&amp;</span><span class='ident'>public_key</span>, <span class='kw-2'>&amp;</span><span class='ident'>secret_key</span>));
+            <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>hybrid_encrypt</span>(<span class='kw-2'>&amp;</span><span class='ident'>plain_text_0</span>[..], <span class='kw-2'>&amp;</span><span class='ident'>nonce</span>, <span class='kw-2'>&amp;</span><span class='ident'>public_key</span>, <span class='kw-2'>&amp;</span><span class='ident'>secret_key</span>));
         <span class='kw'>let</span> <span class='ident'>cipher_text_1</span> <span class='op'>=</span>
-            <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>hybrid_encrypt</span>(<span class='kw-2'>&amp;</span><span class='ident'>plain_text_1</span>[..], <span class='kw-2'>&amp;</span><span class='ident'>nonce</span>, <span class='kw-2'>&amp;</span><span class='ident'>public_key</span>, <span class='kw-2'>&amp;</span><span class='ident'>secret_key</span>));
+            <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>hybrid_encrypt</span>(<span class='kw-2'>&amp;</span><span class='ident'>plain_text_1</span>[..], <span class='kw-2'>&amp;</span><span class='ident'>nonce</span>, <span class='kw-2'>&amp;</span><span class='ident'>public_key</span>, <span class='kw-2'>&amp;</span><span class='ident'>secret_key</span>));
 
         <span class='comment'>// Same Plain Texts</span>
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>plain_text_0</span>, <span class='ident'>plain_text_1</span>);
@@ -336,9 +336,9 @@
 
         <span class='comment'>// Decrypt</span>
         <span class='kw'>let</span> <span class='ident'>deciphered_plain_text_0</span> <span class='op'>=</span>
-            <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>hybrid_decrypt</span>(<span class='kw-2'>&amp;</span><span class='ident'>cipher_text_0</span>, <span class='kw-2'>&amp;</span><span class='ident'>nonce</span>, <span class='kw-2'>&amp;</span><span class='ident'>public_key</span>, <span class='kw-2'>&amp;</span><span class='ident'>secret_key</span>));
+            <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>hybrid_decrypt</span>(<span class='kw-2'>&amp;</span><span class='ident'>cipher_text_0</span>, <span class='kw-2'>&amp;</span><span class='ident'>nonce</span>, <span class='kw-2'>&amp;</span><span class='ident'>public_key</span>, <span class='kw-2'>&amp;</span><span class='ident'>secret_key</span>));
         <span class='kw'>let</span> <span class='ident'>deciphered_plain_text_1</span> <span class='op'>=</span>
-            <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>hybrid_decrypt</span>(<span class='kw-2'>&amp;</span><span class='ident'>cipher_text_1</span>, <span class='kw-2'>&amp;</span><span class='ident'>nonce</span>, <span class='kw-2'>&amp;</span><span class='ident'>public_key</span>, <span class='kw-2'>&amp;</span><span class='ident'>secret_key</span>));
+            <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>hybrid_decrypt</span>(<span class='kw-2'>&amp;</span><span class='ident'>cipher_text_1</span>, <span class='kw-2'>&amp;</span><span class='ident'>nonce</span>, <span class='kw-2'>&amp;</span><span class='ident'>public_key</span>, <span class='kw-2'>&amp;</span><span class='ident'>secret_key</span>));
 
         <span class='comment'>// Should have decrypted to the same Plain Texts</span>
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>plain_text_0</span>, <span class='ident'>deciphered_plain_text_0</span>);
@@ -348,9 +348,9 @@
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>random_string</span>() {
         <span class='kw'>const</span> <span class='ident'>SIZE</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>10</span>;
-        <span class='kw'>let</span> <span class='ident'>str0</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>generate_random_string</span>(<span class='ident'>SIZE</span>));
-        <span class='kw'>let</span> <span class='ident'>str1</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>generate_random_string</span>(<span class='ident'>SIZE</span>));
-        <span class='kw'>let</span> <span class='ident'>str2</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>generate_random_string</span>(<span class='ident'>SIZE</span>));
+        <span class='kw'>let</span> <span class='ident'>str0</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>generate_random_string</span>(<span class='ident'>SIZE</span>));
+        <span class='kw'>let</span> <span class='ident'>str1</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>generate_random_string</span>(<span class='ident'>SIZE</span>));
+        <span class='kw'>let</span> <span class='ident'>str2</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>generate_random_string</span>(<span class='ident'>SIZE</span>));
 
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>str0</span> <span class='op'>!=</span> <span class='ident'>str1</span>);
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>str0</span> <span class='op'>!=</span> <span class='ident'>str2</span>);
@@ -360,9 +360,9 @@
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>random_vector</span>() {
         <span class='kw'>const</span> <span class='ident'>SIZE</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>10</span>;
-        <span class='kw'>let</span> <span class='ident'>vec0</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>generate_random_vector</span>::<span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>(<span class='ident'>SIZE</span>));
-        <span class='kw'>let</span> <span class='ident'>vec1</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>generate_random_vector</span>::<span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>(<span class='ident'>SIZE</span>));
-        <span class='kw'>let</span> <span class='ident'>vec2</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>generate_random_vector</span>::<span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>(<span class='ident'>SIZE</span>));
+        <span class='kw'>let</span> <span class='ident'>vec0</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>generate_random_vector</span>::<span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>(<span class='ident'>SIZE</span>));
+        <span class='kw'>let</span> <span class='ident'>vec1</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>generate_random_vector</span>::<span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>(<span class='ident'>SIZE</span>));
+        <span class='kw'>let</span> <span class='ident'>vec2</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>generate_random_vector</span>::<span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>(<span class='ident'>SIZE</span>));
 
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>vec0</span> <span class='op'>!=</span> <span class='ident'>vec1</span>);
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>vec0</span> <span class='op'>!=</span> <span class='ident'>vec2</span>);

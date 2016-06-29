@@ -254,10 +254,10 @@
         }
         <span class='string'>&quot;get-file-metadata&quot;</span> <span class='op'>=&gt;</span> {
             <span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>parse_result</span><span class='macro'>!</span>(<span class='ident'>decoder</span>.<span class='ident'>read_struct_field</span>(<span class='string'>&quot;data&quot;</span>, <span class='number'>0</span>, <span class='op'>|</span><span class='ident'>d</span><span class='op'>|</span> {
-                                          <span class='ident'>get_file_metadata</span>::<span class='ident'>GetFileMetadata</span>::<span class='ident'>decode</span>(<span class='ident'>d</span>)
-                                       }),
-                                       <span class='string'>&quot;&quot;</span>)))
-         }
+                                            <span class='ident'>get_file_metadata</span>::<span class='ident'>GetFileMetadata</span>::<span class='ident'>decode</span>(<span class='ident'>d</span>)
+                                        }),
+                                        <span class='string'>&quot;&quot;</span>)))
+        }
         _ <span class='op'>=&gt;</span> {
             <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>FfiError</span>::<span class='ident'>SpecificParseError</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;Unsupported action {:?} for this \
                                                              endpoint.&quot;</span>,

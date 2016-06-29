@@ -146,9 +146,6 @@
 <span id="102">102</span>
 <span id="103">103</span>
 <span id="104">104</span>
-<span id="105">105</span>
-<span id="106">106</span>
-<span id="107">107</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -168,7 +165,7 @@
 <span class='comment'>// relating to use of the SAFE Network Software.</span>
 
 <span class='kw'>use</span> <span class='ident'>dns</span>::<span class='ident'>dns_operations</span>::<span class='ident'>DnsOperations</span>;
-<span class='kw'>use</span> <span class='ident'>ffi</span>::{<span class='ident'>helper</span>, <span class='ident'>Action</span>, <span class='ident'>ParameterPacket</span>, <span class='ident'>ResponseType</span>};
+<span class='kw'>use</span> <span class='ident'>ffi</span>::{<span class='ident'>Action</span>, <span class='ident'>ParameterPacket</span>, <span class='ident'>ResponseType</span>, <span class='ident'>helper</span>};
 <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>errors</span>::<span class='ident'>FfiError</span>;
 <span class='kw'>use</span> <span class='ident'>sodiumoxide</span>::<span class='ident'>crypto</span>::<span class='ident'>box_</span>;
 
@@ -202,10 +199,9 @@
 
         <span class='kw'>let</span> (<span class='ident'>msg_public_key</span>, <span class='ident'>msg_secret_key</span>) <span class='op'>=</span> <span class='ident'>box_</span>::<span class='ident'>gen_keypair</span>();
         <span class='kw'>let</span> <span class='ident'>services</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[(<span class='self'>self</span>.<span class='ident'>service_name</span>.<span class='ident'>clone</span>(), (<span class='ident'>dir_to_map</span>.<span class='ident'>get_key</span>().<span class='ident'>clone</span>()))];
-        <span class='kw'>let</span> <span class='ident'>public_signing_key</span> <span class='op'>=</span>
-            <span class='op'>*</span><span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>params</span>.<span class='ident'>client</span>.<span class='ident'>lock</span>()).<span class='ident'>get_public_signing_key</span>());
-        <span class='kw'>let</span> <span class='ident'>secret_signing_key</span> <span class='op'>=</span>
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>params</span>.<span class='ident'>client</span>.<span class='ident'>lock</span>()).<span class='ident'>get_secret_signing_key</span>()).<span class='ident'>clone</span>();
+        <span class='kw'>let</span> <span class='ident'>public_signing_key</span> <span class='op'>=</span> <span class='op'>*</span><span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>params</span>.<span class='ident'>client</span>.<span class='ident'>lock</span>()).<span class='ident'>get_public_signing_key</span>());
+        <span class='kw'>let</span> <span class='ident'>secret_signing_key</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>params</span>.<span class='ident'>client</span>.<span class='ident'>lock</span>()).<span class='ident'>get_secret_signing_key</span>())
+            .<span class='ident'>clone</span>();
         <span class='kw'>let</span> <span class='ident'>dns_operation</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>DnsOperations</span>::<span class='ident'>new</span>(<span class='ident'>params</span>.<span class='ident'>client</span>
             .<span class='ident'>clone</span>()));
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dns_operation</span>.<span class='ident'>register_dns</span>(<span class='self'>self</span>.<span class='ident'>long_name</span>.<span class='ident'>clone</span>(),
@@ -232,20 +228,18 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>register_dns</span>() {
-        <span class='kw'>let</span> <span class='ident'>parameter_packet</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>get_parameter_packet</span>(<span class='boolval'>false</span>));
+        <span class='kw'>let</span> <span class='ident'>parameter_packet</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>get_parameter_packet</span>(<span class='boolval'>false</span>));
 
         <span class='kw'>let</span> <span class='ident'>dir_helper</span> <span class='op'>=</span> <span class='ident'>DirectoryHelper</span>::<span class='ident'>new</span>(<span class='ident'>parameter_packet</span>.<span class='ident'>client</span>.<span class='ident'>clone</span>());
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>app_root_dir</span> <span class='op'>=</span>
-            <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>dir_helper</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='macro'>unwrap_option</span><span class='macro'>!</span>(<span class='ident'>parameter_packet</span>.<span class='ident'>clone</span>()
-                                                              .<span class='ident'>app_root_dir_key</span>,
-                                                          <span class='string'>&quot;&quot;</span>)));
-        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>dir_helper</span>.<span class='ident'>create</span>(<span class='ident'>TEST_DIR_NAME</span>.<span class='ident'>to_string</span>(),
-                                                 <span class='ident'>UNVERSIONED_DIRECTORY_LISTING_TAG</span>,
-                                                 <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
-                                                 <span class='boolval'>false</span>,
-                                                 <span class='ident'>AccessLevel</span>::<span class='ident'>Public</span>,
-                                                 <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>app_root_dir</span>)));
-        <span class='kw'>let</span> <span class='ident'>public_name</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>app_root_dir</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>dir_helper</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>parameter_packet</span>.<span class='ident'>clone</span>()
+            .<span class='ident'>app_root_dir_key</span>)));
+        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>dir_helper</span>.<span class='ident'>create</span>(<span class='ident'>TEST_DIR_NAME</span>.<span class='ident'>to_string</span>(),
+                                          <span class='ident'>UNVERSIONED_DIRECTORY_LISTING_TAG</span>,
+                                          <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
+                                          <span class='boolval'>false</span>,
+                                          <span class='ident'>AccessLevel</span>::<span class='ident'>Public</span>,
+                                          <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>app_root_dir</span>)));
+        <span class='kw'>let</span> <span class='ident'>public_name</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>request</span> <span class='op'>=</span> <span class='ident'>RegisterDns</span> {
             <span class='ident'>long_name</span>: <span class='ident'>public_name</span>,
             <span class='ident'>service_name</span>: <span class='string'>&quot;www&quot;</span>.<span class='ident'>to_string</span>(),

@@ -437,10 +437,6 @@
 <span id="393">393</span>
 <span id="394">394</span>
 <span id="395">395</span>
-<span id="396">396</span>
-<span id="397">397</span>
-<span id="398">398</span>
-<span id="399">399</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -466,8 +462,8 @@
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>SelfEncryptionStorage</span>;
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>structured_data_operations</span>::{<span class='self'>self</span>, <span class='ident'>DataFitResult</span>};
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>utility</span>;
-<span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::{<span class='ident'>serialise</span>, <span class='ident'>deserialise</span>};
-<span class='kw'>use</span> <span class='ident'>routing</span>::{<span class='ident'>StructuredData</span>, <span class='ident'>ImmutableData</span>, <span class='ident'>Data</span>, <span class='ident'>DataIdentifier</span>, <span class='ident'>XorName</span>};
+<span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::{<span class='ident'>deserialise</span>, <span class='ident'>serialise</span>};
+<span class='kw'>use</span> <span class='ident'>routing</span>::{<span class='ident'>Data</span>, <span class='ident'>DataIdentifier</span>, <span class='ident'>ImmutableData</span>, <span class='ident'>StructuredData</span>, <span class='ident'>XorName</span>};
 <span class='kw'>use</span> <span class='ident'>self_encryption</span>::{<span class='ident'>DataMap</span>, <span class='ident'>SelfEncryptor</span>};
 <span class='kw'>use</span> <span class='ident'>sodiumoxide</span>::<span class='ident'>crypto</span>::{<span class='ident'>box_</span>, <span class='ident'>sign</span>};
 
@@ -535,7 +531,7 @@
                     <span class='kw'>let</span> <span class='ident'>immutable_data</span> <span class='op'>=</span> <span class='ident'>ImmutableData</span>::<span class='ident'>new</span>(<span class='ident'>data_to_store</span>);
                     <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='ident'>immutable_data</span>.<span class='ident'>name</span>();
                     <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='ident'>Data</span>::<span class='ident'>Immutable</span>(<span class='ident'>immutable_data</span>);
-                    <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>lock</span>()).<span class='ident'>put_recover</span>(<span class='ident'>data</span>, <span class='prelude-val'>None</span>));
+                    <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>lock</span>()).<span class='ident'>put_recover</span>(<span class='ident'>data</span>, <span class='prelude-val'>None</span>));
 
                     <span class='kw'>let</span> <span class='ident'>data_to_store</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>get_encoded_data_to_store</span>(
                         <span class='ident'>DataTypeEncoding</span>::<span class='ident'>MapName</span>(<span class='ident'>name</span>), <span class='ident'>data_encryption_keys</span>));
@@ -578,7 +574,7 @@
         }
         <span class='ident'>DataTypeEncoding</span>::<span class='ident'>MapName</span>(<span class='ident'>data_map_name</span>) <span class='op'>=&gt;</span> {
             <span class='kw'>let</span> <span class='ident'>request</span> <span class='op'>=</span> <span class='ident'>DataIdentifier</span>::<span class='ident'>Immutable</span>(<span class='ident'>data_map_name</span>);
-            <span class='kw'>let</span> <span class='ident'>response_getter</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>lock</span>()).<span class='ident'>get</span>(<span class='ident'>request</span>, <span class='prelude-val'>None</span>));
+            <span class='kw'>let</span> <span class='ident'>response_getter</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>lock</span>()).<span class='ident'>get</span>(<span class='ident'>request</span>, <span class='prelude-val'>None</span>));
             <span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>response_getter</span>.<span class='ident'>get</span>()) {
                 <span class='ident'>Data</span>::<span class='ident'>Immutable</span>(<span class='ident'>immutable_data</span>) <span class='op'>=&gt;</span> {
                     <span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>get_decoded_stored_data</span>(<span class='kw-2'>&amp;</span><span class='ident'>immutable_data</span>.<span class='ident'>value</span>(),
@@ -648,14 +644,14 @@
     <span class='kw'>fn</span> <span class='ident'>create_and_get_unversioned_structured_data</span>() {
         <span class='kw'>let</span> <span class='ident'>keys</span> <span class='op'>=</span> <span class='ident'>box_</span>::<span class='ident'>gen_keypair</span>();
         <span class='kw'>let</span> <span class='ident'>data_decryption_keys</span> <span class='op'>=</span> (<span class='kw-2'>&amp;</span><span class='ident'>keys</span>.<span class='number'>0</span>, <span class='kw-2'>&amp;</span><span class='ident'>keys</span>.<span class='number'>1</span>, <span class='kw-2'>&amp;</span><span class='ident'>box_</span>::<span class='ident'>gen_nonce</span>());
-        <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='ident'>Mutex</span>::<span class='ident'>new</span>(<span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>get_client</span>())));
+        <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='ident'>Mutex</span>::<span class='ident'>new</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>get_client</span>())));
         <span class='comment'>// Empty Data</span>
         {
             <span class='kw'>let</span> <span class='ident'>id</span>: <span class='ident'>XorName</span> <span class='op'>=</span> <span class='ident'>rand</span>::<span class='ident'>random</span>();
             <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>new</span>();
             <span class='kw'>let</span> <span class='ident'>owners</span> <span class='op'>=</span> <span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>get_max_sized_public_keys</span>(<span class='number'>1</span>);
             <span class='kw'>let</span> <span class='ident'>prev_owners</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>new</span>();
-            <span class='kw'>let</span> <span class='kw-2'>ref</span> <span class='ident'>secret_key</span> <span class='op'>=</span> <span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>get_max_sized_secret_keys</span>(<span class='number'>1</span>)[<span class='number'>0</span>];
+            <span class='kw'>let</span> <span class='ident'>secret_key</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>get_max_sized_secret_keys</span>(<span class='number'>1</span>)[<span class='number'>0</span>];
             <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>create</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(),
                                 <span class='ident'>TAG_ID</span>,
                                 <span class='ident'>id</span>,
@@ -665,7 +661,7 @@
                                 <span class='ident'>prev_owners</span>.<span class='ident'>clone</span>(),
                                 <span class='ident'>secret_key</span>,
                                 <span class='prelude-val'>None</span>);
-            <span class='kw'>match</span> <span class='ident'>get_data</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(), <span class='kw-2'>&amp;</span><span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>result</span>), <span class='prelude-val'>None</span>) {
+            <span class='kw'>match</span> <span class='ident'>get_data</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(), <span class='kw-2'>&amp;</span><span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>result</span>), <span class='prelude-val'>None</span>) {
                 <span class='prelude-val'>Ok</span>(<span class='ident'>fetched_data</span>) <span class='op'>=&gt;</span> <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>fetched_data</span>, <span class='ident'>data</span>),
                 <span class='prelude-val'>Err</span>(_) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Failed to fetch&quot;</span>),
             }
@@ -676,7 +672,7 @@
             <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>new</span>();
             <span class='kw'>let</span> <span class='ident'>owners</span> <span class='op'>=</span> <span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>get_max_sized_public_keys</span>(<span class='number'>1</span>);
             <span class='kw'>let</span> <span class='ident'>prev_owners</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>new</span>();
-            <span class='kw'>let</span> <span class='kw-2'>ref</span> <span class='ident'>secret_key</span> <span class='op'>=</span> <span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>get_max_sized_secret_keys</span>(<span class='number'>1</span>)[<span class='number'>0</span>];
+            <span class='kw'>let</span> <span class='ident'>secret_key</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>get_max_sized_secret_keys</span>(<span class='number'>1</span>)[<span class='number'>0</span>];
             <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>create</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(),
                                 <span class='ident'>TAG_ID</span>,
                                 <span class='ident'>id</span>,
@@ -686,9 +682,7 @@
                                 <span class='ident'>prev_owners</span>.<span class='ident'>clone</span>(),
                                 <span class='ident'>secret_key</span>,
                                 <span class='prelude-val'>Some</span>(<span class='ident'>data_decryption_keys</span>));
-            <span class='kw'>match</span> <span class='ident'>get_data</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(),
-                           <span class='kw-2'>&amp;</span><span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>result</span>),
-                           <span class='prelude-val'>Some</span>(<span class='ident'>data_decryption_keys</span>)) {
+            <span class='kw'>match</span> <span class='ident'>get_data</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(), <span class='kw-2'>&amp;</span><span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>result</span>), <span class='prelude-val'>Some</span>(<span class='ident'>data_decryption_keys</span>)) {
                 <span class='prelude-val'>Ok</span>(<span class='ident'>fetched_data</span>) <span class='op'>=&gt;</span> <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>fetched_data</span>, <span class='ident'>data</span>),
                 <span class='prelude-val'>Err</span>(_) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Failed to fetch&quot;</span>),
             }
@@ -699,7 +693,7 @@
             <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>99u8</span>; <span class='number'>1024</span> <span class='op'>*</span> <span class='number'>75</span>];
             <span class='kw'>let</span> <span class='ident'>owners</span> <span class='op'>=</span> <span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>get_max_sized_public_keys</span>(<span class='number'>1</span>);
             <span class='kw'>let</span> <span class='ident'>prev_owners</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>new</span>();
-            <span class='kw'>let</span> <span class='kw-2'>ref</span> <span class='ident'>secret_key</span> <span class='op'>=</span> <span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>get_max_sized_secret_keys</span>(<span class='number'>1</span>)[<span class='number'>0</span>];
+            <span class='kw'>let</span> <span class='ident'>secret_key</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>get_max_sized_secret_keys</span>(<span class='number'>1</span>)[<span class='number'>0</span>];
             <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>create</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(),
                                 <span class='ident'>TAG_ID</span>,
                                 <span class='ident'>id</span>,
@@ -709,7 +703,7 @@
                                 <span class='ident'>prev_owners</span>.<span class='ident'>clone</span>(),
                                 <span class='ident'>secret_key</span>,
                                 <span class='prelude-val'>None</span>);
-            <span class='kw'>match</span> <span class='ident'>get_data</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(), <span class='kw-2'>&amp;</span><span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>result</span>), <span class='prelude-val'>None</span>) {
+            <span class='kw'>match</span> <span class='ident'>get_data</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(), <span class='kw-2'>&amp;</span><span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>result</span>), <span class='prelude-val'>None</span>) {
                 <span class='prelude-val'>Ok</span>(<span class='ident'>fetched_data</span>) <span class='op'>=&gt;</span> <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>data</span>.<span class='ident'>len</span>(), <span class='ident'>fetched_data</span>.<span class='ident'>len</span>()),
                 <span class='prelude-val'>Err</span>(_) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Failed to fetch&quot;</span>),
             }
@@ -720,7 +714,7 @@
             <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>99u8</span>; <span class='number'>1024</span> <span class='op'>*</span> <span class='number'>75</span>];
             <span class='kw'>let</span> <span class='ident'>owners</span> <span class='op'>=</span> <span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>get_max_sized_public_keys</span>(<span class='number'>200</span>);
             <span class='kw'>let</span> <span class='ident'>prev_owners</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>new</span>();
-            <span class='kw'>let</span> <span class='kw-2'>ref</span> <span class='ident'>secret_key</span> <span class='op'>=</span> <span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>get_max_sized_secret_keys</span>(<span class='number'>1</span>)[<span class='number'>0</span>];
+            <span class='kw'>let</span> <span class='ident'>secret_key</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>get_max_sized_secret_keys</span>(<span class='number'>1</span>)[<span class='number'>0</span>];
             <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>create</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(),
                                 <span class='ident'>TAG_ID</span>,
                                 <span class='ident'>id</span>,
@@ -730,7 +724,7 @@
                                 <span class='ident'>prev_owners</span>.<span class='ident'>clone</span>(),
                                 <span class='ident'>secret_key</span>,
                                 <span class='prelude-val'>None</span>);
-            <span class='kw'>match</span> <span class='ident'>get_data</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(), <span class='kw-2'>&amp;</span><span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>result</span>), <span class='prelude-val'>None</span>) {
+            <span class='kw'>match</span> <span class='ident'>get_data</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(), <span class='kw-2'>&amp;</span><span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>result</span>), <span class='prelude-val'>None</span>) {
                 <span class='prelude-val'>Ok</span>(<span class='ident'>fetched_data</span>) <span class='op'>=&gt;</span> <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>fetched_data</span>, <span class='ident'>data</span>),
                 <span class='prelude-val'>Err</span>(_) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Failed to fetch&quot;</span>),
             }
@@ -741,7 +735,7 @@
             <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>99u8</span>; <span class='number'>1024</span> <span class='op'>*</span> <span class='number'>75</span>];
             <span class='kw'>let</span> <span class='ident'>owners</span> <span class='op'>=</span> <span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>get_max_sized_public_keys</span>(<span class='number'>903</span>);
             <span class='kw'>let</span> <span class='ident'>prev_owners</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>new</span>();
-            <span class='kw'>let</span> <span class='kw-2'>ref</span> <span class='ident'>secret_key</span> <span class='op'>=</span> <span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>get_max_sized_secret_keys</span>(<span class='number'>1</span>)[<span class='number'>0</span>];
+            <span class='kw'>let</span> <span class='ident'>secret_key</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>get_max_sized_secret_keys</span>(<span class='number'>1</span>)[<span class='number'>0</span>];
             <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>create</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(),
                                 <span class='ident'>TAG_ID</span>,
                                 <span class='ident'>id</span>,
@@ -751,7 +745,7 @@
                                 <span class='ident'>prev_owners</span>.<span class='ident'>clone</span>(),
                                 <span class='ident'>secret_key</span>,
                                 <span class='prelude-val'>None</span>);
-            <span class='kw'>match</span> <span class='ident'>get_data</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(), <span class='kw-2'>&amp;</span><span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>result</span>), <span class='prelude-val'>None</span>) {
+            <span class='kw'>match</span> <span class='ident'>get_data</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(), <span class='kw-2'>&amp;</span><span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>result</span>), <span class='prelude-val'>None</span>) {
                 <span class='prelude-val'>Ok</span>(<span class='ident'>fetched_data</span>) <span class='op'>=&gt;</span> <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>fetched_data</span>, <span class='ident'>data</span>),
                 <span class='prelude-val'>Err</span>(_) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Failed to fetch&quot;</span>),
             }
@@ -762,7 +756,7 @@
             <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>99u8</span>; <span class='number'>1024</span> <span class='op'>*</span> <span class='number'>75</span>];
             <span class='kw'>let</span> <span class='ident'>owners</span> <span class='op'>=</span> <span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>get_max_sized_public_keys</span>(<span class='number'>900</span>);
             <span class='kw'>let</span> <span class='ident'>prev_owners</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>new</span>();
-            <span class='kw'>let</span> <span class='kw-2'>ref</span> <span class='ident'>secret_key</span> <span class='op'>=</span> <span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>get_max_sized_secret_keys</span>(<span class='number'>1</span>)[<span class='number'>0</span>];
+            <span class='kw'>let</span> <span class='ident'>secret_key</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>get_max_sized_secret_keys</span>(<span class='number'>1</span>)[<span class='number'>0</span>];
             <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>create</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(),
                                 <span class='ident'>TAG_ID</span>,
                                 <span class='ident'>id</span>,
@@ -772,9 +766,7 @@
                                 <span class='ident'>prev_owners</span>.<span class='ident'>clone</span>(),
                                 <span class='ident'>secret_key</span>,
                                 <span class='prelude-val'>Some</span>(<span class='ident'>data_decryption_keys</span>));
-            <span class='kw'>match</span> <span class='ident'>get_data</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(),
-                           <span class='kw-2'>&amp;</span><span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>result</span>),
-                           <span class='prelude-val'>Some</span>(<span class='ident'>data_decryption_keys</span>)) {
+            <span class='kw'>match</span> <span class='ident'>get_data</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(), <span class='kw-2'>&amp;</span><span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>result</span>), <span class='prelude-val'>Some</span>(<span class='ident'>data_decryption_keys</span>)) {
                 <span class='prelude-val'>Ok</span>(<span class='ident'>fetched_data</span>) <span class='op'>=&gt;</span> <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>fetched_data</span>, <span class='ident'>data</span>),
                 <span class='prelude-val'>Err</span>(_) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Failed to fetch&quot;</span>),
             }
@@ -785,7 +777,7 @@
             <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>99u8</span>; <span class='number'>1024</span> <span class='op'>*</span> <span class='number'>80</span>];
             <span class='kw'>let</span> <span class='ident'>owners</span> <span class='op'>=</span> <span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>get_max_sized_public_keys</span>(<span class='number'>905</span>);
             <span class='kw'>let</span> <span class='ident'>prev_owners</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>new</span>();
-            <span class='kw'>let</span> <span class='kw-2'>ref</span> <span class='ident'>secret_key</span> <span class='op'>=</span> <span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>get_max_sized_secret_keys</span>(<span class='number'>1</span>)[<span class='number'>0</span>];
+            <span class='kw'>let</span> <span class='ident'>secret_key</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>get_max_sized_secret_keys</span>(<span class='number'>1</span>)[<span class='number'>0</span>];
             <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>create</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(),
                                 <span class='ident'>TAG_ID</span>,
                                 <span class='ident'>id</span>,
@@ -803,7 +795,7 @@
             <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>99u8</span>; <span class='number'>102400</span>];
             <span class='kw'>let</span> <span class='ident'>owners</span> <span class='op'>=</span> <span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>get_max_sized_public_keys</span>(<span class='number'>1</span>);
             <span class='kw'>let</span> <span class='ident'>prev_owners</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>new</span>();
-            <span class='kw'>let</span> <span class='kw-2'>ref</span> <span class='ident'>secret_key</span> <span class='op'>=</span> <span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>get_max_sized_secret_keys</span>(<span class='number'>1</span>)[<span class='number'>0</span>];
+            <span class='kw'>let</span> <span class='ident'>secret_key</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>get_max_sized_secret_keys</span>(<span class='number'>1</span>)[<span class='number'>0</span>];
             <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>create</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(),
                                 <span class='ident'>TAG_ID</span>,
                                 <span class='ident'>id</span>,
@@ -813,7 +805,7 @@
                                 <span class='ident'>prev_owners</span>.<span class='ident'>clone</span>(),
                                 <span class='ident'>secret_key</span>,
                                 <span class='prelude-val'>None</span>);
-            <span class='kw'>match</span> <span class='ident'>get_data</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(), <span class='kw-2'>&amp;</span><span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>result</span>), <span class='prelude-val'>None</span>) {
+            <span class='kw'>match</span> <span class='ident'>get_data</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(), <span class='kw-2'>&amp;</span><span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>result</span>), <span class='prelude-val'>None</span>) {
                 <span class='prelude-val'>Ok</span>(<span class='ident'>fetched_data</span>) <span class='op'>=&gt;</span> <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>fetched_data</span>, <span class='ident'>data</span>),
                 <span class='prelude-val'>Err</span>(_) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Failed to fetch&quot;</span>),
             }
@@ -824,7 +816,7 @@
             <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>99u8</span>; <span class='number'>204801</span>];
             <span class='kw'>let</span> <span class='ident'>owners</span> <span class='op'>=</span> <span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>get_max_sized_public_keys</span>(<span class='number'>1</span>);
             <span class='kw'>let</span> <span class='ident'>prev_owners</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>new</span>();
-            <span class='kw'>let</span> <span class='kw-2'>ref</span> <span class='ident'>secret_key</span> <span class='op'>=</span> <span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>get_max_sized_secret_keys</span>(<span class='number'>1</span>)[<span class='number'>0</span>];
+            <span class='kw'>let</span> <span class='ident'>secret_key</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>get_max_sized_secret_keys</span>(<span class='number'>1</span>)[<span class='number'>0</span>];
             <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>create</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(),
                                 <span class='ident'>TAG_ID</span>,
                                 <span class='ident'>id</span>,
@@ -834,7 +826,7 @@
                                 <span class='ident'>prev_owners</span>.<span class='ident'>clone</span>(),
                                 <span class='ident'>secret_key</span>,
                                 <span class='prelude-val'>None</span>);
-            <span class='kw'>match</span> <span class='ident'>get_data</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(), <span class='kw-2'>&amp;</span><span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>result</span>), <span class='prelude-val'>None</span>) {
+            <span class='kw'>match</span> <span class='ident'>get_data</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(), <span class='kw-2'>&amp;</span><span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>result</span>), <span class='prelude-val'>None</span>) {
                 <span class='prelude-val'>Ok</span>(<span class='ident'>fetched_data</span>) <span class='op'>=&gt;</span> <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>fetched_data</span>, <span class='ident'>data</span>),
                 <span class='prelude-val'>Err</span>(_) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Failed to fetch&quot;</span>),
             }

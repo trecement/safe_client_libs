@@ -169,7 +169,6 @@
 <span id="125">125</span>
 <span id="126">126</span>
 <span id="127">127</span>
-<span id="128">128</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -188,7 +187,7 @@
 <span class='comment'>// Please review the Licences for the specific language governing permissions and limitations</span>
 <span class='comment'>// relating to use of the SAFE Network Software.</span>
 
-<span class='kw'>use</span> <span class='ident'>ffi</span>::{<span class='ident'>helper</span>, <span class='ident'>ParameterPacket</span>, <span class='ident'>ResponseType</span>, <span class='ident'>Action</span>};
+<span class='kw'>use</span> <span class='ident'>ffi</span>::{<span class='ident'>Action</span>, <span class='ident'>ParameterPacket</span>, <span class='ident'>ResponseType</span>, <span class='ident'>helper</span>};
 <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>errors</span>::<span class='ident'>FfiError</span>;
 <span class='kw'>use</span> <span class='ident'>nfs</span>::{<span class='ident'>AccessLevel</span>, <span class='ident'>UNVERSIONED_DIRECTORY_LISTING_TAG</span>, <span class='ident'>VERSIONED_DIRECTORY_LISTING_TAG</span>};
 <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>helper</span>::<span class='ident'>directory_helper</span>::<span class='ident'>DirectoryHelper</span>;
@@ -261,7 +260,7 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>create_dir</span>() {
-        <span class='kw'>let</span> <span class='ident'>parameter_packet</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>test_utils</span>::<span class='ident'>get_parameter_packet</span>(<span class='boolval'>false</span>));
+        <span class='kw'>let</span> <span class='ident'>parameter_packet</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>test_utils</span>::<span class='ident'>get_parameter_packet</span>(<span class='boolval'>false</span>));
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>request</span> <span class='op'>=</span> <span class='ident'>CreateDir</span> {
             <span class='ident'>dir_path</span>: <span class='string'>&quot;/&quot;</span>.<span class='ident'>to_string</span>(),
@@ -285,17 +284,16 @@
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>request</span>.<span class='ident'>execute</span>(<span class='ident'>parameter_packet</span>.<span class='ident'>clone</span>()).<span class='ident'>is_ok</span>());
 
         <span class='kw'>let</span> <span class='ident'>dir_helper</span> <span class='op'>=</span> <span class='ident'>DirectoryHelper</span>::<span class='ident'>new</span>(<span class='ident'>parameter_packet</span>.<span class='ident'>clone</span>().<span class='ident'>client</span>);
-        <span class='kw'>let</span> <span class='ident'>app_dir</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>dir_helper</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='macro'>unwrap_option</span><span class='macro'>!</span>(<span class='ident'>parameter_packet</span>.<span class='ident'>clone</span>()
-                                                                        .<span class='ident'>app_root_dir_key</span>,
-                                                                    <span class='string'>&quot;&quot;</span>)));
+        <span class='kw'>let</span> <span class='ident'>app_dir</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>dir_helper</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>parameter_packet</span>.<span class='ident'>clone</span>()
+            .<span class='ident'>app_root_dir_key</span>)));
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>app_dir</span>.<span class='ident'>find_sub_directory</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;test_dir&quot;</span>.<span class='ident'>to_string</span>()).<span class='ident'>is_some</span>());
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>app_dir</span>.<span class='ident'>find_sub_directory</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;test_dir2&quot;</span>.<span class='ident'>to_string</span>()).<span class='ident'>is_some</span>());
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>app_dir</span>.<span class='ident'>get_sub_directories</span>().<span class='ident'>len</span>(), <span class='number'>2</span>);
 
-        <span class='kw'>let</span> <span class='ident'>test_dir_key</span> <span class='op'>=</span> <span class='macro'>unwrap_option</span><span class='macro'>!</span>(<span class='ident'>app_dir</span>.<span class='ident'>find_sub_directory</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;test_dir&quot;</span>.<span class='ident'>to_string</span>()),
-                                          <span class='string'>&quot;Directory not found&quot;</span>)
+        <span class='kw'>let</span> <span class='ident'>test_dir_key</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>app_dir</span>.<span class='ident'>find_sub_directory</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;test_dir&quot;</span>.<span class='ident'>to_string</span>()),
+                                   <span class='string'>&quot;Directory not found&quot;</span>)
             .<span class='ident'>get_key</span>();
-        <span class='kw'>let</span> <span class='ident'>test_dir</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>dir_helper</span>.<span class='ident'>get</span>(<span class='ident'>test_dir_key</span>));
+        <span class='kw'>let</span> <span class='ident'>test_dir</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>dir_helper</span>.<span class='ident'>get</span>(<span class='ident'>test_dir_key</span>));
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>test_dir</span>.<span class='ident'>find_sub_directory</span>(<span class='kw-2'>&amp;</span><span class='string'>&quot;secondlevel&quot;</span>.<span class='ident'>to_string</span>()).<span class='ident'>is_some</span>());
     }
 }

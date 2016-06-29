@@ -1054,13 +1054,6 @@
 <span id="1010">1010</span>
 <span id="1011">1011</span>
 <span id="1012">1012</span>
-<span id="1013">1013</span>
-<span id="1014">1014</span>
-<span id="1015">1015</span>
-<span id="1016">1016</span>
-<span id="1017">1017</span>
-<span id="1018">1018</span>
-<span id="1019">1019</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -1114,8 +1107,6 @@
 <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>non_networking_test_framework</span>::<span class='ident'>RoutingMock</span> <span class='kw'>as</span> <span class='ident'>Routing</span>;
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;use-mock-routing&quot;</span>))]</span>
 <span class='kw'>use</span> <span class='ident'>routing</span>::<span class='ident'>Client</span> <span class='kw'>as</span> <span class='ident'>Routing</span>;
-
-<span class='kw'>const</span> <span class='ident'>LOGIC_ERROR</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;Logic Error !! Report as bug.&quot;</span>;
 
 <span class='doccomment'>/// The main self-authentication client instance that will interface all the request from high</span>
 <span class='doccomment'>/// level API&#39;s to the actual routing layer and manage all interactions with it. This is</span>
@@ -1212,12 +1203,10 @@
 
         {
             <span class='kw'>let</span> <span class='ident'>account_version</span> <span class='op'>=</span> {
-                <span class='kw'>let</span> <span class='ident'>account</span> <span class='op'>=</span> <span class='macro'>unwrap_option</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>account</span>.<span class='ident'>as_ref</span>(), <span class='ident'>LOGIC_ERROR</span>);
-                <span class='kw'>let</span> <span class='ident'>session_packet_keys</span> <span class='op'>=</span> <span class='macro'>unwrap_option</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>session_packet_keys</span>.<span class='ident'>as_ref</span>(),
-                                                         <span class='ident'>LOGIC_ERROR</span>);
+                <span class='kw'>let</span> <span class='ident'>account</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>account</span>.<span class='ident'>as_ref</span>());
+                <span class='kw'>let</span> <span class='ident'>session_packet_keys</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>session_packet_keys</span>.<span class='ident'>as_ref</span>());
 
-                <span class='kw'>let</span> <span class='ident'>session_packet_id</span> <span class='op'>=</span> <span class='macro'>unwrap_option</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>session_packet_id</span>.<span class='ident'>as_ref</span>(),
-                                                       <span class='ident'>LOGIC_ERROR</span>);
+                <span class='kw'>let</span> <span class='ident'>session_packet_id</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>session_packet_id</span>.<span class='ident'>as_ref</span>());
                 <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>StructuredData</span>::<span class='ident'>new</span>(<span class='ident'>TYPE_TAG_SESSION_PACKET</span>,
                                          <span class='op'>*</span><span class='ident'>session_packet_id</span>,
                                          <span class='number'>0</span>,
@@ -1407,7 +1396,7 @@
         <span class='self'>self</span>.<span class='ident'>issued_gets</span> <span class='op'>+=</span> <span class='number'>1</span>;
 
         <span class='kw'>if</span> <span class='kw'>let</span> <span class='ident'>DataIdentifier</span>::<span class='ident'>Immutable</span>(..) <span class='op'>=</span> <span class='ident'>request_for</span> {
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>msg_queue</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>message_queue</span>.<span class='ident'>lock</span>());
+            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>msg_queue</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>message_queue</span>.<span class='ident'>lock</span>());
             <span class='kw'>if</span> <span class='ident'>msg_queue</span>.<span class='ident'>local_cache_check</span>(<span class='kw-2'>&amp;</span><span class='ident'>request_for</span>.<span class='ident'>name</span>()) {
                 <span class='kw'>return</span> <span class='prelude-val'>Ok</span>(<span class='ident'>GetResponseGetter</span>::<span class='ident'>new</span>(<span class='prelude-val'>None</span>, <span class='self'>self</span>.<span class='ident'>message_queue</span>.<span class='ident'>clone</span>(), <span class='ident'>request_for</span>));
             }
@@ -1420,7 +1409,7 @@
 
         <span class='kw'>let</span> (<span class='ident'>tx</span>, <span class='ident'>rx</span>) <span class='op'>=</span> <span class='ident'>mpsc</span>::<span class='ident'>channel</span>();
         <span class='kw'>let</span> <span class='ident'>msg_id</span> <span class='op'>=</span> <span class='ident'>MessageId</span>::<span class='ident'>new</span>();
-        <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>message_queue</span>.<span class='ident'>lock</span>()).<span class='ident'>register_response_observer</span>(<span class='ident'>msg_id</span>, <span class='ident'>tx</span>.<span class='ident'>clone</span>());
+        <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>message_queue</span>.<span class='ident'>lock</span>()).<span class='ident'>register_response_observer</span>(<span class='ident'>msg_id</span>, <span class='ident'>tx</span>.<span class='ident'>clone</span>());
 
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>routing</span>.<span class='ident'>send_get_request</span>(<span class='ident'>dst</span>, <span class='ident'>request_for</span>.<span class='ident'>clone</span>(), <span class='ident'>msg_id</span>));
 
@@ -1441,7 +1430,7 @@
 
         <span class='kw'>let</span> (<span class='ident'>tx</span>, <span class='ident'>rx</span>) <span class='op'>=</span> <span class='ident'>mpsc</span>::<span class='ident'>channel</span>();
         <span class='kw'>let</span> <span class='ident'>msg_id</span> <span class='op'>=</span> <span class='ident'>MessageId</span>::<span class='ident'>new</span>();
-        <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>message_queue</span>.<span class='ident'>lock</span>()).<span class='ident'>register_response_observer</span>(<span class='ident'>msg_id</span>, <span class='ident'>tx</span>.<span class='ident'>clone</span>());
+        <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>message_queue</span>.<span class='ident'>lock</span>()).<span class='ident'>register_response_observer</span>(<span class='ident'>msg_id</span>, <span class='ident'>tx</span>.<span class='ident'>clone</span>());
 
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>routing</span>.<span class='ident'>send_put_request</span>(<span class='ident'>dst</span>, <span class='ident'>data</span>, <span class='ident'>msg_id</span>));
 
@@ -1516,7 +1505,7 @@
 
         <span class='kw'>let</span> (<span class='ident'>tx</span>, <span class='ident'>rx</span>) <span class='op'>=</span> <span class='ident'>mpsc</span>::<span class='ident'>channel</span>();
         <span class='kw'>let</span> <span class='ident'>msg_id</span> <span class='op'>=</span> <span class='ident'>MessageId</span>::<span class='ident'>new</span>();
-        <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>message_queue</span>.<span class='ident'>lock</span>()).<span class='ident'>register_response_observer</span>(<span class='ident'>msg_id</span>, <span class='ident'>tx</span>.<span class='ident'>clone</span>());
+        <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>message_queue</span>.<span class='ident'>lock</span>()).<span class='ident'>register_response_observer</span>(<span class='ident'>msg_id</span>, <span class='ident'>tx</span>.<span class='ident'>clone</span>());
 
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>routing</span>.<span class='ident'>send_post_request</span>(<span class='ident'>dst</span>, <span class='ident'>data</span>, <span class='ident'>msg_id</span>));
 
@@ -1537,7 +1526,7 @@
 
         <span class='kw'>let</span> (<span class='ident'>tx</span>, <span class='ident'>rx</span>) <span class='op'>=</span> <span class='ident'>mpsc</span>::<span class='ident'>channel</span>();
         <span class='kw'>let</span> <span class='ident'>msg_id</span> <span class='op'>=</span> <span class='ident'>MessageId</span>::<span class='ident'>new</span>();
-        <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>message_queue</span>.<span class='ident'>lock</span>()).<span class='ident'>register_response_observer</span>(<span class='ident'>msg_id</span>, <span class='ident'>tx</span>.<span class='ident'>clone</span>());
+        <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>message_queue</span>.<span class='ident'>lock</span>()).<span class='ident'>register_response_observer</span>(<span class='ident'>msg_id</span>, <span class='ident'>tx</span>.<span class='ident'>clone</span>());
 
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>routing</span>.<span class='ident'>send_delete_request</span>(<span class='ident'>dst</span>, <span class='ident'>data</span>, <span class='ident'>msg_id</span>));
 
@@ -1642,7 +1631,7 @@
         <span class='kw'>let</span> <span class='ident'>data_request</span> <span class='op'>=</span> <span class='ident'>DataIdentifier</span>::<span class='ident'>Plain</span>(<span class='ident'>mpid_account</span>);
 
         {
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>msg_queue</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>message_queue</span>.<span class='ident'>lock</span>());
+            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>msg_queue</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>message_queue</span>.<span class='ident'>lock</span>());
             <span class='kw'>if</span> <span class='ident'>msg_queue</span>.<span class='ident'>local_cache_check</span>(<span class='kw-2'>&amp;</span><span class='ident'>mpid_account</span>) {
                 <span class='kw'>return</span> <span class='prelude-val'>Ok</span>(<span class='ident'>GetResponseGetter</span>::<span class='ident'>new</span>(<span class='prelude-val'>None</span>, <span class='self'>self</span>.<span class='ident'>message_queue</span>.<span class='ident'>clone</span>(), <span class='ident'>data_request</span>));
             }
@@ -1654,7 +1643,7 @@
 
         <span class='kw'>let</span> (<span class='ident'>tx</span>, <span class='ident'>rx</span>) <span class='op'>=</span> <span class='ident'>mpsc</span>::<span class='ident'>channel</span>();
         <span class='kw'>let</span> <span class='ident'>msg_id</span> <span class='op'>=</span> <span class='ident'>MessageId</span>::<span class='ident'>new</span>();
-        <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>message_queue</span>.<span class='ident'>lock</span>()).<span class='ident'>register_response_observer</span>(<span class='ident'>msg_id</span>, <span class='ident'>tx</span>.<span class='ident'>clone</span>());
+        <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>message_queue</span>.<span class='ident'>lock</span>()).<span class='ident'>register_response_observer</span>(<span class='ident'>msg_id</span>, <span class='ident'>tx</span>.<span class='ident'>clone</span>());
 
         <span class='prelude-val'>Ok</span>(<span class='ident'>GetResponseGetter</span>::<span class='ident'>new</span>(<span class='prelude-val'>Some</span>((<span class='ident'>tx</span>, <span class='ident'>rx</span>)), <span class='self'>self</span>.<span class='ident'>message_queue</span>.<span class='ident'>clone</span>(), <span class='ident'>data_request</span>))
     }
@@ -1685,7 +1674,7 @@
 
     <span class='doccomment'>/// Add observers for Network Events like `Connected`, `Disconnected`, `Terminated`</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>add_network_event_observer</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>sender</span>: <span class='ident'>Sender</span><span class='op'>&lt;</span><span class='ident'>NetworkEvent</span><span class='op'>&gt;</span>) {
-        <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>message_queue</span>.<span class='ident'>lock</span>()).<span class='ident'>add_network_event_observer</span>(<span class='ident'>sender</span>);
+        <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>message_queue</span>.<span class='ident'>lock</span>()).<span class='ident'>add_network_event_observer</span>(<span class='ident'>sender</span>);
     }
 
     <span class='doccomment'>/// Get the default address where the PUTs will go to for this client</span>
@@ -1807,13 +1796,12 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>account_creation</span>() {
-        <span class='kw'>let</span> <span class='ident'>keyword</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
-        <span class='kw'>let</span> <span class='ident'>password</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
-        <span class='kw'>let</span> <span class='ident'>pin</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
+        <span class='kw'>let</span> <span class='ident'>keyword</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
+        <span class='kw'>let</span> <span class='ident'>password</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
+        <span class='kw'>let</span> <span class='ident'>pin</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
 
         <span class='comment'>// Account creation for the 1st time - should succeed</span>
-        <span class='kw'>let</span> _ <span class='op'>=</span>
-            <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>create_account</span>(<span class='ident'>keyword</span>.<span class='ident'>clone</span>(), <span class='ident'>pin</span>.<span class='ident'>clone</span>(), <span class='ident'>password</span>.<span class='ident'>clone</span>()));
+        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>create_account</span>(<span class='ident'>keyword</span>.<span class='ident'>clone</span>(), <span class='ident'>pin</span>.<span class='ident'>clone</span>(), <span class='ident'>password</span>.<span class='ident'>clone</span>()));
 
         <span class='comment'>// Account creation - same keyword, pin and password - should fail</span>
         <span class='kw'>match</span> <span class='ident'>Client</span>::<span class='ident'>create_account</span>(<span class='ident'>keyword</span>.<span class='ident'>clone</span>(), <span class='ident'>pin</span>.<span class='ident'>clone</span>(), <span class='ident'>password</span>.<span class='ident'>clone</span>()) {
@@ -1823,7 +1811,7 @@
         }
 
         <span class='comment'>// Account creation - same keyword and pin - different password - should fail</span>
-        <span class='kw'>let</span> <span class='ident'>new_password</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
+        <span class='kw'>let</span> <span class='ident'>new_password</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
         <span class='kw'>match</span> <span class='ident'>Client</span>::<span class='ident'>create_account</span>(<span class='ident'>keyword</span>.<span class='ident'>clone</span>(), <span class='ident'>pin</span>.<span class='ident'>clone</span>(), <span class='ident'>new_password</span>) {
             <span class='prelude-val'>Ok</span>(_) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Account name hijaking should fail !&quot;</span>),
             <span class='prelude-val'>Err</span>(<span class='ident'>CoreError</span>::<span class='ident'>MutationFailure</span> { <span class='ident'>reason</span>: <span class='ident'>MutationError</span>::<span class='ident'>AccountExists</span>, .. }) <span class='op'>=&gt;</span> (),
@@ -1831,48 +1819,47 @@
         }
 
         <span class='comment'>// Account creation - same keyword and password - different pin - should succeed</span>
-        <span class='kw'>let</span> <span class='ident'>new_pin</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
-        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>create_account</span>(<span class='ident'>keyword</span>, <span class='ident'>new_pin</span>, <span class='ident'>password</span>.<span class='ident'>clone</span>()));
+        <span class='kw'>let</span> <span class='ident'>new_pin</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
+        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>create_account</span>(<span class='ident'>keyword</span>, <span class='ident'>new_pin</span>, <span class='ident'>password</span>.<span class='ident'>clone</span>()));
 
         <span class='comment'>// Account creation - same pin and password - different keyword - should succeed</span>
-        <span class='kw'>let</span> <span class='ident'>new_keyword</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
-        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>create_account</span>(<span class='ident'>new_keyword</span>, <span class='ident'>pin</span>, <span class='ident'>password</span>));
+        <span class='kw'>let</span> <span class='ident'>new_keyword</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
+        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>create_account</span>(<span class='ident'>new_keyword</span>, <span class='ident'>pin</span>, <span class='ident'>password</span>));
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>account_login</span>() {
-        <span class='kw'>let</span> <span class='ident'>keyword</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
-        <span class='kw'>let</span> <span class='ident'>password</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
-        <span class='kw'>let</span> <span class='ident'>pin</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
+        <span class='kw'>let</span> <span class='ident'>keyword</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
+        <span class='kw'>let</span> <span class='ident'>password</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
+        <span class='kw'>let</span> <span class='ident'>pin</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
 
         <span class='comment'>// Creation should pass</span>
-        <span class='kw'>let</span> _ <span class='op'>=</span>
-            <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>create_account</span>(<span class='ident'>keyword</span>.<span class='ident'>clone</span>(), <span class='ident'>pin</span>.<span class='ident'>clone</span>(), <span class='ident'>password</span>.<span class='ident'>clone</span>()));
+        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>create_account</span>(<span class='ident'>keyword</span>.<span class='ident'>clone</span>(), <span class='ident'>pin</span>.<span class='ident'>clone</span>(), <span class='ident'>password</span>.<span class='ident'>clone</span>()));
 
         <span class='comment'>// Correct Credentials - Login Should Pass</span>
-        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>log_in</span>(<span class='ident'>keyword</span>, <span class='ident'>pin</span>, <span class='ident'>password</span>));
+        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>log_in</span>(<span class='ident'>keyword</span>, <span class='ident'>pin</span>, <span class='ident'>password</span>));
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>unregistered_client</span>() {
-        <span class='kw'>let</span> <span class='ident'>immut_data</span> <span class='op'>=</span> <span class='ident'>ImmutableData</span>::<span class='ident'>new</span>(<span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_vector</span>(<span class='number'>30</span>)));
+        <span class='kw'>let</span> <span class='ident'>immut_data</span> <span class='op'>=</span> <span class='ident'>ImmutableData</span>::<span class='ident'>new</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_vector</span>(<span class='number'>30</span>)));
         <span class='kw'>let</span> <span class='ident'>orig_data</span> <span class='op'>=</span> <span class='ident'>Data</span>::<span class='ident'>Immutable</span>(<span class='ident'>immut_data</span>);
 
         <span class='comment'>// Registered Client PUTs something onto the network</span>
         {
-            <span class='kw'>let</span> <span class='ident'>keyword</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
-            <span class='kw'>let</span> <span class='ident'>password</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
-            <span class='kw'>let</span> <span class='ident'>pin</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
+            <span class='kw'>let</span> <span class='ident'>keyword</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
+            <span class='kw'>let</span> <span class='ident'>password</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
+            <span class='kw'>let</span> <span class='ident'>pin</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
 
             <span class='comment'>// Creation should pass</span>
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>create_account</span>(<span class='ident'>keyword</span>, <span class='ident'>pin</span>, <span class='ident'>password</span>));
-            <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>put</span>(<span class='ident'>orig_data</span>.<span class='ident'>clone</span>(), <span class='prelude-val'>None</span>)).<span class='ident'>get</span>());
+            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>create_account</span>(<span class='ident'>keyword</span>, <span class='ident'>pin</span>, <span class='ident'>password</span>));
+            <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>put</span>(<span class='ident'>orig_data</span>.<span class='ident'>clone</span>(), <span class='prelude-val'>None</span>)).<span class='ident'>get</span>());
         }
 
         <span class='comment'>// Unregistered Client should be able to retrieve the data</span>
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>unregistered_client</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>create_unregistered_client</span>());
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>unregistered_client</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>create_unregistered_client</span>());
         <span class='kw'>let</span> <span class='ident'>request</span> <span class='op'>=</span> <span class='ident'>DataIdentifier</span>::<span class='ident'>Immutable</span>(<span class='ident'>orig_data</span>.<span class='ident'>name</span>());
-        <span class='kw'>let</span> <span class='ident'>rxd_data</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>unregistered_client</span>.<span class='ident'>get</span>(<span class='ident'>request</span>, <span class='prelude-val'>None</span>)).<span class='ident'>get</span>());
+        <span class='kw'>let</span> <span class='ident'>rxd_data</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>unregistered_client</span>.<span class='ident'>get</span>(<span class='ident'>request</span>, <span class='prelude-val'>None</span>)).<span class='ident'>get</span>());
 
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>rxd_data</span>, <span class='ident'>orig_data</span>);
 
@@ -1890,21 +1877,21 @@
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>user_root_dir_id_creation</span>() {
         <span class='comment'>// Construct Client</span>
-        <span class='kw'>let</span> <span class='ident'>keyword</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
-        <span class='kw'>let</span> <span class='ident'>password</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
-        <span class='kw'>let</span> <span class='ident'>pin</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
+        <span class='kw'>let</span> <span class='ident'>keyword</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
+        <span class='kw'>let</span> <span class='ident'>password</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
+        <span class='kw'>let</span> <span class='ident'>pin</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>client</span> <span class='op'>=</span>
-            <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>create_account</span>(<span class='ident'>keyword</span>.<span class='ident'>clone</span>(), <span class='ident'>pin</span>.<span class='ident'>clone</span>(), <span class='ident'>password</span>.<span class='ident'>clone</span>()));
+            <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>create_account</span>(<span class='ident'>keyword</span>.<span class='ident'>clone</span>(), <span class='ident'>pin</span>.<span class='ident'>clone</span>(), <span class='ident'>password</span>.<span class='ident'>clone</span>()));
 
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>get_user_root_directory_id</span>().<span class='ident'>is_none</span>());
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>get_configuration_root_directory_id</span>().<span class='ident'>is_none</span>());
 
         <span class='kw'>let</span> <span class='ident'>root_dir_id</span> <span class='op'>=</span> <span class='ident'>XorName</span>([<span class='number'>99u8</span>; <span class='ident'>XOR_NAME_LEN</span>]);
-        <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>set_user_root_directory_id</span>(<span class='ident'>root_dir_id</span>.<span class='ident'>clone</span>()));
+        <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>set_user_root_directory_id</span>(<span class='ident'>root_dir_id</span>.<span class='ident'>clone</span>()));
 
         <span class='comment'>// Correct Credentials - Login Should Pass</span>
-        <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>log_in</span>(<span class='ident'>keyword</span>, <span class='ident'>pin</span>, <span class='ident'>password</span>));
+        <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>log_in</span>(<span class='ident'>keyword</span>, <span class='ident'>pin</span>, <span class='ident'>password</span>));
 
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>get_user_root_directory_id</span>().<span class='ident'>is_some</span>());
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>get_configuration_root_directory_id</span>().<span class='ident'>is_none</span>());
@@ -1915,21 +1902,21 @@
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>maidsafe_config_root_dir_id_creation</span>() {
         <span class='comment'>// Construct Client</span>
-        <span class='kw'>let</span> <span class='ident'>keyword</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
-        <span class='kw'>let</span> <span class='ident'>password</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
-        <span class='kw'>let</span> <span class='ident'>pin</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
+        <span class='kw'>let</span> <span class='ident'>keyword</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
+        <span class='kw'>let</span> <span class='ident'>password</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
+        <span class='kw'>let</span> <span class='ident'>pin</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>client</span> <span class='op'>=</span>
-            <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>create_account</span>(<span class='ident'>keyword</span>.<span class='ident'>clone</span>(), <span class='ident'>pin</span>.<span class='ident'>clone</span>(), <span class='ident'>password</span>.<span class='ident'>clone</span>()));
+            <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>create_account</span>(<span class='ident'>keyword</span>.<span class='ident'>clone</span>(), <span class='ident'>pin</span>.<span class='ident'>clone</span>(), <span class='ident'>password</span>.<span class='ident'>clone</span>()));
 
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>get_user_root_directory_id</span>().<span class='ident'>is_none</span>());
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>get_configuration_root_directory_id</span>().<span class='ident'>is_none</span>());
 
         <span class='kw'>let</span> <span class='ident'>root_dir_id</span> <span class='op'>=</span> <span class='ident'>XorName</span>([<span class='number'>99u8</span>; <span class='ident'>XOR_NAME_LEN</span>]);
-        <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>set_configuration_root_directory_id</span>(<span class='ident'>root_dir_id</span>.<span class='ident'>clone</span>()));
+        <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>set_configuration_root_directory_id</span>(<span class='ident'>root_dir_id</span>.<span class='ident'>clone</span>()));
 
         <span class='comment'>// Correct Credentials - Login Should Pass</span>
-        <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>log_in</span>(<span class='ident'>keyword</span>, <span class='ident'>pin</span>, <span class='ident'>password</span>));
+        <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>log_in</span>(<span class='ident'>keyword</span>, <span class='ident'>pin</span>, <span class='ident'>password</span>));
 
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>get_user_root_directory_id</span>().<span class='ident'>is_none</span>());
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>get_configuration_root_directory_id</span>().<span class='ident'>is_some</span>());
@@ -1941,11 +1928,11 @@
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>hybrid_encryption_decryption</span>() {
         <span class='comment'>// Construct Client</span>
-        <span class='kw'>let</span> <span class='ident'>keyword</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
-        <span class='kw'>let</span> <span class='ident'>password</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
-        <span class='kw'>let</span> <span class='ident'>pin</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
+        <span class='kw'>let</span> <span class='ident'>keyword</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
+        <span class='kw'>let</span> <span class='ident'>password</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
+        <span class='kw'>let</span> <span class='ident'>pin</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
 
-        <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>create_account</span>(<span class='ident'>keyword</span>, <span class='ident'>pin</span>, <span class='ident'>password</span>));
+        <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>create_account</span>(<span class='ident'>keyword</span>, <span class='ident'>pin</span>, <span class='ident'>password</span>));
 
         <span class='comment'>// Identical Plain Texts</span>
         <span class='kw'>let</span> <span class='ident'>plain_text_original_0</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>123u8</span>; <span class='number'>1000</span>];
@@ -1954,13 +1941,13 @@
         <span class='comment'>// Encrypt passing Nonce</span>
         <span class='kw'>let</span> <span class='ident'>nonce</span> <span class='op'>=</span> ::<span class='ident'>sodiumoxide</span>::<span class='ident'>crypto</span>::<span class='ident'>box_</span>::<span class='ident'>gen_nonce</span>();
         <span class='kw'>let</span> <span class='ident'>cipher_text_0</span> <span class='op'>=</span>
-            <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>hybrid_encrypt</span>(<span class='kw-2'>&amp;</span><span class='ident'>plain_text_original_0</span>[..], <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='ident'>nonce</span>)));
+            <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>hybrid_encrypt</span>(<span class='kw-2'>&amp;</span><span class='ident'>plain_text_original_0</span>[..], <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='ident'>nonce</span>)));
         <span class='kw'>let</span> <span class='ident'>cipher_text_1</span> <span class='op'>=</span>
-            <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>hybrid_encrypt</span>(<span class='kw-2'>&amp;</span><span class='ident'>plain_text_original_1</span>[..], <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='ident'>nonce</span>)));
+            <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>hybrid_encrypt</span>(<span class='kw-2'>&amp;</span><span class='ident'>plain_text_original_1</span>[..], <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='ident'>nonce</span>)));
 
         <span class='comment'>// Encrypt without passing Nonce</span>
-        <span class='kw'>let</span> <span class='ident'>cipher_text_2</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>hybrid_encrypt</span>(<span class='kw-2'>&amp;</span><span class='ident'>plain_text_original_0</span>[..], <span class='prelude-val'>None</span>));
-        <span class='kw'>let</span> <span class='ident'>cipher_text_3</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>hybrid_encrypt</span>(<span class='kw-2'>&amp;</span><span class='ident'>plain_text_original_1</span>[..], <span class='prelude-val'>None</span>));
+        <span class='kw'>let</span> <span class='ident'>cipher_text_2</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>hybrid_encrypt</span>(<span class='kw-2'>&amp;</span><span class='ident'>plain_text_original_0</span>[..], <span class='prelude-val'>None</span>));
+        <span class='kw'>let</span> <span class='ident'>cipher_text_3</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>hybrid_encrypt</span>(<span class='kw-2'>&amp;</span><span class='ident'>plain_text_original_1</span>[..], <span class='prelude-val'>None</span>));
 
         <span class='comment'>// Same Plain Texts</span>
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>plain_text_original_0</span>, <span class='ident'>plain_text_original_1</span>);
@@ -1973,12 +1960,12 @@
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>cipher_text_2</span> <span class='op'>!=</span> <span class='ident'>cipher_text_3</span>);
 
         <span class='comment'>// Decrypt with Nonce</span>
-        <span class='kw'>let</span> <span class='ident'>plain_text_0</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>hybrid_decrypt</span>(<span class='kw-2'>&amp;</span><span class='ident'>cipher_text_0</span>, <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='ident'>nonce</span>)));
-        <span class='kw'>let</span> <span class='ident'>plain_text_1</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>hybrid_decrypt</span>(<span class='kw-2'>&amp;</span><span class='ident'>cipher_text_1</span>, <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='ident'>nonce</span>)));
+        <span class='kw'>let</span> <span class='ident'>plain_text_0</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>hybrid_decrypt</span>(<span class='kw-2'>&amp;</span><span class='ident'>cipher_text_0</span>, <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='ident'>nonce</span>)));
+        <span class='kw'>let</span> <span class='ident'>plain_text_1</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>hybrid_decrypt</span>(<span class='kw-2'>&amp;</span><span class='ident'>cipher_text_1</span>, <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='ident'>nonce</span>)));
 
         <span class='comment'>// Decrypt without Nonce</span>
-        <span class='kw'>let</span> <span class='ident'>plain_text_2</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>hybrid_decrypt</span>(<span class='kw-2'>&amp;</span><span class='ident'>cipher_text_2</span>, <span class='prelude-val'>None</span>));
-        <span class='kw'>let</span> <span class='ident'>plain_text_3</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>hybrid_decrypt</span>(<span class='kw-2'>&amp;</span><span class='ident'>cipher_text_3</span>, <span class='prelude-val'>None</span>));
+        <span class='kw'>let</span> <span class='ident'>plain_text_2</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>hybrid_decrypt</span>(<span class='kw-2'>&amp;</span><span class='ident'>cipher_text_2</span>, <span class='prelude-val'>None</span>));
+        <span class='kw'>let</span> <span class='ident'>plain_text_3</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>hybrid_decrypt</span>(<span class='kw-2'>&amp;</span><span class='ident'>cipher_text_3</span>, <span class='prelude-val'>None</span>));
 
         <span class='comment'>// Decryption without passing Nonce for something encrypted with passing Nonce - Should Fail</span>
         <span class='kw'>match</span> <span class='ident'>client</span>.<span class='ident'>hybrid_decrypt</span>(<span class='kw-2'>&amp;</span><span class='ident'>cipher_text_0</span>, <span class='prelude-val'>None</span>) {
@@ -2002,15 +1989,14 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>version_caching</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>get_client</span>());
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>get_client</span>());
 
         <span class='comment'>// Version Caching should work for ImmutableData</span>
         {
-            <span class='kw'>let</span> <span class='ident'>immut_data</span> <span class='op'>=</span>
-                <span class='ident'>ImmutableData</span>::<span class='ident'>new</span>(<span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_vector</span>(<span class='number'>10</span>)));
+            <span class='kw'>let</span> <span class='ident'>immut_data</span> <span class='op'>=</span> <span class='ident'>ImmutableData</span>::<span class='ident'>new</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_vector</span>(<span class='number'>10</span>)));
             <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='ident'>Data</span>::<span class='ident'>Immutable</span>(<span class='ident'>immut_data</span>);
 
-            <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>put</span>(<span class='ident'>data</span>.<span class='ident'>clone</span>(), <span class='prelude-val'>None</span>)).<span class='ident'>get</span>());
+            <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>put</span>(<span class='ident'>data</span>.<span class='ident'>clone</span>(), <span class='prelude-val'>None</span>)).<span class='ident'>get</span>());
 
             <span class='kw'>let</span> <span class='ident'>data_request</span> <span class='op'>=</span> <span class='ident'>DataIdentifier</span>::<span class='ident'>Immutable</span>(<span class='ident'>data</span>.<span class='ident'>name</span>());
 
@@ -2026,12 +2012,12 @@
                 }
             }
 
-            <span class='kw'>let</span> <span class='ident'>response_getter</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>get</span>(<span class='ident'>data_request</span>, <span class='prelude-val'>None</span>));
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>response_getter</span>.<span class='ident'>get</span>()), <span class='ident'>data</span>);
+            <span class='kw'>let</span> <span class='ident'>response_getter</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>get</span>(<span class='ident'>data_request</span>, <span class='prelude-val'>None</span>));
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>response_getter</span>.<span class='ident'>get</span>()), <span class='ident'>data</span>);
 
             <span class='kw'>let</span> <span class='ident'>resp_getter</span> <span class='op'>=</span>
                 <span class='ident'>GetResponseGetter</span>::<span class='ident'>new</span>(<span class='prelude-val'>None</span>, <span class='ident'>client</span>.<span class='ident'>message_queue</span>.<span class='ident'>clone</span>(), <span class='ident'>data_request</span>);
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>resp_getter</span>.<span class='ident'>get</span>()), <span class='ident'>data</span>);
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>resp_getter</span>.<span class='ident'>get</span>()), <span class='ident'>data</span>);
         }
 
         <span class='comment'>// Version Caching should NOT work for StructuredData</span>
@@ -2039,16 +2025,16 @@
             <span class='kw'>const</span> <span class='ident'>TYPE_TAG</span>: <span class='ident'>u64</span> <span class='op'>=</span> <span class='number'>15000</span>;
             <span class='kw'>let</span> <span class='ident'>id</span>: <span class='ident'>XorName</span> <span class='op'>=</span> <span class='ident'>rand</span>::<span class='ident'>random</span>();
 
-            <span class='kw'>let</span> <span class='ident'>struct_data</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>StructuredData</span>::<span class='ident'>new</span>(<span class='ident'>TYPE_TAG</span>,
-                                                                 <span class='ident'>id</span>.<span class='ident'>clone</span>(),
-                                                                 <span class='number'>0</span>,
-                                                                 <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
-                                                                 <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
-                                                                 <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
-                                                                 <span class='prelude-val'>None</span>));
+            <span class='kw'>let</span> <span class='ident'>struct_data</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>StructuredData</span>::<span class='ident'>new</span>(<span class='ident'>TYPE_TAG</span>,
+                                                          <span class='ident'>id</span>.<span class='ident'>clone</span>(),
+                                                          <span class='number'>0</span>,
+                                                          <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
+                                                          <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
+                                                          <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
+                                                          <span class='prelude-val'>None</span>));
             <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='ident'>Data</span>::<span class='ident'>Structured</span>(<span class='ident'>struct_data</span>);
 
-            <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>put</span>(<span class='ident'>data</span>.<span class='ident'>clone</span>(), <span class='prelude-val'>None</span>)).<span class='ident'>get</span>());
+            <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>put</span>(<span class='ident'>data</span>.<span class='ident'>clone</span>(), <span class='prelude-val'>None</span>)).<span class='ident'>get</span>());
 
             <span class='kw'>let</span> <span class='ident'>data_request</span> <span class='op'>=</span> <span class='ident'>DataIdentifier</span>::<span class='ident'>Structured</span>(<span class='ident'>id</span>, <span class='ident'>TYPE_TAG</span>);
 
@@ -2064,8 +2050,8 @@
                 }
             }
 
-            <span class='kw'>let</span> <span class='ident'>response_getter</span> <span class='op'>=</span> <span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>get</span>(<span class='ident'>data_request</span>, <span class='prelude-val'>None</span>));
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>unwrap_result</span><span class='macro'>!</span>(<span class='ident'>response_getter</span>.<span class='ident'>get</span>()), <span class='ident'>data</span>);
+            <span class='kw'>let</span> <span class='ident'>response_getter</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>get</span>(<span class='ident'>data_request</span>, <span class='prelude-val'>None</span>));
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>response_getter</span>.<span class='ident'>get</span>()), <span class='ident'>data</span>);
 
             <span class='comment'>// Should not be in version cache even after fetch</span>
             {
