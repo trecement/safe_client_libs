@@ -1054,6 +1054,11 @@
 <span id="1010">1010</span>
 <span id="1011">1011</span>
 <span id="1012">1012</span>
+<span id="1013">1013</span>
+<span id="1014">1014</span>
+<span id="1015">1015</span>
+<span id="1016">1016</span>
+<span id="1017">1017</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -1752,6 +1757,11 @@
     <span class='doccomment'>/// Return the amount of calls that were done to `delete`</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>issued_deletes</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u64</span> {
         <span class='self'>self</span>.<span class='ident'>issued_deletes</span>
+    }
+
+    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>all</span>(<span class='ident'>test</span>, <span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;use-mock-routing&quot;</span>))]</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_network_limits</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>max_ops_count</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>u64</span><span class='op'>&gt;</span>) {
+        <span class='self'>self</span>.<span class='ident'>routing</span>.<span class='ident'>set_network_limits</span>(<span class='ident'>max_ops_count</span>);
     }
 }
 

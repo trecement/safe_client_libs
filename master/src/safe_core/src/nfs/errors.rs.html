@@ -170,6 +170,20 @@
 <span id="126">126</span>
 <span id="127">127</span>
 <span id="128">128</span>
+<span id="129">129</span>
+<span id="130">130</span>
+<span id="131">131</span>
+<span id="132">132</span>
+<span id="133">133</span>
+<span id="134">134</span>
+<span id="135">135</span>
+<span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -266,7 +280,21 @@
             <span class='ident'>NfsError</span>::<span class='ident'>ParameterIsNotValid</span> <span class='op'>=&gt;</span> <span class='ident'>NFS_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>8</span>,
             <span class='ident'>NfsError</span>::<span class='ident'>Unexpected</span>(_) <span class='op'>=&gt;</span> <span class='ident'>NFS_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>9</span>,
             <span class='ident'>NfsError</span>::<span class='ident'>UnsuccessfulEncodeDecode</span>(_) <span class='op'>=&gt;</span> <span class='ident'>NFS_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>10</span>,
-            <span class='ident'>NfsError</span>::<span class='ident'>SelfEncryption</span>(_) <span class='op'>=&gt;</span> <span class='ident'>NFS_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>11</span>,
+            <span class='ident'>NfsError</span>::<span class='ident'>SelfEncryption</span>(<span class='ident'>SelfEncryptionError</span>
+                                      ::<span class='ident'>Compression</span>::<span class='op'>&lt;</span><span class='ident'>SelfEncryptionStorageError</span><span class='op'>&gt;</span>) <span class='op'>=&gt;</span> {
+                <span class='ident'>NFS_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>11</span>
+            }
+            <span class='ident'>NfsError</span>::<span class='ident'>SelfEncryption</span>(<span class='ident'>SelfEncryptionError</span>
+                                      ::<span class='ident'>Decryption</span>::<span class='op'>&lt;</span><span class='ident'>SelfEncryptionStorageError</span><span class='op'>&gt;</span>) <span class='op'>=&gt;</span> {
+                <span class='ident'>NFS_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>12</span>
+            }
+            <span class='ident'>NfsError</span>::<span class='ident'>SelfEncryption</span>(<span class='ident'>SelfEncryptionError</span>::<span class='ident'>Io</span>::<span class='op'>&lt;</span><span class='ident'>SelfEncryptionStorageError</span><span class='op'>&gt;</span>(_)) <span class='op'>=&gt;</span> {
+                <span class='ident'>NFS_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>13</span>
+            }
+            <span class='ident'>NfsError</span>::<span class='ident'>SelfEncryption</span>(<span class='ident'>SelfEncryptionError</span>
+                                      ::<span class='ident'>Storage</span>
+                                      ::<span class='op'>&lt;</span><span class='ident'>SelfEncryptionStorageError</span><span class='op'>&gt;</span>(
+                                          <span class='ident'>SelfEncryptionStorageError</span>(<span class='ident'>err</span>))) <span class='op'>=&gt;</span> (<span class='op'>*</span><span class='ident'>err</span>).<span class='ident'>into</span>(),
         }
     }
 }
