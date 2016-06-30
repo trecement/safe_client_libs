@@ -260,6 +260,8 @@
 <span id="216">216</span>
 <span id="217">217</span>
 <span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -431,6 +433,8 @@
                     <span class='ident'>Event</span>::<span class='ident'>Terminate</span> <span class='op'>=&gt;</span> {
                         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>dead_sender_positions</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span>::<span class='ident'>new</span>();
                         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>queue_guard</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>message_queue_cloned</span>.<span class='ident'>lock</span>());
+                        <span class='macro'>info</span><span class='macro'>!</span>(<span class='string'>&quot;Received a Terminate event. Informing {} observers.&quot;</span>,
+                              <span class='ident'>queue_guard</span>.<span class='ident'>network_event_observers</span>.<span class='ident'>len</span>());
                         <span class='kw'>for</span> <span class='ident'>it</span> <span class='kw'>in</span> <span class='ident'>queue_guard</span>.<span class='ident'>network_event_observers</span>.<span class='ident'>iter</span>().<span class='ident'>enumerate</span>() {
                             <span class='kw'>if</span> <span class='ident'>it</span>.<span class='number'>1</span>.<span class='ident'>send</span>(<span class='ident'>NetworkEvent</span>::<span class='ident'>Disconnected</span>).<span class='ident'>is_err</span>() {
                                 <span class='ident'>dead_sender_positions</span>.<span class='ident'>push</span>(<span class='ident'>it</span>.<span class='number'>0</span>);

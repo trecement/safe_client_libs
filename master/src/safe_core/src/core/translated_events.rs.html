@@ -96,6 +96,8 @@
 <span id="52">52</span>
 <span id="53">53</span>
 <span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -122,6 +124,7 @@
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>NETWORK_EVENT_START_RANGE</span>: <span class='ident'>i32</span> <span class='op'>=</span> <span class='number'>0</span>;
 
 <span class='doccomment'>/// These events are received as a response to a GET/PUT/POST/DELETE requests made by clients</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>ResponseEvent</span> {
     <span class='doccomment'>/// Response to a previous GET request</span>
     <span class='ident'>GetResp</span>(<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Data</span>, <span class='ident'>CoreError</span><span class='op'>&gt;</span>),
@@ -132,6 +135,7 @@
 }
 
 <span class='doccomment'>/// Netowork Events that Client Modules need to deal with</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>NetworkEvent</span> {
     <span class='doccomment'>/// The client engine is connected to atleast one peer</span>
     <span class='ident'>Connected</span>,

@@ -634,6 +634,10 @@
 <span id="590">590</span>
 <span id="591">591</span>
 <span id="592">592</span>
+<span id="593">593</span>
+<span id="594">594</span>
+<span id="595">595</span>
+<span id="596">596</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -682,7 +686,7 @@
 <span class='doccomment'>/// Errors thrown by the FFI operations</span>
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>errors</span>;
 
-<span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>mem</span>, <span class='ident'>ptr</span>};
+<span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>fs</span>, <span class='ident'>mem</span>, <span class='ident'>ptr</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::{<span class='ident'>Arc</span>, <span class='ident'>Mutex</span>, <span class='ident'>mpsc</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>mpsc</span>::<span class='ident'>Sender</span>;
 
@@ -763,6 +767,7 @@
 <span class='doccomment'>/// This function should be called to enable logging to a file</span>
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
 <span class='kw'>pub</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>init_logging</span>() <span class='op'>-&gt;</span> <span class='ident'>int32_t</span> {
+    <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>fs</span>::<span class='ident'>remove_file</span>(<span class='string'>&quot;Client.log&quot;</span>);
     <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>safe_log</span>::<span class='ident'>init</span>(<span class='boolval'>false</span>).<span class='ident'>map_err</span>(<span class='ident'>CoreError</span>::<span class='ident'>Unexpected</span>));
 
     <span class='number'>0</span>
@@ -845,6 +850,9 @@
                     <span class='kw'>break</span>;
                 }
                 <span class='kw'>let</span> <span class='ident'>cbs</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>callbacks</span>.<span class='ident'>lock</span>());
+                <span class='macro'>info</span><span class='macro'>!</span>(<span class='string'>&quot;Informing {:?} to {} FFI network event observers.&quot;</span>,
+                      <span class='ident'>event</span>,
+                      <span class='ident'>cbs</span>.<span class='ident'>len</span>());
                 <span class='kw'>let</span> <span class='ident'>event_ffi_val</span> <span class='op'>=</span> <span class='ident'>event</span>.<span class='ident'>into</span>();
                 <span class='kw'>for</span> <span class='ident'>cb</span> <span class='kw'>in</span> <span class='ident'>cbs</span> {
                     <span class='ident'>cb</span>(<span class='ident'>event_ffi_val</span>);
