@@ -167,6 +167,9 @@
 <span id="123">123</span>
 <span id="124">124</span>
 <span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
+<span id="128">128</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -184,11 +187,16 @@
 <span class='comment'>//</span>
 <span class='comment'>// Please review the Licences for the specific language governing permissions and limitations</span>
 <span class='comment'>// relating to use of the SAFE Network Software.</span>
+
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
 
-<span class='kw'>use</span> <span class='ident'>ffi</span>::{<span class='ident'>Action</span>, <span class='ident'>ParameterPacket</span>, <span class='ident'>ResponseType</span>};
 <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>errors</span>::<span class='ident'>FfiError</span>;
+<span class='kw'>use</span> <span class='ident'>ffi</span>::{<span class='ident'>Action</span>, <span class='ident'>ParameterPacket</span>, <span class='ident'>ResponseType</span>};
 <span class='kw'>use</span> <span class='ident'>rustc_serialize</span>::{<span class='ident'>Decodable</span>, <span class='ident'>Decoder</span>};
+
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>directory_response</span>;
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>file_response</span>;
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>get_file_writer</span>;
 
 <span class='kw'>mod</span> <span class='ident'>create_dir</span>;
 <span class='kw'>mod</span> <span class='ident'>create_file</span>;
@@ -197,12 +205,10 @@
 <span class='kw'>mod</span> <span class='ident'>get_dir</span>;
 <span class='kw'>mod</span> <span class='ident'>get_file</span>;
 <span class='kw'>mod</span> <span class='ident'>get_file_metadata</span>;
-<span class='kw'>mod</span> <span class='ident'>move_dir</span>;
-<span class='kw'>mod</span> <span class='ident'>move_file</span>;
 <span class='kw'>mod</span> <span class='ident'>modify_dir</span>;
 <span class='kw'>mod</span> <span class='ident'>modify_file</span>;
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>directory_response</span>;
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>file_response</span>;
+<span class='kw'>mod</span> <span class='ident'>move_dir</span>;
+<span class='kw'>mod</span> <span class='ident'>move_file</span>;
 
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>action_dispatcher</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span>(<span class='ident'>action</span>: <span class='ident'>String</span>,
                             <span class='ident'>params</span>: <span class='ident'>ParameterPacket</span>,
