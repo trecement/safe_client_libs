@@ -702,6 +702,53 @@
 <span id="658">658</span>
 <span id="659">659</span>
 <span id="660">660</span>
+<span id="661">661</span>
+<span id="662">662</span>
+<span id="663">663</span>
+<span id="664">664</span>
+<span id="665">665</span>
+<span id="666">666</span>
+<span id="667">667</span>
+<span id="668">668</span>
+<span id="669">669</span>
+<span id="670">670</span>
+<span id="671">671</span>
+<span id="672">672</span>
+<span id="673">673</span>
+<span id="674">674</span>
+<span id="675">675</span>
+<span id="676">676</span>
+<span id="677">677</span>
+<span id="678">678</span>
+<span id="679">679</span>
+<span id="680">680</span>
+<span id="681">681</span>
+<span id="682">682</span>
+<span id="683">683</span>
+<span id="684">684</span>
+<span id="685">685</span>
+<span id="686">686</span>
+<span id="687">687</span>
+<span id="688">688</span>
+<span id="689">689</span>
+<span id="690">690</span>
+<span id="691">691</span>
+<span id="692">692</span>
+<span id="693">693</span>
+<span id="694">694</span>
+<span id="695">695</span>
+<span id="696">696</span>
+<span id="697">697</span>
+<span id="698">698</span>
+<span id="699">699</span>
+<span id="700">700</span>
+<span id="701">701</span>
+<span id="702">702</span>
+<span id="703">703</span>
+<span id="704">704</span>
+<span id="705">705</span>
+<span id="706">706</span>
+<span id="707">707</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -751,7 +798,7 @@
 <span class='kw'>mod</span> <span class='ident'>nfs</span>;
 <span class='kw'>mod</span> <span class='ident'>test_utils</span>;
 
-<span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>fs</span>, <span class='ident'>mem</span>, <span class='ident'>ptr</span>, <span class='ident'>slice</span>};
+<span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>fs</span>, <span class='ident'>mem</span>, <span class='ident'>panic</span>, <span class='ident'>ptr</span>, <span class='ident'>slice</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::{<span class='ident'>Arc</span>, <span class='ident'>Mutex</span>, <span class='ident'>mpsc</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>mpsc</span>::<span class='ident'>Sender</span>;
 
@@ -760,7 +807,7 @@
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>translated_events</span>::<span class='ident'>NetworkEvent</span>;
 <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>errors</span>::<span class='ident'>FfiError</span>;
 <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>nfs</span>::<span class='ident'>get_file_writer</span>::{<span class='ident'>FfiWriterHandle</span>, <span class='ident'>GetFileWriter</span>};
-<span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>c_char</span>, <span class='ident'>int32_t</span>};
+<span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>c_char</span>, <span class='ident'>int32_t</span>, <span class='ident'>int64_t</span>};
 <span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>log</span> <span class='kw'>as</span> <span class='ident'>safe_log</span>;
 <span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::{<span class='ident'>deserialise</span>, <span class='ident'>serialise</span>};
 <span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>thread</span>::{<span class='self'>self</span>, <span class='ident'>RaiiThreadJoiner</span>};
@@ -832,10 +879,12 @@
 <span class='doccomment'>/// This function should be called to enable logging to a file</span>
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
 <span class='kw'>pub</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>init_logging</span>() <span class='op'>-&gt;</span> <span class='ident'>int32_t</span> {
-    <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>fs</span>::<span class='ident'>remove_file</span>(<span class='string'>&quot;Client.log&quot;</span>);
-    <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>safe_log</span>::<span class='ident'>init</span>(<span class='boolval'>false</span>).<span class='ident'>map_err</span>(<span class='ident'>CoreError</span>::<span class='ident'>Unexpected</span>));
+    <span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
+        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>fs</span>::<span class='ident'>remove_file</span>(<span class='string'>&quot;Client.log&quot;</span>);
+        <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>safe_log</span>::<span class='ident'>init</span>(<span class='boolval'>false</span>).<span class='ident'>map_err</span>(<span class='ident'>CoreError</span>::<span class='ident'>Unexpected</span>));
 
-    <span class='number'>0</span>
+        <span class='number'>0</span>
+    })
 }
 
 <span class='doccomment'>/// Create an unregistered client. This or any one of the other companion functions to get a</span>
@@ -843,11 +892,13 @@
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
 <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>unsafe_code</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>create_unregistered_client</span>(<span class='ident'>ffi_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FfiHandle</span>) <span class='op'>-&gt;</span> <span class='ident'>int32_t</span> {
-    <span class='kw'>unsafe</span> {
-        <span class='op'>*</span><span class='ident'>ffi_handle</span> <span class='op'>=</span> <span class='ident'>cast_to_ffi_handle</span>(<span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>create_unregistered_client</span>()));
-    }
+    <span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
+        <span class='kw'>unsafe</span> {
+            <span class='op'>*</span><span class='ident'>ffi_handle</span> <span class='op'>=</span> <span class='ident'>cast_to_ffi_handle</span>(<span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>create_unregistered_client</span>()));
+        }
 
-    <span class='number'>0</span>
+        <span class='number'>0</span>
+    })
 }
 
 <span class='doccomment'>/// Create a registered client. This or any one of the other companion functions to get a</span>
@@ -861,14 +912,16 @@
                                  <span class='ident'>c_password</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>,
                                  <span class='ident'>ffi_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FfiHandle</span>)
                                  <span class='op'>-&gt;</span> <span class='ident'>int32_t</span> {
-    <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>create_account</span>(<span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_char_ptr_to_string</span>(<span class='ident'>c_keyword</span>)),
-                                        <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_char_ptr_to_string</span>(<span class='ident'>c_pin</span>)),
-                                        <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_char_ptr_to_string</span>(<span class='ident'>c_password</span>))));
-    <span class='kw'>unsafe</span> {
-        <span class='op'>*</span><span class='ident'>ffi_handle</span> <span class='op'>=</span> <span class='ident'>cast_to_ffi_handle</span>(<span class='ident'>client</span>);
-    }
+    <span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
+        <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>create_account</span>(<span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_char_ptr_to_string</span>(<span class='ident'>c_keyword</span>)),
+                                            <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_char_ptr_to_string</span>(<span class='ident'>c_pin</span>)),
+                                            <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_char_ptr_to_string</span>(<span class='ident'>c_password</span>))));
+        <span class='kw'>unsafe</span> {
+            <span class='op'>*</span><span class='ident'>ffi_handle</span> <span class='op'>=</span> <span class='ident'>cast_to_ffi_handle</span>(<span class='ident'>client</span>);
+        }
 
-    <span class='number'>0</span>
+        <span class='number'>0</span>
+    })
 }
 
 <span class='doccomment'>/// Log into a registered client. This or any one of the other companion functions to get a</span>
@@ -882,14 +935,16 @@
                          <span class='ident'>c_password</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>,
                          <span class='ident'>ffi_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FfiHandle</span>)
                          <span class='op'>-&gt;</span> <span class='ident'>int32_t</span> {
-    <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>log_in</span>(<span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_char_ptr_to_string</span>(<span class='ident'>c_keyword</span>)),
-                                         <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_char_ptr_to_string</span>(<span class='ident'>c_pin</span>)),
-                                         <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_char_ptr_to_string</span>(<span class='ident'>c_password</span>))));
-    <span class='kw'>unsafe</span> {
-        <span class='op'>*</span><span class='ident'>ffi_handle</span> <span class='op'>=</span> <span class='ident'>cast_to_ffi_handle</span>(<span class='ident'>client</span>);
-    }
+    <span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
+        <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>log_in</span>(<span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_char_ptr_to_string</span>(<span class='ident'>c_keyword</span>)),
+                                             <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_char_ptr_to_string</span>(<span class='ident'>c_pin</span>)),
+                                             <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_char_ptr_to_string</span>(<span class='ident'>c_password</span>))));
+        <span class='kw'>unsafe</span> {
+            <span class='op'>*</span><span class='ident'>ffi_handle</span> <span class='op'>=</span> <span class='ident'>cast_to_ffi_handle</span>(<span class='ident'>client</span>);
+        }
 
-    <span class='number'>0</span>
+        <span class='number'>0</span>
+    })
 }
 
 <span class='doccomment'>/// Register an observer to network events like Connected, Disconnected etc. as provided by the</span>
@@ -897,39 +952,42 @@
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
 <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>unsafe_code</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>register_network_event_observer</span>(<span class='ident'>ffi_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FfiHandle</span>,
-                                                  <span class='ident'>callback</span>: <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span>(<span class='ident'>i32</span>)) {
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ffi_handle</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>Box</span>::<span class='ident'>from_raw</span>(<span class='ident'>ffi_handle</span>) };
+                                                  <span class='ident'>callback</span>: <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span>(<span class='ident'>i32</span>)) <span class='op'>-&gt;</span> <span class='ident'>int32_t</span> {
+    <span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ffi_handle</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>Box</span>::<span class='ident'>from_raw</span>(<span class='ident'>ffi_handle</span>) };
 
-    <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>ffi_handle</span>.<span class='ident'>network_event_observers</span>.<span class='ident'>lock</span>()).<span class='ident'>push</span>(<span class='ident'>callback</span>);
+        <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>ffi_handle</span>.<span class='ident'>network_event_observers</span>.<span class='ident'>lock</span>()).<span class='ident'>push</span>(<span class='ident'>callback</span>);
 
-    <span class='kw'>if</span> <span class='ident'>ffi_handle</span>.<span class='ident'>raii_joiner</span>.<span class='ident'>is_none</span>() {
-        <span class='kw'>let</span> <span class='ident'>callbacks</span> <span class='op'>=</span> <span class='ident'>ffi_handle</span>.<span class='ident'>network_event_observers</span>.<span class='ident'>clone</span>();
+        <span class='kw'>if</span> <span class='ident'>ffi_handle</span>.<span class='ident'>raii_joiner</span>.<span class='ident'>is_none</span>() {
+            <span class='kw'>let</span> <span class='ident'>callbacks</span> <span class='op'>=</span> <span class='ident'>ffi_handle</span>.<span class='ident'>network_event_observers</span>.<span class='ident'>clone</span>();
 
-        <span class='kw'>let</span> (<span class='ident'>tx</span>, <span class='ident'>rx</span>) <span class='op'>=</span> <span class='ident'>mpsc</span>::<span class='ident'>channel</span>();
-        <span class='kw'>let</span> <span class='ident'>cloned_tx</span> <span class='op'>=</span> <span class='ident'>tx</span>.<span class='ident'>clone</span>();
-        <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>ffi_handle</span>.<span class='ident'>client</span>.<span class='ident'>lock</span>()).<span class='ident'>add_network_event_observer</span>(<span class='ident'>tx</span>);
+            <span class='kw'>let</span> (<span class='ident'>tx</span>, <span class='ident'>rx</span>) <span class='op'>=</span> <span class='ident'>mpsc</span>::<span class='ident'>channel</span>();
+            <span class='kw'>let</span> <span class='ident'>cloned_tx</span> <span class='op'>=</span> <span class='ident'>tx</span>.<span class='ident'>clone</span>();
+            <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>ffi_handle</span>.<span class='ident'>client</span>.<span class='ident'>lock</span>()).<span class='ident'>add_network_event_observer</span>(<span class='ident'>tx</span>);
 
-        <span class='kw'>let</span> <span class='ident'>raii_joiner</span> <span class='op'>=</span> <span class='ident'>thread</span>::<span class='ident'>named</span>(<span class='string'>&quot;FfiNetworkEventObserver&quot;</span>, <span class='kw'>move</span> <span class='op'>||</span> {
-            <span class='kw'>while</span> <span class='kw'>let</span> <span class='prelude-val'>Ok</span>(<span class='ident'>event</span>) <span class='op'>=</span> <span class='ident'>rx</span>.<span class='ident'>recv</span>() {
-                <span class='kw'>if</span> <span class='kw'>let</span> <span class='ident'>NetworkEvent</span>::<span class='ident'>Terminated</span> <span class='op'>=</span> <span class='ident'>event</span> {
-                    <span class='kw'>break</span>;
+            <span class='kw'>let</span> <span class='ident'>raii_joiner</span> <span class='op'>=</span> <span class='ident'>thread</span>::<span class='ident'>named</span>(<span class='string'>&quot;FfiNetworkEventObserver&quot;</span>, <span class='kw'>move</span> <span class='op'>||</span> {
+                <span class='kw'>while</span> <span class='kw'>let</span> <span class='prelude-val'>Ok</span>(<span class='ident'>event</span>) <span class='op'>=</span> <span class='ident'>rx</span>.<span class='ident'>recv</span>() {
+                    <span class='kw'>if</span> <span class='kw'>let</span> <span class='ident'>NetworkEvent</span>::<span class='ident'>Terminated</span> <span class='op'>=</span> <span class='ident'>event</span> {
+                        <span class='kw'>break</span>;
+                    }
+                    <span class='kw'>let</span> <span class='ident'>cbs</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>callbacks</span>.<span class='ident'>lock</span>());
+                    <span class='macro'>info</span><span class='macro'>!</span>(<span class='string'>&quot;Informing {:?} to {} FFI network event observers.&quot;</span>,
+                          <span class='ident'>event</span>,
+                          <span class='ident'>cbs</span>.<span class='ident'>len</span>());
+                    <span class='kw'>let</span> <span class='ident'>event_ffi_val</span> <span class='op'>=</span> <span class='ident'>event</span>.<span class='ident'>into</span>();
+                    <span class='kw'>for</span> <span class='ident'>cb</span> <span class='kw'>in</span> <span class='ident'>cbs</span> {
+                        <span class='ident'>cb</span>(<span class='ident'>event_ffi_val</span>);
+                    }
                 }
-                <span class='kw'>let</span> <span class='ident'>cbs</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>callbacks</span>.<span class='ident'>lock</span>());
-                <span class='macro'>info</span><span class='macro'>!</span>(<span class='string'>&quot;Informing {:?} to {} FFI network event observers.&quot;</span>,
-                      <span class='ident'>event</span>,
-                      <span class='ident'>cbs</span>.<span class='ident'>len</span>());
-                <span class='kw'>let</span> <span class='ident'>event_ffi_val</span> <span class='op'>=</span> <span class='ident'>event</span>.<span class='ident'>into</span>();
-                <span class='kw'>for</span> <span class='ident'>cb</span> <span class='kw'>in</span> <span class='ident'>cbs</span> {
-                    <span class='ident'>cb</span>(<span class='ident'>event_ffi_val</span>);
-                }
-            }
-        });
+            });
 
-        <span class='ident'>ffi_handle</span>.<span class='ident'>raii_joiner</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>raii_joiner</span>);
-        <span class='ident'>ffi_handle</span>.<span class='ident'>network_thread_terminator</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>cloned_tx</span>);
-    }
+            <span class='ident'>ffi_handle</span>.<span class='ident'>raii_joiner</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>raii_joiner</span>);
+            <span class='ident'>ffi_handle</span>.<span class='ident'>network_thread_terminator</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>cloned_tx</span>);
+        }
 
-    <span class='ident'>mem</span>::<span class='ident'>forget</span>(<span class='ident'>ffi_handle</span>);
+        <span class='ident'>mem</span>::<span class='ident'>forget</span>(<span class='ident'>ffi_handle</span>);
+        <span class='number'>0</span>
+    })
 }
 
 <span class='doccomment'>/// Returns key size</span>
@@ -943,24 +1001,26 @@
                                   <span class='ident'>c_result</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>int32_t</span>,
                                   <span class='ident'>ffi_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FfiHandle</span>)
                                   <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span> {
-    <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='ident'>cast_from_ffi_handle</span>(<span class='ident'>ffi_handle</span>);
-    <span class='kw'>let</span> <span class='ident'>app_name</span>: <span class='ident'>String</span> <span class='op'>=</span> <span class='macro'>ffi_ptr_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_char_ptr_to_string</span>(<span class='ident'>c_app_name</span>), <span class='ident'>c_result</span>);
-    <span class='kw'>let</span> <span class='ident'>app_id</span>: <span class='ident'>String</span> <span class='op'>=</span> <span class='macro'>ffi_ptr_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_char_ptr_to_string</span>(<span class='ident'>c_app_id</span>), <span class='ident'>c_result</span>);
-    <span class='kw'>let</span> <span class='ident'>vendor</span>: <span class='ident'>String</span> <span class='op'>=</span> <span class='macro'>ffi_ptr_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_char_ptr_to_string</span>(<span class='ident'>c_vendor</span>), <span class='ident'>c_result</span>);
-    <span class='kw'>let</span> <span class='ident'>handler</span> <span class='op'>=</span> <span class='ident'>launcher_config_handler</span>::<span class='ident'>ConfigHandler</span>::<span class='ident'>new</span>(<span class='ident'>client</span>);
-    <span class='kw'>let</span> <span class='ident'>dir_key</span> <span class='op'>=</span> <span class='macro'>ffi_ptr_try</span><span class='macro'>!</span>(<span class='ident'>handler</span>.<span class='ident'>get_app_dir_key</span>(<span class='ident'>app_name</span>, <span class='ident'>app_id</span>, <span class='ident'>vendor</span>), <span class='ident'>c_result</span>);
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>serialised_data</span> <span class='op'>=</span> <span class='macro'>ffi_ptr_try</span><span class='macro'>!</span>(<span class='ident'>serialise</span>(<span class='kw-2'>&amp;</span><span class='ident'>dir_key</span>).<span class='ident'>map_err</span>(<span class='ident'>FfiError</span>::<span class='ident'>from</span>), <span class='ident'>c_result</span>);
-    <span class='ident'>serialised_data</span>.<span class='ident'>shrink_to_fit</span>();
-    <span class='kw'>unsafe</span> {
-        <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>c_size</span>, <span class='ident'>serialised_data</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>i32</span>);
-        <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>c_capacity</span>, <span class='ident'>serialised_data</span>.<span class='ident'>capacity</span>() <span class='kw'>as</span> <span class='ident'>i32</span>);
-        <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>c_result</span>, <span class='number'>0</span>);
-    }
+    <span class='ident'>catch_unwind_ptr</span>(<span class='op'>||</span> {
+        <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='ident'>cast_from_ffi_handle</span>(<span class='ident'>ffi_handle</span>);
+        <span class='kw'>let</span> <span class='ident'>app_name</span>: <span class='ident'>String</span> <span class='op'>=</span> <span class='macro'>ffi_ptr_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_char_ptr_to_string</span>(<span class='ident'>c_app_name</span>), <span class='ident'>c_result</span>);
+        <span class='kw'>let</span> <span class='ident'>app_id</span>: <span class='ident'>String</span> <span class='op'>=</span> <span class='macro'>ffi_ptr_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_char_ptr_to_string</span>(<span class='ident'>c_app_id</span>), <span class='ident'>c_result</span>);
+        <span class='kw'>let</span> <span class='ident'>vendor</span>: <span class='ident'>String</span> <span class='op'>=</span> <span class='macro'>ffi_ptr_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_char_ptr_to_string</span>(<span class='ident'>c_vendor</span>), <span class='ident'>c_result</span>);
+        <span class='kw'>let</span> <span class='ident'>handler</span> <span class='op'>=</span> <span class='ident'>launcher_config_handler</span>::<span class='ident'>ConfigHandler</span>::<span class='ident'>new</span>(<span class='ident'>client</span>);
+        <span class='kw'>let</span> <span class='ident'>dir_key</span> <span class='op'>=</span> <span class='macro'>ffi_ptr_try</span><span class='macro'>!</span>(<span class='ident'>handler</span>.<span class='ident'>get_app_dir_key</span>(<span class='ident'>app_name</span>, <span class='ident'>app_id</span>, <span class='ident'>vendor</span>), <span class='ident'>c_result</span>);
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>serialised_data</span> <span class='op'>=</span> <span class='macro'>ffi_ptr_try</span><span class='macro'>!</span>(<span class='ident'>serialise</span>(<span class='kw-2'>&amp;</span><span class='ident'>dir_key</span>).<span class='ident'>map_err</span>(<span class='ident'>FfiError</span>::<span class='ident'>from</span>), <span class='ident'>c_result</span>);
+        <span class='ident'>serialised_data</span>.<span class='ident'>shrink_to_fit</span>();
+        <span class='kw'>unsafe</span> {
+            <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>c_size</span>, <span class='ident'>serialised_data</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>i32</span>);
+            <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>c_capacity</span>, <span class='ident'>serialised_data</span>.<span class='ident'>capacity</span>() <span class='kw'>as</span> <span class='ident'>i32</span>);
+            <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>c_result</span>, <span class='number'>0</span>);
+        }
 
-    <span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> <span class='ident'>serialised_data</span>.<span class='ident'>as_ptr</span>();
-    <span class='ident'>mem</span>::<span class='ident'>forget</span>(<span class='ident'>serialised_data</span>);
+        <span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> <span class='ident'>serialised_data</span>.<span class='ident'>as_ptr</span>();
+        <span class='ident'>mem</span>::<span class='ident'>forget</span>(<span class='ident'>serialised_data</span>);
 
-    <span class='ident'>ptr</span>
+        <span class='ident'>ptr</span>
+    })
 }
 
 <span class='doccomment'>/// Returns Key as base64 string</span>
@@ -971,19 +1031,21 @@
                                      <span class='ident'>c_result</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>int32_t</span>,
                                      <span class='ident'>ffi_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FfiHandle</span>)
                                      <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span> {
-    <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='ident'>cast_from_ffi_handle</span>(<span class='ident'>ffi_handle</span>);
-    <span class='kw'>let</span> <span class='ident'>dir_key</span> <span class='op'>=</span> <span class='macro'>ffi_ptr_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>get_safe_drive_key</span>(<span class='ident'>client</span>), <span class='ident'>c_result</span>);
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>serialised_data</span> <span class='op'>=</span> <span class='macro'>ffi_ptr_try</span><span class='macro'>!</span>(<span class='ident'>serialise</span>(<span class='kw-2'>&amp;</span><span class='ident'>dir_key</span>).<span class='ident'>map_err</span>(<span class='ident'>FfiError</span>::<span class='ident'>from</span>), <span class='ident'>c_result</span>);
-    <span class='ident'>serialised_data</span>.<span class='ident'>shrink_to_fit</span>();
-    <span class='kw'>unsafe</span> {
-        <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>c_size</span>, <span class='ident'>serialised_data</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>i32</span>);
-        <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>c_capacity</span>, <span class='ident'>serialised_data</span>.<span class='ident'>capacity</span>() <span class='kw'>as</span> <span class='ident'>i32</span>);
-        <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>c_result</span>, <span class='number'>0</span>);
-    }
-    <span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> <span class='ident'>serialised_data</span>.<span class='ident'>as_ptr</span>();
-    <span class='ident'>mem</span>::<span class='ident'>forget</span>(<span class='ident'>serialised_data</span>);
+    <span class='ident'>catch_unwind_ptr</span>(<span class='op'>||</span> {
+        <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='ident'>cast_from_ffi_handle</span>(<span class='ident'>ffi_handle</span>);
+        <span class='kw'>let</span> <span class='ident'>dir_key</span> <span class='op'>=</span> <span class='macro'>ffi_ptr_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>get_safe_drive_key</span>(<span class='ident'>client</span>), <span class='ident'>c_result</span>);
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>serialised_data</span> <span class='op'>=</span> <span class='macro'>ffi_ptr_try</span><span class='macro'>!</span>(<span class='ident'>serialise</span>(<span class='kw-2'>&amp;</span><span class='ident'>dir_key</span>).<span class='ident'>map_err</span>(<span class='ident'>FfiError</span>::<span class='ident'>from</span>), <span class='ident'>c_result</span>);
+        <span class='ident'>serialised_data</span>.<span class='ident'>shrink_to_fit</span>();
+        <span class='kw'>unsafe</span> {
+            <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>c_size</span>, <span class='ident'>serialised_data</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>i32</span>);
+            <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>c_capacity</span>, <span class='ident'>serialised_data</span>.<span class='ident'>capacity</span>() <span class='kw'>as</span> <span class='ident'>i32</span>);
+            <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>c_result</span>, <span class='number'>0</span>);
+        }
+        <span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> <span class='ident'>serialised_data</span>.<span class='ident'>as_ptr</span>();
+        <span class='ident'>mem</span>::<span class='ident'>forget</span>(<span class='ident'>serialised_data</span>);
 
-    <span class='ident'>ptr</span>
+        <span class='ident'>ptr</span>
+    })
 }
 
 <span class='doccomment'>/// Discard and clean up the previously allocated client. Use this only if the client is obtained</span>
@@ -1006,15 +1068,17 @@
 <span class='doccomment'>/// safe_drive_access and data. `data` refers to API specific payload.</span>
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
 <span class='kw'>pub</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>execute</span>(<span class='ident'>c_payload</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>, <span class='ident'>ffi_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FfiHandle</span>) <span class='op'>-&gt;</span> <span class='ident'>int32_t</span> {
-    <span class='kw'>let</span> <span class='ident'>payload</span>: <span class='ident'>String</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_char_ptr_to_string</span>(<span class='ident'>c_payload</span>));
-    <span class='kw'>let</span> <span class='ident'>json_request</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>parse_result</span><span class='macro'>!</span>(<span class='ident'>json</span>::<span class='ident'>Json</span>::<span class='ident'>from_str</span>(<span class='kw-2'>&amp;</span><span class='ident'>payload</span>), <span class='string'>&quot;JSON parse error&quot;</span>));
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>json_decoder</span> <span class='op'>=</span> <span class='ident'>json</span>::<span class='ident'>Decoder</span>::<span class='ident'>new</span>(<span class='ident'>json_request</span>);
-    <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='ident'>cast_from_ffi_handle</span>(<span class='ident'>ffi_handle</span>);
-    <span class='kw'>let</span> (<span class='ident'>module</span>, <span class='ident'>action</span>, <span class='ident'>parameter_packet</span>) <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>get_context</span>(<span class='ident'>client</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>json_decoder</span>));
-    <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>module_parser</span>(<span class='ident'>module</span>, <span class='ident'>action</span>, <span class='ident'>parameter_packet</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>json_decoder</span>);
-    <span class='kw'>let</span> _ <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>result</span>);
+    <span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
+        <span class='kw'>let</span> <span class='ident'>payload</span>: <span class='ident'>String</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_char_ptr_to_string</span>(<span class='ident'>c_payload</span>));
+        <span class='kw'>let</span> <span class='ident'>json_request</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>parse_result</span><span class='macro'>!</span>(<span class='ident'>json</span>::<span class='ident'>Json</span>::<span class='ident'>from_str</span>(<span class='kw-2'>&amp;</span><span class='ident'>payload</span>), <span class='string'>&quot;JSON parse error&quot;</span>));
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>json_decoder</span> <span class='op'>=</span> <span class='ident'>json</span>::<span class='ident'>Decoder</span>::<span class='ident'>new</span>(<span class='ident'>json_request</span>);
+        <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='ident'>cast_from_ffi_handle</span>(<span class='ident'>ffi_handle</span>);
+        <span class='kw'>let</span> (<span class='ident'>module</span>, <span class='ident'>action</span>, <span class='ident'>parameter_packet</span>) <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>get_context</span>(<span class='ident'>client</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>json_decoder</span>));
+        <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>module_parser</span>(<span class='ident'>module</span>, <span class='ident'>action</span>, <span class='ident'>parameter_packet</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>json_decoder</span>);
+        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>result</span>);
 
-    <span class='number'>0</span>
+        <span class='number'>0</span>
+    })
 }
 
 <span class='doccomment'>/// General function that can be invoked for getting data as a resut for an operation.</span>
@@ -1029,76 +1093,86 @@
                                       <span class='ident'>c_result</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>int32_t</span>,
                                       <span class='ident'>ffi_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FfiHandle</span>)
                                       <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span> {
-    <span class='kw'>let</span> <span class='ident'>payload</span>: <span class='ident'>String</span> <span class='op'>=</span> <span class='macro'>ffi_ptr_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_char_ptr_to_string</span>(<span class='ident'>c_payload</span>), <span class='ident'>c_result</span>);
-    <span class='kw'>let</span> <span class='ident'>json_request</span> <span class='op'>=</span> <span class='macro'>ffi_ptr_try</span><span class='macro'>!</span>(<span class='macro'>parse_result</span><span class='macro'>!</span>(<span class='ident'>json</span>::<span class='ident'>Json</span>::<span class='ident'>from_str</span>(<span class='kw-2'>&amp;</span><span class='ident'>payload</span>),
-                                                  <span class='string'>&quot;JSON parse error&quot;</span>),
-                                    <span class='ident'>c_result</span>);
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>json_decoder</span> <span class='op'>=</span> <span class='ident'>json</span>::<span class='ident'>Decoder</span>::<span class='ident'>new</span>(<span class='ident'>json_request</span>.<span class='ident'>clone</span>());
-    <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='ident'>cast_from_ffi_handle</span>(<span class='ident'>ffi_handle</span>);
-    <span class='kw'>let</span> (<span class='ident'>module</span>, <span class='ident'>action</span>, <span class='ident'>parameter_packet</span>) <span class='op'>=</span> <span class='macro'>ffi_ptr_try</span><span class='macro'>!</span>(<span class='ident'>get_context</span>(<span class='ident'>client</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>json_decoder</span>),
-                                                          <span class='ident'>c_result</span>);
-    <span class='comment'>// TODO Krishna: Avoid parsing it twice (line 292). for get_context pass the json</span>
-    <span class='comment'>// object and iterate. parse based on keys</span>
-    <span class='ident'>json_decoder</span> <span class='op'>=</span> <span class='ident'>json</span>::<span class='ident'>Decoder</span>::<span class='ident'>new</span>(<span class='ident'>json_request</span>.<span class='ident'>clone</span>());
-    <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='macro'>ffi_ptr_try</span><span class='macro'>!</span>(<span class='ident'>module_parser</span>(<span class='ident'>module</span>, <span class='ident'>action</span>, <span class='ident'>parameter_packet</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>json_decoder</span>),
-                              <span class='ident'>c_result</span>);
-    <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>result</span> {
-        <span class='prelude-val'>Some</span>(<span class='ident'>response</span>) <span class='op'>=&gt;</span> <span class='ident'>response</span>.<span class='ident'>into_bytes</span>(),
-        <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='ident'>Vec</span>::<span class='ident'>with_capacity</span>(<span class='number'>0</span>),
-    };
+    <span class='ident'>catch_unwind_ptr</span>(<span class='op'>||</span> {
+        <span class='kw'>let</span> <span class='ident'>payload</span>: <span class='ident'>String</span> <span class='op'>=</span> <span class='macro'>ffi_ptr_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_char_ptr_to_string</span>(<span class='ident'>c_payload</span>), <span class='ident'>c_result</span>);
+        <span class='kw'>let</span> <span class='ident'>json_request</span> <span class='op'>=</span> <span class='macro'>ffi_ptr_try</span><span class='macro'>!</span>(<span class='macro'>parse_result</span><span class='macro'>!</span>(<span class='ident'>json</span>::<span class='ident'>Json</span>::<span class='ident'>from_str</span>(<span class='kw-2'>&amp;</span><span class='ident'>payload</span>),
+                                                      <span class='string'>&quot;JSON parse error&quot;</span>),
+                                        <span class='ident'>c_result</span>);
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>json_decoder</span> <span class='op'>=</span> <span class='ident'>json</span>::<span class='ident'>Decoder</span>::<span class='ident'>new</span>(<span class='ident'>json_request</span>.<span class='ident'>clone</span>());
+        <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='ident'>cast_from_ffi_handle</span>(<span class='ident'>ffi_handle</span>);
+        <span class='kw'>let</span> (<span class='ident'>module</span>, <span class='ident'>action</span>, <span class='ident'>parameter_packet</span>) <span class='op'>=</span> <span class='macro'>ffi_ptr_try</span><span class='macro'>!</span>(<span class='ident'>get_context</span>(<span class='ident'>client</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>json_decoder</span>),
+                                                              <span class='ident'>c_result</span>);
+        <span class='comment'>// TODO Krishna: Avoid parsing it twice (line 292). for get_context pass the json</span>
+        <span class='comment'>// object and iterate. parse based on keys</span>
+        <span class='ident'>json_decoder</span> <span class='op'>=</span> <span class='ident'>json</span>::<span class='ident'>Decoder</span>::<span class='ident'>new</span>(<span class='ident'>json_request</span>.<span class='ident'>clone</span>());
+        <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='macro'>ffi_ptr_try</span><span class='macro'>!</span>(<span class='ident'>module_parser</span>(<span class='ident'>module</span>, <span class='ident'>action</span>, <span class='ident'>parameter_packet</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>json_decoder</span>),
+                                  <span class='ident'>c_result</span>);
+        <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>result</span> {
+            <span class='prelude-val'>Some</span>(<span class='ident'>response</span>) <span class='op'>=&gt;</span> <span class='ident'>response</span>.<span class='ident'>into_bytes</span>(),
+            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='ident'>Vec</span>::<span class='ident'>with_capacity</span>(<span class='number'>0</span>),
+        };
 
-    <span class='kw'>unsafe</span> {
-        <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>c_size</span>, <span class='ident'>data</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>i32</span>);
-        <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>c_capacity</span>, <span class='ident'>data</span>.<span class='ident'>capacity</span>() <span class='kw'>as</span> <span class='ident'>i32</span>);
-        <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>c_result</span>, <span class='number'>0</span>);
-    };
-    <span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> <span class='ident'>data</span>.<span class='ident'>as_ptr</span>();
-    <span class='ident'>mem</span>::<span class='ident'>forget</span>(<span class='ident'>data</span>);
+        <span class='kw'>unsafe</span> {
+            <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>c_size</span>, <span class='ident'>data</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>i32</span>);
+            <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>c_capacity</span>, <span class='ident'>data</span>.<span class='ident'>capacity</span>() <span class='kw'>as</span> <span class='ident'>i32</span>);
+            <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>c_result</span>, <span class='number'>0</span>);
+        };
+        <span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> <span class='ident'>data</span>.<span class='ident'>as_ptr</span>();
+        <span class='ident'>mem</span>::<span class='ident'>forget</span>(<span class='ident'>data</span>);
 
-    <span class='ident'>ptr</span>
+        <span class='ident'>ptr</span>
+    })
 }
 
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
 <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>unsafe_code</span>)]</span>
 <span class='doccomment'>/// Drop the vector returned as a result of the execute_for_content fn</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>drop_vector</span>(<span class='ident'>ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>, <span class='ident'>size</span>: <span class='ident'>int32_t</span>, <span class='ident'>capacity</span>: <span class='ident'>int32_t</span>) {
+<span class='kw'>pub</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>drop_vector</span>(<span class='ident'>ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>, <span class='ident'>size</span>: <span class='ident'>int32_t</span>, <span class='ident'>capacity</span>: <span class='ident'>int32_t</span>) {
     <span class='kw'>let</span> _ <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>Vec</span>::<span class='ident'>from_raw_parts</span>(<span class='ident'>ptr</span>, <span class='ident'>size</span> <span class='kw'>as</span> <span class='ident'>usize</span>, <span class='ident'>capacity</span> <span class='kw'>as</span> <span class='ident'>usize</span>) };
 }
 
 <span class='doccomment'>/// Return the amount of calls that were done to `get`</span>
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
 <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>unsafe_code</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>client_issued_gets</span>(<span class='ident'>ffi_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FfiHandle</span>) <span class='op'>-&gt;</span> <span class='ident'>u64</span> {
-    <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='ident'>cast_from_ffi_handle</span>(<span class='ident'>ffi_handle</span>);
-    <span class='kw'>let</span> <span class='ident'>guard</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>lock</span>());
-    <span class='ident'>guard</span>.<span class='ident'>issued_gets</span>()
+<span class='kw'>pub</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>client_issued_gets</span>(<span class='ident'>ffi_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FfiHandle</span>) <span class='op'>-&gt;</span> <span class='ident'>int64_t</span> {
+    <span class='ident'>catch_unwind_i64</span>(<span class='op'>||</span> {
+        <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='ident'>cast_from_ffi_handle</span>(<span class='ident'>ffi_handle</span>);
+        <span class='kw'>let</span> <span class='ident'>guard</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>lock</span>());
+        <span class='ident'>guard</span>.<span class='ident'>issued_gets</span>() <span class='kw'>as</span> <span class='ident'>int64_t</span>
+    })
 }
 
 <span class='doccomment'>/// Return the amount of calls that were done to `put`</span>
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
 <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>unsafe_code</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>client_issued_puts</span>(<span class='ident'>ffi_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FfiHandle</span>) <span class='op'>-&gt;</span> <span class='ident'>u64</span> {
-    <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='ident'>cast_from_ffi_handle</span>(<span class='ident'>ffi_handle</span>);
-    <span class='kw'>let</span> <span class='ident'>guard</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>lock</span>());
-    <span class='ident'>guard</span>.<span class='ident'>issued_puts</span>()
+<span class='kw'>pub</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>client_issued_puts</span>(<span class='ident'>ffi_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FfiHandle</span>) <span class='op'>-&gt;</span> <span class='ident'>int64_t</span> {
+    <span class='ident'>catch_unwind_i64</span>(<span class='op'>||</span> {
+        <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='ident'>cast_from_ffi_handle</span>(<span class='ident'>ffi_handle</span>);
+        <span class='kw'>let</span> <span class='ident'>guard</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>lock</span>());
+        <span class='ident'>guard</span>.<span class='ident'>issued_puts</span>() <span class='kw'>as</span> <span class='ident'>int64_t</span>
+    })
 }
 
 <span class='doccomment'>/// Return the amount of calls that were done to `post`</span>
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
 <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>unsafe_code</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>client_issued_posts</span>(<span class='ident'>ffi_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FfiHandle</span>) <span class='op'>-&gt;</span> <span class='ident'>u64</span> {
-    <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='ident'>cast_from_ffi_handle</span>(<span class='ident'>ffi_handle</span>);
-    <span class='kw'>let</span> <span class='ident'>guard</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>lock</span>());
-    <span class='ident'>guard</span>.<span class='ident'>issued_posts</span>()
+<span class='kw'>pub</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>client_issued_posts</span>(<span class='ident'>ffi_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FfiHandle</span>) <span class='op'>-&gt;</span> <span class='ident'>int64_t</span> {
+    <span class='ident'>catch_unwind_i64</span>(<span class='op'>||</span> {
+        <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='ident'>cast_from_ffi_handle</span>(<span class='ident'>ffi_handle</span>);
+        <span class='kw'>let</span> <span class='ident'>guard</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>lock</span>());
+        <span class='ident'>guard</span>.<span class='ident'>issued_posts</span>() <span class='kw'>as</span> <span class='ident'>int64_t</span>
+    })
 }
 
 <span class='doccomment'>/// Return the amount of calls that were done to `delete`</span>
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
 <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>unsafe_code</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>client_issued_deletes</span>(<span class='ident'>ffi_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FfiHandle</span>) <span class='op'>-&gt;</span> <span class='ident'>u64</span> {
-    <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='ident'>cast_from_ffi_handle</span>(<span class='ident'>ffi_handle</span>);
-    <span class='kw'>let</span> <span class='ident'>guard</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>lock</span>());
-    <span class='ident'>guard</span>.<span class='ident'>issued_deletes</span>()
+<span class='kw'>pub</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>client_issued_deletes</span>(<span class='ident'>ffi_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FfiHandle</span>) <span class='op'>-&gt;</span> <span class='ident'>int64_t</span> {
+    <span class='ident'>catch_unwind_i64</span>(<span class='op'>||</span> {
+        <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='ident'>cast_from_ffi_handle</span>(<span class='ident'>ffi_handle</span>);
+        <span class='kw'>let</span> <span class='ident'>guard</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>lock</span>());
+        <span class='ident'>guard</span>.<span class='ident'>issued_deletes</span>() <span class='kw'>as</span> <span class='ident'>int64_t</span>
+    })
 }
 
 
@@ -1109,45 +1183,65 @@
                                  <span class='ident'>ffi_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FfiHandle</span>,
                                  <span class='ident'>p_writer_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FfiWriterHandle</span>)
                                  <span class='op'>-&gt;</span> <span class='ident'>int32_t</span> {
-    <span class='kw'>let</span> <span class='ident'>payload</span>: <span class='ident'>String</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_char_ptr_to_string</span>(<span class='ident'>c_payload</span>));
-    <span class='kw'>let</span> <span class='ident'>json_request</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>parse_result</span><span class='macro'>!</span>(<span class='ident'>json</span>::<span class='ident'>Json</span>::<span class='ident'>from_str</span>(<span class='kw-2'>&amp;</span><span class='ident'>payload</span>), <span class='string'>&quot;JSON parse error&quot;</span>));
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>json_decoder</span> <span class='op'>=</span> <span class='ident'>json</span>::<span class='ident'>Decoder</span>::<span class='ident'>new</span>(<span class='ident'>json_request</span>);
-    <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='ident'>cast_from_ffi_handle</span>(<span class='ident'>ffi_handle</span>);
-    <span class='kw'>let</span> <span class='ident'>parameter_packet</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>get_parameter_packet</span>(<span class='ident'>client</span>, <span class='number'>0</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>json_decoder</span>));
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>get_file_writer</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>parse_result</span><span class='macro'>!</span>(<span class='ident'>json_decoder</span>.<span class='ident'>read_struct_field</span>(<span class='string'>&quot;data&quot;</span>, <span class='number'>0</span>, <span class='op'>|</span><span class='ident'>d</span><span class='op'>|</span> {
-                                                             <span class='ident'>GetFileWriter</span>::<span class='ident'>decode</span>(<span class='ident'>d</span>)
-                                                         }),
-                                                     <span class='string'>&quot;&quot;</span>));
-    <span class='kw'>let</span> <span class='ident'>writer_handle</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>get_file_writer</span>.<span class='ident'>get</span>(<span class='ident'>parameter_packet</span>));
-    <span class='kw'>unsafe</span> {
-        <span class='op'>*</span><span class='ident'>p_writer_handle</span> <span class='op'>=</span> <span class='ident'>Box</span>::<span class='ident'>into_raw</span>(<span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>writer_handle</span>));
-    }
+    <span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
+        <span class='kw'>let</span> <span class='ident'>payload</span>: <span class='ident'>String</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_char_ptr_to_string</span>(<span class='ident'>c_payload</span>));
+        <span class='kw'>let</span> <span class='ident'>json_request</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>parse_result</span><span class='macro'>!</span>(<span class='ident'>json</span>::<span class='ident'>Json</span>::<span class='ident'>from_str</span>(<span class='kw-2'>&amp;</span><span class='ident'>payload</span>), <span class='string'>&quot;JSON parse error&quot;</span>));
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>json_decoder</span> <span class='op'>=</span> <span class='ident'>json</span>::<span class='ident'>Decoder</span>::<span class='ident'>new</span>(<span class='ident'>json_request</span>);
+        <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='ident'>cast_from_ffi_handle</span>(<span class='ident'>ffi_handle</span>);
+        <span class='kw'>let</span> <span class='ident'>parameter_packet</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>get_parameter_packet</span>(<span class='ident'>client</span>, <span class='number'>0</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>json_decoder</span>));
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>get_file_writer</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>parse_result</span><span class='macro'>!</span>(<span class='ident'>json_decoder</span>.<span class='ident'>read_struct_field</span>(<span class='string'>&quot;data&quot;</span>, <span class='number'>0</span>, <span class='op'>|</span><span class='ident'>d</span><span class='op'>|</span> {
+                                                                 <span class='ident'>GetFileWriter</span>::<span class='ident'>decode</span>(<span class='ident'>d</span>)
+                                                             }),
+                                                         <span class='string'>&quot;&quot;</span>));
+        <span class='kw'>let</span> <span class='ident'>writer_handle</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>get_file_writer</span>.<span class='ident'>get</span>(<span class='ident'>parameter_packet</span>));
+        <span class='kw'>unsafe</span> {
+            <span class='op'>*</span><span class='ident'>p_writer_handle</span> <span class='op'>=</span> <span class='ident'>Box</span>::<span class='ident'>into_raw</span>(<span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>writer_handle</span>));
+        }
 
-    <span class='number'>0</span>
+        <span class='number'>0</span>
+    })
 }
 
 <span class='doccomment'>/// Write data to the Network using the NFS Writer handle</span>
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
 <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>unsafe_code</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>nfs_stream_write</span>(<span class='ident'>writer_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FfiWriterHandle</span>,
+<span class='kw'>pub</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>nfs_stream_write</span>(<span class='ident'>writer_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FfiWriterHandle</span>,
                         <span class='ident'>offset</span>: <span class='ident'>u64</span>,
                         <span class='ident'>c_data</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
                         <span class='ident'>len</span>: <span class='ident'>usize</span>)
                         <span class='op'>-&gt;</span> <span class='ident'>int32_t</span> {
-    <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>slice</span>::<span class='ident'>from_raw_parts</span>(<span class='ident'>c_data</span>, <span class='ident'>len</span>) };
-    <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { (<span class='op'>*</span><span class='ident'>writer_handle</span>).<span class='ident'>writer</span>().<span class='ident'>write</span>(<span class='kw-2'>&amp;</span><span class='ident'>data</span>[..], <span class='ident'>offset</span>) });
+    <span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
+        <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>slice</span>::<span class='ident'>from_raw_parts</span>(<span class='ident'>c_data</span>, <span class='ident'>len</span>) };
+        <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { (<span class='op'>*</span><span class='ident'>writer_handle</span>).<span class='ident'>writer</span>().<span class='ident'>write</span>(<span class='kw-2'>&amp;</span><span class='ident'>data</span>[..], <span class='ident'>offset</span>) });
 
-    <span class='number'>0</span>
+        <span class='number'>0</span>
+    })
 }
 
 <span class='doccomment'>/// Closes the NFS Writer handle</span>
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
 <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>unsafe_code</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>nfs_stream_close</span>(<span class='ident'>writer_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FfiWriterHandle</span>) <span class='op'>-&gt;</span> <span class='ident'>int32_t</span> {
-    <span class='kw'>let</span> <span class='ident'>handle</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>Box</span>::<span class='ident'>from_raw</span>(<span class='ident'>writer_handle</span>) };
-    <span class='kw'>let</span> _ <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>handle</span>.<span class='ident'>close</span>());
+<span class='kw'>pub</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>nfs_stream_close</span>(<span class='ident'>writer_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FfiWriterHandle</span>) <span class='op'>-&gt;</span> <span class='ident'>int32_t</span> {
+    <span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
+        <span class='kw'>let</span> <span class='ident'>handle</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>Box</span>::<span class='ident'>from_raw</span>(<span class='ident'>writer_handle</span>) };
+        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>handle</span>.<span class='ident'>close</span>());
 
-    <span class='number'>0</span>
+        <span class='number'>0</span>
+    })
+}
+
+<span class='kw'>fn</span> <span class='ident'>catch_unwind_i32</span><span class='op'>&lt;</span><span class='ident'>F</span>: <span class='ident'>FnOnce</span>() <span class='op'>-&gt;</span> <span class='ident'>int32_t</span><span class='op'>&gt;</span>(<span class='ident'>f</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='ident'>int32_t</span> {
+    <span class='kw'>let</span> <span class='ident'>errno</span>: <span class='ident'>i32</span> <span class='op'>=</span> <span class='ident'>FfiError</span>::<span class='ident'>Unexpected</span>(<span class='ident'>String</span>::<span class='ident'>new</span>()).<span class='ident'>into</span>();
+    <span class='ident'>panic</span>::<span class='ident'>catch_unwind</span>(<span class='ident'>panic</span>::<span class='ident'>AssertUnwindSafe</span>(<span class='ident'>f</span>)).<span class='ident'>unwrap_or</span>(<span class='ident'>errno</span>)
+}
+
+<span class='kw'>fn</span> <span class='ident'>catch_unwind_i64</span><span class='op'>&lt;</span><span class='ident'>F</span>: <span class='ident'>FnOnce</span>() <span class='op'>-&gt;</span> <span class='ident'>int64_t</span><span class='op'>&gt;</span>(<span class='ident'>f</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='ident'>int64_t</span> {
+    <span class='kw'>let</span> <span class='ident'>errno</span>: <span class='ident'>i32</span> <span class='op'>=</span> <span class='ident'>FfiError</span>::<span class='ident'>Unexpected</span>(<span class='ident'>String</span>::<span class='ident'>new</span>()).<span class='ident'>into</span>();
+    <span class='ident'>panic</span>::<span class='ident'>catch_unwind</span>(<span class='ident'>panic</span>::<span class='ident'>AssertUnwindSafe</span>(<span class='ident'>f</span>)).<span class='ident'>unwrap_or</span>(<span class='ident'>errno</span> <span class='kw'>as</span> <span class='ident'>i64</span>)
+}
+
+<span class='kw'>fn</span> <span class='ident'>catch_unwind_ptr</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>F</span>: <span class='ident'>FnOnce</span>() <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>f</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>T</span> {
+    <span class='ident'>panic</span>::<span class='ident'>catch_unwind</span>(<span class='ident'>panic</span>::<span class='ident'>AssertUnwindSafe</span>(<span class='ident'>f</span>)).<span class='ident'>unwrap_or</span>(<span class='ident'>ptr</span>::<span class='ident'>null</span>())
 }
 
 <span class='kw'>fn</span> <span class='ident'>get_context</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span>(<span class='ident'>client</span>: <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>Mutex</span><span class='op'>&lt;</span><span class='ident'>Client</span><span class='op'>&gt;&gt;</span>,
