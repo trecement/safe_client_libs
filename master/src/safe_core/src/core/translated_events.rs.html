@@ -98,6 +98,8 @@
 <span id="54">54</span>
 <span id="55">55</span>
 <span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -128,6 +130,8 @@
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>ResponseEvent</span> {
     <span class='doccomment'>/// Response to a previous GET request</span>
     <span class='ident'>GetResp</span>(<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Data</span>, <span class='ident'>CoreError</span><span class='op'>&gt;</span>),
+    <span class='doccomment'>/// Response to a previous GetAccountInfo request</span>
+    <span class='ident'>GetAccountInfoResp</span>(<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(<span class='ident'>u64</span>, <span class='ident'>u64</span>), <span class='ident'>CoreError</span><span class='op'>&gt;</span>),
     <span class='doccomment'>/// Response to a previous Mutating (PUT/POST/DELETE) request</span>
     <span class='ident'>MutationResp</span>(<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>CoreError</span><span class='op'>&gt;</span>),
     <span class='doccomment'>/// Graceful Exit Condition</span>
@@ -179,6 +183,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

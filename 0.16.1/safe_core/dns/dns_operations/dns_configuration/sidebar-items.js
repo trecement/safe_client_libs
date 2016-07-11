@@ -1,1 +1,0 @@
-initSidebarItems({"fn":[["get_dns_configuration_data","Get dns configuration data."],["initialise_dns_configuaration","Initialise dns configuration."],["write_dns_configuration_data","Write dns configuration data."]],"struct":[["DnsConfiguration","Dns configuration. For internal use by the `dns` module."]]});

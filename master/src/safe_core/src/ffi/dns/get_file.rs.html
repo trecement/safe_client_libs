@@ -237,7 +237,7 @@
         <span class='kw'>let</span> <span class='ident'>directory_key</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dns_operations</span>.<span class='ident'>get_service_home_directory_key</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>long_name</span>,
                                                                                <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>service_name</span>,
                                                                                <span class='prelude-val'>None</span>));
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>tokens</span> <span class='op'>=</span> <span class='ident'>helper</span>::<span class='ident'>tokenise_path</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>file_path</span>, <span class='boolval'>false</span>);
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>tokens</span> <span class='op'>=</span> <span class='ident'>helper</span>::<span class='ident'>tokenise_path</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>file_path</span>, <span class='boolvalue'>false</span>);
         <span class='kw'>let</span> <span class='ident'>file_name</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>tokens</span>.<span class='ident'>pop</span>().<span class='ident'>ok_or</span>(<span class='ident'>FfiError</span>::<span class='ident'>InvalidPath</span>));
         <span class='kw'>let</span> <span class='ident'>file_dir</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>get_final_subdirectory</span>(<span class='ident'>params</span>.<span class='ident'>client</span>.<span class='ident'>clone</span>(),
                                                            <span class='kw-2'>&amp;</span><span class='ident'>tokens</span>,
@@ -256,7 +256,7 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>test</span> {
-    <span class='kw'>use</span> <span class='ident'>super</span>::<span class='op'>*</span>;
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
     <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>utility</span>;
     <span class='kw'>use</span> <span class='ident'>sodiumoxide</span>::<span class='ident'>crypto</span>::<span class='ident'>box_</span>;
     <span class='kw'>use</span> <span class='ident'>dns</span>::<span class='ident'>dns_operations</span>::<span class='ident'>DnsOperations</span>;
@@ -278,7 +278,7 @@
         <span class='kw'>let</span> (<span class='ident'>file_directory</span>, _) <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>directory_helper</span>.<span class='ident'>create</span>(<span class='ident'>String</span>::<span class='ident'>from</span>(<span class='string'>&quot;public-dir&quot;</span>),
                                                                <span class='ident'>UNVERSIONED_DIRECTORY_LISTING_TAG</span>,
                                                                <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>0u8</span>; <span class='number'>0</span>],
-                                                               <span class='boolval'>false</span>,
+                                                               <span class='boolvalue'>false</span>,
                                                                <span class='ident'>AccessLevel</span>::<span class='ident'>Public</span>,
                                                                <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>file_directory</span>)));
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>file_helper</span> <span class='op'>=</span> <span class='ident'>FileHelper</span>::<span class='ident'>new</span>(<span class='ident'>params</span>.<span class='ident'>clone</span>().<span class='ident'>client</span>);
@@ -316,7 +316,7 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>get_public_file_using_registerd_client</span>() {
-        <span class='kw'>let</span> <span class='ident'>parameter_packet</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>test_utils</span>::<span class='ident'>get_parameter_packet</span>(<span class='boolval'>false</span>));
+        <span class='kw'>let</span> <span class='ident'>parameter_packet</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>test_utils</span>::<span class='ident'>get_parameter_packet</span>(<span class='boolvalue'>false</span>));
         <span class='kw'>let</span> <span class='ident'>file_name</span> <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>from</span>(<span class='string'>&quot;index.html&quot;</span>);
         <span class='kw'>let</span> <span class='ident'>file_content</span> <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>from</span>(<span class='string'>&quot;&lt;html&gt;&lt;title&gt;Home&lt;/title&gt;&lt;/html&gt;&quot;</span>);
         <span class='kw'>let</span> <span class='ident'>public_directory_key</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>create_public_file</span>(<span class='kw-2'>&amp;</span><span class='ident'>parameter_packet</span>,
@@ -336,11 +336,11 @@
             <span class='ident'>offset</span>: <span class='number'>0i64</span>,
             <span class='ident'>length</span>: <span class='number'>0i64</span>,
             <span class='ident'>file_path</span>: <span class='ident'>file_name</span>,
-            <span class='ident'>include_metadata</span>: <span class='boolval'>false</span>,
+            <span class='ident'>include_metadata</span>: <span class='boolvalue'>false</span>,
         };
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>request</span>.<span class='ident'>execute</span>(<span class='ident'>parameter_packet</span>).<span class='ident'>is_ok</span>());
         <span class='comment'>// Fetch the file using a new client</span>
-        <span class='kw'>let</span> <span class='ident'>new_parameter_packet</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>test_utils</span>::<span class='ident'>get_parameter_packet</span>(<span class='boolval'>false</span>));
+        <span class='kw'>let</span> <span class='ident'>new_parameter_packet</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>test_utils</span>::<span class='ident'>get_parameter_packet</span>(<span class='boolvalue'>false</span>));
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>request</span>.<span class='ident'>execute</span>(<span class='ident'>new_parameter_packet</span>).<span class='ident'>is_ok</span>());
         <span class='comment'>// Fetch the file using an unregisterd client</span>
         <span class='kw'>let</span> <span class='ident'>unreg_parameter_packet</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>test_utils</span>::<span class='ident'>get_unregistered_parameter_packet</span>());
@@ -371,6 +371,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

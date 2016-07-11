@@ -197,7 +197,7 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>test</span> {
-    <span class='kw'>use</span> <span class='ident'>super</span>::<span class='op'>*</span>;
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
     <span class='kw'>use</span> <span class='ident'>rand</span>;
     <span class='kw'>use</span> <span class='ident'>routing</span>::<span class='ident'>XorName</span>;
     <span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::{<span class='ident'>deserialise</span>, <span class='ident'>serialise</span>};
@@ -208,7 +208,7 @@
     <span class='kw'>fn</span> <span class='ident'>serailise_and_deserialise_directory_key</span>() {
         <span class='kw'>let</span> <span class='ident'>id</span>: <span class='ident'>XorName</span> <span class='op'>=</span> <span class='ident'>rand</span>::<span class='ident'>random</span>();
         <span class='kw'>let</span> <span class='ident'>tag</span> <span class='op'>=</span> <span class='number'>10u64</span>;
-        <span class='kw'>let</span> <span class='ident'>versioned</span> <span class='op'>=</span> <span class='boolval'>false</span>;
+        <span class='kw'>let</span> <span class='ident'>versioned</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
         <span class='kw'>let</span> <span class='ident'>access_level</span> <span class='op'>=</span> <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>;
 
         <span class='kw'>let</span> <span class='ident'>directory_key</span> <span class='op'>=</span> <span class='ident'>DirectoryKey</span>::<span class='ident'>new</span>(<span class='ident'>id</span>, <span class='ident'>tag</span>, <span class='ident'>versioned</span>, <span class='ident'>access_level</span>.<span class='ident'>clone</span>());
@@ -245,6 +245,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

@@ -1059,6 +1059,25 @@
 <span id="1015">1015</span>
 <span id="1016">1016</span>
 <span id="1017">1017</span>
+<span id="1018">1018</span>
+<span id="1019">1019</span>
+<span id="1020">1020</span>
+<span id="1021">1021</span>
+<span id="1022">1022</span>
+<span id="1023">1023</span>
+<span id="1024">1024</span>
+<span id="1025">1025</span>
+<span id="1026">1026</span>
+<span id="1027">1027</span>
+<span id="1028">1028</span>
+<span id="1029">1029</span>
+<span id="1030">1030</span>
+<span id="1031">1031</span>
+<span id="1032">1032</span>
+<span id="1033">1033</span>
+<span id="1034">1034</span>
+<span id="1035">1035</span>
+<span id="1036">1036</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -1090,7 +1109,8 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::{<span class='ident'>Arc</span>, <span class='ident'>Mutex</span>, <span class='ident'>mpsc</span>};
 
 <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>message_queue</span>::<span class='ident'>MessageQueue</span>;
-<span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>response_getter</span>::{<span class='ident'>GetResponseGetter</span>, <span class='ident'>MutationResponseGetter</span>};
+<span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>response_getter</span>::{<span class='ident'>GetAccountInfoResponseGetter</span>, <span class='ident'>GetResponseGetter</span>,
+                            <span class='ident'>MutationResponseGetter</span>};
 <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>user_account</span>::<span class='ident'>Account</span>;
 
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>errors</span>::<span class='ident'>CoreError</span>;
@@ -1140,9 +1160,9 @@
         <span class='kw'>let</span> (<span class='ident'>routing_sender</span>, <span class='ident'>routing_receiver</span>) <span class='op'>=</span> <span class='ident'>mpsc</span>::<span class='ident'>channel</span>();
         <span class='kw'>let</span> (<span class='ident'>network_event_sender</span>, <span class='ident'>network_event_receiver</span>) <span class='op'>=</span> <span class='ident'>mpsc</span>::<span class='ident'>channel</span>();
 
-        <span class='kw'>let</span> <span class='ident'>routing</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>Routing</span>::<span class='ident'>new</span>(<span class='ident'>routing_sender</span>, <span class='prelude-val'>None</span>));
         <span class='kw'>let</span> (<span class='ident'>message_queue</span>, <span class='ident'>raii_joiner</span>) <span class='op'>=</span> <span class='ident'>MessageQueue</span>::<span class='ident'>new</span>(<span class='ident'>routing_receiver</span>,
                                                              <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>network_event_sender</span>]);
+        <span class='kw'>let</span> <span class='ident'>routing</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>Routing</span>::<span class='ident'>new</span>(<span class='ident'>routing_sender</span>, <span class='prelude-val'>None</span>));
 
         <span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>network_event_receiver</span>.<span class='ident'>recv</span>()) {
             <span class='ident'>NetworkEvent</span>::<span class='ident'>Connected</span> <span class='op'>=&gt;</span> (),
@@ -1179,9 +1199,9 @@
         <span class='kw'>let</span> (<span class='ident'>routing_sender</span>, <span class='ident'>routing_receiver</span>) <span class='op'>=</span> <span class='ident'>mpsc</span>::<span class='ident'>channel</span>();
         <span class='kw'>let</span> (<span class='ident'>network_event_sender</span>, <span class='ident'>network_event_receiver</span>) <span class='op'>=</span> <span class='ident'>mpsc</span>::<span class='ident'>channel</span>();
 
-        <span class='kw'>let</span> <span class='ident'>routing</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>Routing</span>::<span class='ident'>new</span>(<span class='ident'>routing_sender</span>, <span class='prelude-val'>Some</span>(<span class='ident'>id_packet</span>)));
         <span class='kw'>let</span> (<span class='ident'>message_queue</span>, <span class='ident'>raii_joiner</span>) <span class='op'>=</span> <span class='ident'>MessageQueue</span>::<span class='ident'>new</span>(<span class='ident'>routing_receiver</span>,
                                                              <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>network_event_sender</span>]);
+        <span class='kw'>let</span> <span class='ident'>routing</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>Routing</span>::<span class='ident'>new</span>(<span class='ident'>routing_sender</span>, <span class='prelude-val'>Some</span>(<span class='ident'>id_packet</span>)));
 
         <span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>network_event_receiver</span>.<span class='ident'>recv</span>()) {
             <span class='ident'>NetworkEvent</span>::<span class='ident'>Connected</span> <span class='op'>=&gt;</span> (),
@@ -1261,9 +1281,9 @@
             <span class='kw'>let</span> (<span class='ident'>routing_sender</span>, <span class='ident'>routing_receiver</span>) <span class='op'>=</span> <span class='ident'>mpsc</span>::<span class='ident'>channel</span>();
             <span class='kw'>let</span> (<span class='ident'>network_event_sender</span>, <span class='ident'>network_event_receiver</span>) <span class='op'>=</span> <span class='ident'>mpsc</span>::<span class='ident'>channel</span>();
 
-            <span class='kw'>let</span> <span class='ident'>routing</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>Routing</span>::<span class='ident'>new</span>(<span class='ident'>routing_sender</span>, <span class='prelude-val'>Some</span>(<span class='ident'>id_packet</span>)));
             <span class='kw'>let</span> (<span class='ident'>message_queue</span>, <span class='ident'>raii_joiner</span>) <span class='op'>=</span> <span class='ident'>MessageQueue</span>::<span class='ident'>new</span>(<span class='ident'>routing_receiver</span>,
                                                                  <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>network_event_sender</span>]);
+            <span class='kw'>let</span> <span class='ident'>routing</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>Routing</span>::<span class='ident'>new</span>(<span class='ident'>routing_sender</span>, <span class='prelude-val'>Some</span>(<span class='ident'>id_packet</span>)));
 
             <span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>network_event_receiver</span>.<span class='ident'>recv</span>()) {
                 <span class='ident'>NetworkEvent</span>::<span class='ident'>Connected</span> <span class='op'>=&gt;</span> (),
@@ -1402,14 +1422,14 @@
 
         <span class='kw'>if</span> <span class='kw'>let</span> <span class='ident'>DataIdentifier</span>::<span class='ident'>Immutable</span>(..) <span class='op'>=</span> <span class='ident'>request_for</span> {
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>msg_queue</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>message_queue</span>.<span class='ident'>lock</span>());
-            <span class='kw'>if</span> <span class='ident'>msg_queue</span>.<span class='ident'>local_cache_check</span>(<span class='kw-2'>&amp;</span><span class='ident'>request_for</span>.<span class='ident'>name</span>()) {
+            <span class='kw'>if</span> <span class='ident'>msg_queue</span>.<span class='ident'>local_cache_check</span>(<span class='ident'>request_for</span>.<span class='ident'>name</span>()) {
                 <span class='kw'>return</span> <span class='prelude-val'>Ok</span>(<span class='ident'>GetResponseGetter</span>::<span class='ident'>new</span>(<span class='prelude-val'>None</span>, <span class='self'>self</span>.<span class='ident'>message_queue</span>.<span class='ident'>clone</span>(), <span class='ident'>request_for</span>));
             }
         }
 
         <span class='kw'>let</span> <span class='ident'>dst</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>opt_dst</span> {
             <span class='prelude-val'>Some</span>(<span class='ident'>auth</span>) <span class='op'>=&gt;</span> <span class='ident'>auth</span>,
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='ident'>Authority</span>::<span class='ident'>NaeManager</span>(<span class='ident'>request_for</span>.<span class='ident'>name</span>()),
+            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='ident'>Authority</span>::<span class='ident'>NaeManager</span>(<span class='op'>*</span><span class='ident'>request_for</span>.<span class='ident'>name</span>()),
         };
 
         <span class='kw'>let</span> (<span class='ident'>tx</span>, <span class='ident'>rx</span>) <span class='op'>=</span> <span class='ident'>mpsc</span>::<span class='ident'>channel</span>();
@@ -1505,7 +1525,7 @@
 
         <span class='kw'>let</span> <span class='ident'>dst</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>opt_dst</span> {
             <span class='prelude-val'>Some</span>(<span class='ident'>auth</span>) <span class='op'>=&gt;</span> <span class='ident'>auth</span>,
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='ident'>Authority</span>::<span class='ident'>NaeManager</span>(<span class='ident'>data</span>.<span class='ident'>name</span>()),
+            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='ident'>Authority</span>::<span class='ident'>NaeManager</span>(<span class='op'>*</span><span class='ident'>data</span>.<span class='ident'>name</span>()),
         };
 
         <span class='kw'>let</span> (<span class='ident'>tx</span>, <span class='ident'>rx</span>) <span class='op'>=</span> <span class='ident'>mpsc</span>::<span class='ident'>channel</span>();
@@ -1526,7 +1546,7 @@
 
         <span class='kw'>let</span> <span class='ident'>dst</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>opt_dst</span> {
             <span class='prelude-val'>Some</span>(<span class='ident'>auth</span>) <span class='op'>=&gt;</span> <span class='ident'>auth</span>,
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='ident'>Authority</span>::<span class='ident'>NaeManager</span>(<span class='ident'>data</span>.<span class='ident'>name</span>()),
+            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='ident'>Authority</span>::<span class='ident'>NaeManager</span>(<span class='op'>*</span><span class='ident'>data</span>.<span class='ident'>name</span>()),
         };
 
         <span class='kw'>let</span> (<span class='ident'>tx</span>, <span class='ident'>rx</span>) <span class='op'>=</span> <span class='ident'>mpsc</span>::<span class='ident'>channel</span>();
@@ -1549,6 +1569,24 @@
             <span class='prelude-val'>Err</span>(<span class='ident'>CoreError</span>::<span class='ident'>MutationFailure</span> { <span class='ident'>reason</span>: <span class='ident'>MutationError</span>::<span class='ident'>NoSuchData</span>, .. }) <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(()),
             <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='ident'>e</span>),
         }
+    }
+
+    <span class='doccomment'>/// Get data from the network. This is non-blocking.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_account_info</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>,
+                            <span class='ident'>opt_dst</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Authority</span><span class='op'>&gt;</span>)
+                            <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>GetAccountInfoResponseGetter</span>, <span class='ident'>CoreError</span><span class='op'>&gt;</span> {
+        <span class='kw'>let</span> <span class='ident'>dst</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>opt_dst</span> {
+            <span class='prelude-val'>Some</span>(<span class='ident'>auth</span>) <span class='op'>=&gt;</span> <span class='ident'>auth</span>,
+            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='ident'>Authority</span>::<span class='ident'>ClientManager</span>(<span class='op'>*</span><span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>get_default_client_manager_address</span>())),
+        };
+
+        <span class='kw'>let</span> (<span class='ident'>tx</span>, <span class='ident'>rx</span>) <span class='op'>=</span> <span class='ident'>mpsc</span>::<span class='ident'>channel</span>();
+        <span class='kw'>let</span> <span class='ident'>msg_id</span> <span class='op'>=</span> <span class='ident'>MessageId</span>::<span class='ident'>new</span>();
+        <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>message_queue</span>.<span class='ident'>lock</span>()).<span class='ident'>register_response_observer</span>(<span class='ident'>msg_id</span>, <span class='ident'>tx</span>.<span class='ident'>clone</span>());
+
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>routing</span>.<span class='ident'>send_get_account_info_request</span>(<span class='ident'>dst</span>, <span class='ident'>msg_id</span>));
+
+        <span class='prelude-val'>Ok</span>(<span class='ident'>GetAccountInfoResponseGetter</span>::<span class='ident'>new</span>((<span class='ident'>tx</span>, <span class='ident'>rx</span>)))
     }
 
     <span class='comment'>// TODO Redo this since response handling is integrated - For Qi right now</span>
@@ -1794,7 +1832,7 @@
 <span class='doccomment'>/// //////////////////////////////////////////////////////////////</span>
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>test</span> {
-    <span class='kw'>use</span> <span class='ident'>super</span>::<span class='op'>*</span>;
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
 
     <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>client</span>::<span class='ident'>response_getter</span>::<span class='ident'>GetResponseGetter</span>;
     <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>errors</span>::<span class='ident'>CoreError</span>;
@@ -1868,7 +1906,7 @@
 
         <span class='comment'>// Unregistered Client should be able to retrieve the data</span>
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>unregistered_client</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>create_unregistered_client</span>());
-        <span class='kw'>let</span> <span class='ident'>request</span> <span class='op'>=</span> <span class='ident'>DataIdentifier</span>::<span class='ident'>Immutable</span>(<span class='ident'>orig_data</span>.<span class='ident'>name</span>());
+        <span class='kw'>let</span> <span class='ident'>request</span> <span class='op'>=</span> <span class='ident'>DataIdentifier</span>::<span class='ident'>Immutable</span>(<span class='op'>*</span><span class='ident'>orig_data</span>.<span class='ident'>name</span>());
         <span class='kw'>let</span> <span class='ident'>rxd_data</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>unregistered_client</span>.<span class='ident'>get</span>(<span class='ident'>request</span>, <span class='prelude-val'>None</span>)).<span class='ident'>get</span>());
 
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>rxd_data</span>, <span class='ident'>orig_data</span>);
@@ -2008,7 +2046,7 @@
 
             <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>put</span>(<span class='ident'>data</span>.<span class='ident'>clone</span>(), <span class='prelude-val'>None</span>)).<span class='ident'>get</span>());
 
-            <span class='kw'>let</span> <span class='ident'>data_request</span> <span class='op'>=</span> <span class='ident'>DataIdentifier</span>::<span class='ident'>Immutable</span>(<span class='ident'>data</span>.<span class='ident'>name</span>());
+            <span class='kw'>let</span> <span class='ident'>data_request</span> <span class='op'>=</span> <span class='ident'>DataIdentifier</span>::<span class='ident'>Immutable</span>(<span class='op'>*</span><span class='ident'>data</span>.<span class='ident'>name</span>());
 
             <span class='comment'>// Should not initially be in version cache</span>
             {
@@ -2101,6 +2139,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

@@ -830,7 +830,7 @@
                 <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;Retrieving directory at id {:?} ...&quot;</span>, <span class='ident'>id</span>);
                 <span class='self'>self</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='ident'>DirectoryKey</span>::<span class='ident'>new</span>(<span class='ident'>id</span>,
                                             ::<span class='ident'>nfs</span>::<span class='ident'>UNVERSIONED_DIRECTORY_LISTING_TAG</span>,
-                                            <span class='boolval'>false</span>,
+                                            <span class='boolvalue'>false</span>,
                                             <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>))
             }
             <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> {
@@ -839,7 +839,7 @@
                     <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>create</span>(::<span class='ident'>nfs</span>::<span class='ident'>ROOT_DIRECTORY_NAME</span>.<span class='ident'>to_string</span>(),
                                      ::<span class='ident'>nfs</span>::<span class='ident'>UNVERSIONED_DIRECTORY_LISTING_TAG</span>,
                                      <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
-                                     <span class='boolval'>false</span>,
+                                     <span class='boolvalue'>false</span>,
                                      <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>,
                                      <span class='prelude-val'>None</span>));
                 <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>client</span>.<span class='ident'>lock</span>())
@@ -862,7 +862,7 @@
                 <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;Retrieving root configuration directory at id {:?} ...&quot;</span>, <span class='ident'>id</span>);
                 <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='ident'>DirectoryKey</span>::<span class='ident'>new</span>(<span class='ident'>id</span>,
                                                  ::<span class='ident'>nfs</span>::<span class='ident'>UNVERSIONED_DIRECTORY_LISTING_TAG</span>,
-                                                 <span class='boolval'>false</span>,
+                                                 <span class='boolvalue'>false</span>,
                                                  <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>)))
             }
             <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> {
@@ -871,7 +871,7 @@
                     <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>create</span>(::<span class='ident'>nfs</span>::<span class='ident'>CONFIGURATION_DIRECTORY_NAME</span>.<span class='ident'>to_string</span>(),
                                      ::<span class='ident'>nfs</span>::<span class='ident'>UNVERSIONED_DIRECTORY_LISTING_TAG</span>,
                                      <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
-                                     <span class='boolval'>false</span>,
+                                     <span class='boolvalue'>false</span>,
                                      <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>,
                                      <span class='prelude-val'>None</span>));
                 <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>client</span>.<span class='ident'>lock</span>())
@@ -896,7 +896,7 @@
                 <span class='kw'>let</span> (<span class='ident'>directory</span>, _) <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>create</span>(<span class='ident'>directory_name</span>,
                                                       ::<span class='ident'>nfs</span>::<span class='ident'>UNVERSIONED_DIRECTORY_LISTING_TAG</span>,
                                                       <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
-                                                      <span class='boolval'>false</span>,
+                                                      <span class='boolvalue'>false</span>,
                                                       <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>,
                                                       <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>config_directory_listing</span>)));
                 <span class='prelude-val'>Ok</span>(<span class='ident'>directory</span>)
@@ -999,7 +999,7 @@
     <span class='doccomment'>/// Saves the data as ImmutableData in the network and returns the name</span>
     <span class='kw'>fn</span> <span class='ident'>save_as_immutable_data</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>data</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>XorName</span>, <span class='ident'>NfsError</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='ident'>immutable_data</span> <span class='op'>=</span> <span class='ident'>ImmutableData</span>::<span class='ident'>new</span>(<span class='ident'>data</span>);
-        <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='ident'>immutable_data</span>.<span class='ident'>name</span>();
+        <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='op'>*</span><span class='ident'>immutable_data</span>.<span class='ident'>name</span>();
         <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;Posting PUT request to save immutable data to the network ...&quot;</span>);
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>client</span>.<span class='ident'>lock</span>()).<span class='ident'>put_recover</span>(<span class='ident'>Data</span>::<span class='ident'>Immutable</span>(<span class='ident'>immutable_data</span>), <span class='prelude-val'>None</span>));
         <span class='prelude-val'>Ok</span>(<span class='ident'>name</span>)
@@ -1030,7 +1030,7 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>test</span> {
-    <span class='kw'>use</span> <span class='ident'>super</span>::<span class='op'>*</span>;
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::{<span class='ident'>Arc</span>, <span class='ident'>Mutex</span>};
     <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>utility</span>::<span class='ident'>test_utils</span>;
     <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>AccessLevel</span>;
@@ -1044,7 +1044,7 @@
         <span class='kw'>let</span> (<span class='kw-2'>mut</span> <span class='ident'>directory</span>, <span class='ident'>grand_parent</span>) <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>dir_helper</span>.<span class='ident'>create</span>(<span class='string'>&quot;DirName&quot;</span>.<span class='ident'>to_string</span>(),
                     ::<span class='ident'>nfs</span>::<span class='ident'>VERSIONED_DIRECTORY_LISTING_TAG</span>,
                     <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
-                    <span class='boolval'>true</span>,
+                    <span class='boolvalue'>true</span>,
                     <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>,
                     <span class='prelude-val'>None</span>));
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>grand_parent</span>.<span class='ident'>is_none</span>());
@@ -1053,7 +1053,7 @@
         <span class='kw'>let</span> (<span class='kw-2'>mut</span> <span class='ident'>child_directory</span>, <span class='ident'>grand_parent</span>) <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>dir_helper</span>.<span class='ident'>create</span>(<span class='string'>&quot;Child&quot;</span>.<span class='ident'>to_string</span>(),
                     ::<span class='ident'>nfs</span>::<span class='ident'>VERSIONED_DIRECTORY_LISTING_TAG</span>,
                     <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
-                    <span class='boolval'>true</span>,
+                    <span class='boolvalue'>true</span>,
                     <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>,
                     <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>directory</span>)));
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>grand_parent</span>.<span class='ident'>is_none</span>());
@@ -1065,13 +1065,13 @@
             <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>dir_helper</span>.<span class='ident'>create</span>(<span class='string'>&quot;Grand Child&quot;</span>.<span class='ident'>to_string</span>(),
                                       ::<span class='ident'>nfs</span>::<span class='ident'>VERSIONED_DIRECTORY_LISTING_TAG</span>,
                                       <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
-                                      <span class='boolval'>true</span>,
+                                      <span class='boolvalue'>true</span>,
                                       <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>,
                                       <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>child_directory</span>)));
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>dir_helper</span>.<span class='ident'>create</span>(<span class='string'>&quot;Grand Child&quot;</span>.<span class='ident'>to_string</span>(),
                     ::<span class='ident'>nfs</span>::<span class='ident'>VERSIONED_DIRECTORY_LISTING_TAG</span>,
                     <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
-                    <span class='boolval'>true</span>,
+                    <span class='boolvalue'>true</span>,
                     <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>,
                     <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>child_directory</span>))
             .<span class='ident'>is_err</span>());
@@ -1093,7 +1093,7 @@
             <span class='kw'>let</span> (<span class='ident'>directory</span>, _) <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>dir_helper</span>.<span class='ident'>create</span>(<span class='string'>&quot;PublicDirectory&quot;</span>.<span class='ident'>to_string</span>(),
                         ::<span class='ident'>nfs</span>::<span class='ident'>VERSIONED_DIRECTORY_LISTING_TAG</span>,
                         <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>2u8</span>, <span class='number'>10</span>],
-                        <span class='boolval'>true</span>,
+                        <span class='boolvalue'>true</span>,
                         <span class='ident'>AccessLevel</span>::<span class='ident'>Public</span>,
                         <span class='prelude-val'>None</span>));
             <span class='ident'>public_directory</span> <span class='op'>=</span> <span class='ident'>directory</span>;
@@ -1117,7 +1117,7 @@
             <span class='kw'>let</span> (<span class='ident'>directory</span>, _) <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>dir_helper</span>.<span class='ident'>create</span>(<span class='string'>&quot;PublicDirectory&quot;</span>.<span class='ident'>to_string</span>(),
                         ::<span class='ident'>nfs</span>::<span class='ident'>UNVERSIONED_DIRECTORY_LISTING_TAG</span>,
                         <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>2u8</span>, <span class='number'>10</span>],
-                        <span class='boolval'>false</span>,
+                        <span class='boolvalue'>false</span>,
                         <span class='ident'>AccessLevel</span>::<span class='ident'>Public</span>,
                         <span class='prelude-val'>None</span>));
             <span class='ident'>public_directory</span> <span class='op'>=</span> <span class='ident'>directory</span>;
@@ -1141,7 +1141,7 @@
         <span class='kw'>let</span> (<span class='ident'>created_dir</span>, _) <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>dir_helper</span>.<span class='ident'>create</span>(<span class='string'>&quot;DirName&quot;</span>.<span class='ident'>to_string</span>(),
                                                          ::<span class='ident'>nfs</span>::<span class='ident'>VERSIONED_DIRECTORY_LISTING_TAG</span>,
                                                          <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
-                                                         <span class='boolval'>true</span>,
+                                                         <span class='boolvalue'>true</span>,
                                                          <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>,
                                                          <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>root_dir</span>)));
         <span class='kw'>let</span> <span class='ident'>root_dir</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>dir_helper</span>.<span class='ident'>get_user_root_directory_listing</span>());
@@ -1170,7 +1170,7 @@
         <span class='kw'>let</span> (<span class='kw-2'>mut</span> <span class='ident'>dir_listing</span>, _) <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>dir_helper</span>.<span class='ident'>create</span>(<span class='string'>&quot;DirName2&quot;</span>.<span class='ident'>to_string</span>(),
                     ::<span class='ident'>nfs</span>::<span class='ident'>VERSIONED_DIRECTORY_LISTING_TAG</span>,
                     <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
-                    <span class='boolval'>true</span>,
+                    <span class='boolvalue'>true</span>,
                     <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>,
                     <span class='prelude-val'>None</span>));
 
@@ -1209,7 +1209,7 @@
         <span class='kw'>let</span> (<span class='kw-2'>mut</span> <span class='ident'>directory</span>, <span class='ident'>grand_parent</span>) <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>dir_helper</span>.<span class='ident'>create</span>(<span class='string'>&quot;DirName&quot;</span>.<span class='ident'>to_string</span>(),
                     ::<span class='ident'>nfs</span>::<span class='ident'>VERSIONED_DIRECTORY_LISTING_TAG</span>,
                     <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
-                    <span class='boolval'>true</span>,
+                    <span class='boolvalue'>true</span>,
                     <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>,
                     <span class='prelude-val'>None</span>));
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>grand_parent</span>.<span class='ident'>is_none</span>());
@@ -1218,7 +1218,7 @@
         <span class='kw'>let</span> (<span class='kw-2'>mut</span> <span class='ident'>child_directory</span>, <span class='ident'>grand_parent</span>) <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>dir_helper</span>.<span class='ident'>create</span>(<span class='string'>&quot;Child&quot;</span>.<span class='ident'>to_string</span>(),
                     ::<span class='ident'>nfs</span>::<span class='ident'>VERSIONED_DIRECTORY_LISTING_TAG</span>,
                     <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
-                    <span class='boolval'>true</span>,
+                    <span class='boolvalue'>true</span>,
                     <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>,
                     <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>directory</span>)));
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>grand_parent</span>.<span class='ident'>is_none</span>());
@@ -1230,7 +1230,7 @@
             <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>dir_helper</span>.<span class='ident'>create</span>(<span class='string'>&quot;Grand Child&quot;</span>.<span class='ident'>to_string</span>(),
                                       ::<span class='ident'>nfs</span>::<span class='ident'>VERSIONED_DIRECTORY_LISTING_TAG</span>,
                                       <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
-                                      <span class='boolval'>true</span>,
+                                      <span class='boolvalue'>true</span>,
                                       <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>,
                                       <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>child_directory</span>)));
 
@@ -1273,6 +1273,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

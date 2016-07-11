@@ -1,1 +1,0 @@
-initSidebarItems({"mod":[["directory_response",""],["file_response",""]]});

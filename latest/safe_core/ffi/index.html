@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-4300' class='srclink' href='../../src/safe_core/src/ffi/mod.rs.html#18-596' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-4328' class='srclink' href='../../src/safe_core/src/ffi/mod.rs.html#18-764' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Ffi module;
 This module provides FFI-bindings to the Client Modules (<code>core</code>, <code>nfs</code>, <code>dns</code>)
 In the current implementation the allocations made by this crate are managed within the crate
@@ -186,10 +186,26 @@ droping the vector The result of the execution is returned in the c_result out p
                            </td>
                        </tr>
                        <tr class=' module-item'>
+                           <td><a class='fn' href='fn.get_account_info.html'
+                                  title='safe_core::ffi::get_account_info'>get_account_info</a></td>
+                           <td class='docblock short'>
+                                <p>Get data from the network. This is non-blocking. <code>data_stored</code> means number
+of chunks Put. <code>space_available</code> means number of chunks which can still be
+Put.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
                            <td><a class='fn' href='fn.get_app_dir_key.html'
                                   title='safe_core::ffi::get_app_dir_key'>get_app_dir_key</a></td>
                            <td class='docblock short'>
                                 <p>Returns key size</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.get_nfs_writer.html'
+                                  title='safe_core::ffi::get_nfs_writer'>get_nfs_writer</a></td>
+                           <td class='docblock short'>
+                                <p>Obtain NFS writer handle for writing data to a file in streaming mode</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -217,6 +233,27 @@ undefined.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
+                           <td><a class='fn' href='fn.nfs_create_file.html'
+                                  title='safe_core::ffi::nfs_create_file'>nfs_create_file</a></td>
+                           <td class='docblock short'>
+                                <p>Create a file and return a writer for it.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.nfs_stream_close.html'
+                                  title='safe_core::ffi::nfs_stream_close'>nfs_stream_close</a></td>
+                           <td class='docblock short'>
+                                <p>Closes the NFS Writer handle</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.nfs_stream_write.html'
+                                  title='safe_core::ffi::nfs_stream_write'>nfs_stream_write</a></td>
+                           <td class='docblock short'>
+                                <p>Write data to the Network using the NFS Writer handle</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
                            <td><a class='fn' href='fn.register_network_event_observer.html'
                                   title='safe_core::ffi::register_network_event_observer'>register_network_event_observer</a></td>
                            <td class='docblock short'>
@@ -229,7 +266,7 @@ core module</p>
                            <td><a class='type' href='type.ResponseType.html'
                                   title='safe_core::ffi::ResponseType'>ResponseType</a></td>
                            <td class='docblock short'>
-                                <p>ResponseType tspecifies the standard Response that is to be expected from the ::Action trait</p>
+                                <p>ResponseType specifies the standard Response that is to be expected from the Action trait</p>
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>
@@ -254,6 +291,8 @@ core module</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

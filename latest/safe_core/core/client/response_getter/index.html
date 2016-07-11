@@ -47,17 +47,26 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-587' class='srclink' href='../../../../src/safe_core/src/core/client/response_getter.rs.html#18-111' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-578' class='srclink' href='../../../../src/safe_core/src/core/client/response_getter.rs.html#18-149' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Lazy evaluated response getter.</p>
 </div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                        <tr class=' module-item'>
+                           <td><a class='struct' href='struct.GetAccountInfoResponseGetter.html'
+                                  title='safe_core::core::client::response_getter::GetAccountInfoResponseGetter'>GetAccountInfoResponseGetter</a></td>
+                           <td class='docblock short'>
+                                <p><code>GetAccountInfoResponseGetter</code> is a lazy evaluated response getter for <code>GetAccountInfo</code>
+Requests. It will wait for the <code>MessageQueue</code> to notify it of the incoming response from the
+network.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
                            <td><a class='struct' href='struct.GetResponseGetter.html'
                                   title='safe_core::core::client::response_getter::GetResponseGetter'>GetResponseGetter</a></td>
                            <td class='docblock short'>
-                                <p>GetResponseGetter is a lazy evaluated response getter for GET Requests. It will fetch either
-from local cache or wait for the MessageQueue to notify it of the incoming response from the
-network</p>
+                                <p><code>GetResponseGetter</code> is a lazy evaluated response getter for GET Requests. It will fetch either
+from local cache or wait for the <code>MessageQueue</code> to notify it of the incoming response from the
+network.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -91,6 +100,8 @@ it of the incoming response from the network</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

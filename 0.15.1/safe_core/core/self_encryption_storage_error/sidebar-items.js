@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["SelfEncryptionStorageError","Errors arising from storage object being used by self-encryptors."]]});

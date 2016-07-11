@@ -1,1 +1,0 @@
-initSidebarItems({"fn":[["create","Create and obtain immutable data out of the given raw data. The API will encrypt the right content if the keys are provided and will ensure the maximum immutable data chunk size is respected."],["get_data","Get actual data from ImmutableData created via create() function in this module."]]});

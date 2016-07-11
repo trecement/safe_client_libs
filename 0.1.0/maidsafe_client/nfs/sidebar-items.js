@@ -1,1 +1,0 @@
-initSidebarItems({"mod":[["io","Module for input/output to network/file"],["rest","Module for Restful interfaces for storage"]]});

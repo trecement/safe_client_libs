@@ -458,7 +458,7 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>test</span> {
-    <span class='kw'>use</span> <span class='ident'>super</span>::<span class='op'>*</span>;
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
     <span class='kw'>use</span> <span class='ident'>rand</span>;
     <span class='kw'>use</span> <span class='ident'>routing</span>::<span class='ident'>XorName</span>;
     <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>metadata</span>::<span class='ident'>directory_key</span>::<span class='ident'>DirectoryKey</span>;
@@ -466,10 +466,10 @@
     <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>AccessLevel</span>;
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>serialise_directorty_metadata_without_parent_directory</span>() {
+    <span class='kw'>fn</span> <span class='ident'>serialise_directory_metadata_without_parent_directory</span>() {
         <span class='kw'>let</span> <span class='ident'>obj_before</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>DirectoryMetadata</span>::<span class='ident'>new</span>(<span class='string'>&quot;hello.txt&quot;</span>.<span class='ident'>to_string</span>(),
                                                         <span class='number'>99u64</span>,
-                                                        <span class='boolval'>true</span>,
+                                                        <span class='boolvalue'>true</span>,
                                                         <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>,
                                                         <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
                                                         <span class='prelude-val'>None</span>));
@@ -479,12 +479,12 @@
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>serialise_directorty_metadata_with_parent_directory</span>() {
+    <span class='kw'>fn</span> <span class='ident'>serialise_directory_metadata_with_parent_directory</span>() {
         <span class='kw'>let</span> <span class='ident'>id</span>: <span class='ident'>XorName</span> <span class='op'>=</span> <span class='ident'>rand</span>::<span class='ident'>random</span>();
-        <span class='kw'>let</span> <span class='ident'>parent_directory</span> <span class='op'>=</span> <span class='ident'>DirectoryKey</span>::<span class='ident'>new</span>(<span class='ident'>id</span>, <span class='number'>100u64</span>, <span class='boolval'>false</span>, <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>);
+        <span class='kw'>let</span> <span class='ident'>parent_directory</span> <span class='op'>=</span> <span class='ident'>DirectoryKey</span>::<span class='ident'>new</span>(<span class='ident'>id</span>, <span class='number'>100u64</span>, <span class='boolvalue'>false</span>, <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>);
         <span class='kw'>let</span> <span class='ident'>obj_before</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>DirectoryMetadata</span>::<span class='ident'>new</span>(<span class='string'>&quot;hello.txt&quot;</span>.<span class='ident'>to_string</span>(),
                                                         <span class='number'>99u64</span>,
-                                                        <span class='boolval'>true</span>,
+                                                        <span class='boolvalue'>true</span>,
                                                         <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>,
                                                         <span class='string'>&quot;Some user metadata&quot;</span>
                                                             .<span class='ident'>to_string</span>()
@@ -503,12 +503,12 @@
         <span class='kw'>let</span> <span class='ident'>modified_time</span> <span class='op'>=</span> ::<span class='ident'>time</span>::<span class='ident'>now_utc</span>();
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>obj_before</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>DirectoryMetadata</span>::<span class='ident'>new</span>(<span class='string'>&quot;hello.txt&quot;</span>.<span class='ident'>to_string</span>(),
                                                   <span class='number'>99u64</span>,
-                                                  <span class='boolval'>true</span>,
+                                                  <span class='boolvalue'>true</span>,
                                                   <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>,
                                                   <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
                                                   <span class='prelude-val'>Some</span>(<span class='ident'>DirectoryKey</span>::<span class='ident'>new</span>(<span class='ident'>id</span>,
                                                                          <span class='number'>100u64</span>,
-                                                                         <span class='boolval'>false</span>,
+                                                                         <span class='boolvalue'>false</span>,
                                                                          <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>))));
         <span class='kw'>let</span> <span class='ident'>user_metadata</span> <span class='op'>=</span> <span class='string'>&quot;{mime: \&quot;application/json\&quot;}&quot;</span>.<span class='ident'>to_string</span>().<span class='ident'>into_bytes</span>();
         <span class='ident'>obj_before</span>.<span class='ident'>set_user_metadata</span>(<span class='ident'>user_metadata</span>.<span class='ident'>clone</span>());
@@ -545,6 +545,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

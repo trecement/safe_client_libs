@@ -449,6 +449,27 @@
 <span id="405">405</span>
 <span id="406">406</span>
 <span id="407">407</span>
+<span id="408">408</span>
+<span id="409">409</span>
+<span id="410">410</span>
+<span id="411">411</span>
+<span id="412">412</span>
+<span id="413">413</span>
+<span id="414">414</span>
+<span id="415">415</span>
+<span id="416">416</span>
+<span id="417">417</span>
+<span id="418">418</span>
+<span id="419">419</span>
+<span id="420">420</span>
+<span id="421">421</span>
+<span id="422">422</span>
+<span id="423">423</span>
+<span id="424">424</span>
+<span id="425">425</span>
+<span id="426">426</span>
+<span id="427">427</span>
+<span id="428">428</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -524,9 +545,14 @@
         <span class='doccomment'>/// Reason for failure</span>
         <span class='ident'>reason</span>: <span class='ident'>GetError</span>,
     },
+    <span class='doccomment'>/// Performing a GetAccountInfo operation failed</span>
+    <span class='ident'>GetAccountInfoFailure</span> {
+        <span class='doccomment'>/// Reason for failure</span>
+        <span class='ident'>reason</span>: <span class='ident'>GetError</span>,
+    },
     <span class='doccomment'>/// Performing a network mutating operation such as PUT/POST/DELETE failed</span>
     <span class='ident'>MutationFailure</span> {
-        <span class='doccomment'>/// Orignal data that was sent to the network</span>
+        <span class='doccomment'>/// Original data that was sent to the network</span>
         <span class='ident'>data_id</span>: <span class='ident'>DataIdentifier</span>,
         <span class='doccomment'>/// Reason for failure</span>
         <span class='ident'>reason</span>: <span class='ident'>MutationError</span>,
@@ -643,6 +669,10 @@
             <span class='ident'>CoreError</span>::<span class='ident'>SelfEncryption</span>(<span class='ident'>SelfEncryptionError</span>::<span class='ident'>Io</span>::<span class='op'>&lt;</span><span class='ident'>SelfEncryptionStorageError</span><span class='op'>&gt;</span>(_)) <span class='op'>=&gt;</span> {
                 <span class='ident'>CLIENT_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>30</span>
             }
+            <span class='ident'>CoreError</span>::<span class='ident'>GetAccountInfoFailure</span> { <span class='ident'>reason</span>: <span class='ident'>GetError</span>::<span class='ident'>NoSuchAccount</span>, .. } <span class='op'>=&gt;</span> {
+                <span class='ident'>CLIENT_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>31</span>
+            }
+            <span class='ident'>CoreError</span>::<span class='ident'>GetAccountInfoFailure</span> { .. } <span class='op'>=&gt;</span> <span class='ident'>CLIENT_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>32</span>,
             <span class='ident'>CoreError</span>::<span class='ident'>SelfEncryption</span>(<span class='ident'>SelfEncryptionError</span>
                                       ::<span class='ident'>Storage</span>
                                       ::<span class='op'>&lt;</span><span class='ident'>SelfEncryptionStorageError</span><span class='op'>&gt;</span>(
@@ -653,7 +683,7 @@
 
 <span class='kw'>impl</span> <span class='ident'>Debug</span> <span class='kw'>for</span> <span class='ident'>CoreError</span> {
     <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>formatter</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>formatter</span>, <span class='string'>&quot;{}&quot;</span>, <span class='self'>self</span>.<span class='ident'>description</span>()));
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>formatter</span>, <span class='string'>&quot;{} - &quot;</span>, <span class='self'>self</span>.<span class='ident'>description</span>()));
         <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
             <span class='ident'>CoreError</span>::<span class='ident'>StructuredDataHeaderSizeProhibitive</span> <span class='op'>=&gt;</span> {
                 <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>formatter</span>, <span class='string'>&quot;CoreError::StructuredDataHeaderSizeProhibitive&quot;</span>)
@@ -701,13 +731,18 @@
             }
             <span class='ident'>CoreError</span>::<span class='ident'>GetFailure</span> { <span class='kw-2'>ref</span> <span class='ident'>data_id</span>, <span class='kw-2'>ref</span> <span class='ident'>reason</span> } <span class='op'>=&gt;</span> {
                 <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>formatter</span>,
-                       <span class='string'>&quot;CoreError::GetFailure::{{ reason: {:?}, request: {:?}}}&quot;</span>,
+                       <span class='string'>&quot;CoreError::GetFailure::{{ reason: {:?}, data_id: {:?} }}&quot;</span>,
                        <span class='ident'>reason</span>,
                        <span class='ident'>data_id</span>)
             }
+            <span class='ident'>CoreError</span>::<span class='ident'>GetAccountInfoFailure</span> { <span class='kw-2'>ref</span> <span class='ident'>reason</span> } <span class='op'>=&gt;</span> {
+                <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>formatter</span>,
+                       <span class='string'>&quot;CoreError::GetAccountInfoFailure::{{ reason: {:?} }}&quot;</span>,
+                       <span class='ident'>reason</span>)
+            }
             <span class='ident'>CoreError</span>::<span class='ident'>MutationFailure</span> { <span class='kw-2'>ref</span> <span class='ident'>data_id</span>, <span class='kw-2'>ref</span> <span class='ident'>reason</span> } <span class='op'>=&gt;</span> {
                 <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>formatter</span>,
-                       <span class='string'>&quot;CoreError::MutationFailure::{{ reason: {:?}, data_id: {:?}}}&quot;</span>,
+                       <span class='string'>&quot;CoreError::MutationFailure::{{ reason: {:?}, data_id: {:?} }}&quot;</span>,
                        <span class='ident'>reason</span>,
                        <span class='ident'>data_id</span>)
             }
@@ -775,6 +810,11 @@
             <span class='ident'>CoreError</span>::<span class='ident'>GetFailure</span> { <span class='kw-2'>ref</span> <span class='ident'>reason</span>, .. } <span class='op'>=&gt;</span> {
                 <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>formatter</span>, <span class='string'>&quot;Failed to Get from network: {}&quot;</span>, <span class='ident'>reason</span>)
             }
+            <span class='ident'>CoreError</span>::<span class='ident'>GetAccountInfoFailure</span> { <span class='kw-2'>ref</span> <span class='ident'>reason</span> } <span class='op'>=&gt;</span> {
+                <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>formatter</span>,
+                       <span class='string'>&quot;Failed to get account info from network: {}&quot;</span>,
+                       <span class='ident'>reason</span>)
+            }
             <span class='ident'>CoreError</span>::<span class='ident'>MutationFailure</span> { <span class='kw-2'>ref</span> <span class='ident'>reason</span>, .. } <span class='op'>=&gt;</span> {
                 <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>formatter</span>,
                        <span class='string'>&quot;Failed to Put/Post/Delete on network: {}&quot;</span>,
@@ -808,7 +848,8 @@
             <span class='ident'>CoreError</span>::<span class='ident'>UnsuccessfulPwHash</span> <span class='op'>=&gt;</span> <span class='string'>&quot;Failed while password hashing&quot;</span>,
             <span class='ident'>CoreError</span>::<span class='ident'>OperationAborted</span> <span class='op'>=&gt;</span> <span class='string'>&quot;Operation aborted&quot;</span>,
             <span class='ident'>CoreError</span>::<span class='ident'>MpidMessagingError</span>(_) <span class='op'>=&gt;</span> <span class='string'>&quot;Mpid messaging error&quot;</span>,
-            <span class='ident'>CoreError</span>::<span class='ident'>GetFailure</span> { <span class='kw-2'>ref</span> <span class='ident'>reason</span>, .. } <span class='op'>=&gt;</span> <span class='ident'>reason</span>.<span class='ident'>description</span>(),
+            <span class='ident'>CoreError</span>::<span class='ident'>GetFailure</span> { <span class='kw-2'>ref</span> <span class='ident'>reason</span>, .. } <span class='op'>|</span>
+            <span class='ident'>CoreError</span>::<span class='ident'>GetAccountInfoFailure</span> { <span class='kw-2'>ref</span> <span class='ident'>reason</span> } <span class='op'>=&gt;</span> <span class='ident'>reason</span>.<span class='ident'>description</span>(),
             <span class='ident'>CoreError</span>::<span class='ident'>MutationFailure</span> { <span class='kw-2'>ref</span> <span class='ident'>reason</span>, .. } <span class='op'>=&gt;</span> <span class='ident'>reason</span>.<span class='ident'>description</span>(),
             <span class='ident'>CoreError</span>::<span class='ident'>SelfEncryption</span>(<span class='kw-2'>ref</span> <span class='ident'>error</span>) <span class='op'>=&gt;</span> <span class='ident'>error</span>.<span class='ident'>description</span>(),
         }
@@ -819,7 +860,8 @@
             <span class='comment'>// TODO - add `RoutingError` and `InternalError` once they implement `std::error::Error`</span>
             <span class='ident'>CoreError</span>::<span class='ident'>UnsuccessfulEncodeDecode</span>(<span class='kw-2'>ref</span> <span class='ident'>error</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>error</span>),
             <span class='ident'>CoreError</span>::<span class='ident'>MpidMessagingError</span>(<span class='kw-2'>ref</span> <span class='ident'>error</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>error</span>),
-            <span class='ident'>CoreError</span>::<span class='ident'>GetFailure</span> { <span class='kw-2'>ref</span> <span class='ident'>reason</span>, .. } <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>reason</span>),
+            <span class='ident'>CoreError</span>::<span class='ident'>GetFailure</span> { <span class='kw-2'>ref</span> <span class='ident'>reason</span>, .. } <span class='op'>|</span>
+            <span class='ident'>CoreError</span>::<span class='ident'>GetAccountInfoFailure</span> { <span class='kw-2'>ref</span> <span class='ident'>reason</span> } <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>reason</span>),
             <span class='ident'>CoreError</span>::<span class='ident'>MutationFailure</span> { <span class='kw-2'>ref</span> <span class='ident'>reason</span>, .. } <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>reason</span>),
             _ <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>,
         }
@@ -828,7 +870,7 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>test</span> {
-    <span class='kw'>use</span> <span class='ident'>super</span>::<span class='op'>*</span>;
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
 
     <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>SelfEncryptionStorageError</span>;
     <span class='kw'>use</span> <span class='ident'>rand</span>;
@@ -881,6 +923,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
