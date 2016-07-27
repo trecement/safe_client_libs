@@ -205,6 +205,8 @@
 <span id="161">161</span>
 <span id="162">162</span>
 <span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -237,6 +239,8 @@
 <span class='kw'>impl</span> <span class='ident'>Action</span> <span class='kw'>for</span> <span class='ident'>ModifyDir</span> {
     <span class='kw'>fn</span> <span class='ident'>execute</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>params</span>: <span class='ident'>ParameterPacket</span>) <span class='op'>-&gt;</span> <span class='ident'>ResponseType</span> {
         <span class='kw'>use</span> <span class='ident'>rustc_serialize</span>::<span class='ident'>base64</span>::<span class='ident'>FromBase64</span>;
+
+        <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;JSON modify directory, given the path.&quot;</span>);
 
         <span class='kw'>if</span> <span class='op'>!</span>(<span class='self'>self</span>.<span class='ident'>new_values</span>.<span class='ident'>name</span>.<span class='ident'>is_some</span>() <span class='op'>||</span> <span class='self'>self</span>.<span class='ident'>new_values</span>.<span class='ident'>user_metadata</span>.<span class='ident'>is_some</span>()) {
             <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>FfiError</span>::<span class='ident'>from</span>(<span class='string'>&quot;Optional parameters could not be parsed&quot;</span>));

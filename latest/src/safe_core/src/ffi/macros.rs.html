@@ -127,6 +127,12 @@
 <span id="83">83</span>
 <span id="84">84</span>
 <span id="85">85</span>
+<span id="86">86</span>
+<span id="87">87</span>
+<span id="88">88</span>
+<span id="89">89</span>
+<span id="90">90</span>
+<span id="91">91</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -151,8 +157,11 @@
             <span class='prelude-val'>Ok</span>(<span class='ident'>value</span>)  <span class='op'>=&gt;</span> <span class='ident'>value</span>,
             <span class='prelude-val'>Err</span>(<span class='ident'>error</span>) <span class='op'>=&gt;</span> {
                 <span class='kw'>let</span> <span class='ident'>decorator</span> <span class='op'>=</span> ::<span class='ident'>std</span>::<span class='ident'>iter</span>::<span class='ident'>repeat</span>(<span class='string'>&#39;-&#39;</span>).<span class='ident'>take</span>(<span class='number'>50</span>).<span class='ident'>collect</span>::<span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>();
-                <span class='macro'>error</span><span class='macro'>!</span>(<span class='string'>&quot;\n\n {}\n| {:?}\n {}\n\n&quot;</span>, <span class='ident'>decorator</span>, <span class='ident'>error</span>, <span class='ident'>decorator</span>);
-                <span class='kw'>return</span> <span class='ident'>error</span>.<span class='ident'>into</span>()
+                <span class='kw'>let</span> <span class='ident'>err_str</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>error</span>);
+                <span class='kw'>let</span> <span class='ident'>err_code</span> <span class='op'>=</span> <span class='ident'>error</span>.<span class='ident'>into</span>();
+                <span class='macro'>info</span><span class='macro'>!</span>(<span class='string'>&quot;\nFFI cross-boundary error propagation:\n {}\n| **ERRNO: {}** {}\n {}\n\n&quot;</span>,
+                      <span class='ident'>decorator</span>, <span class='ident'>err_code</span>, <span class='ident'>err_str</span>, <span class='ident'>decorator</span>);
+                <span class='kw'>return</span> <span class='ident'>err_code</span>
             },
         }
     }
@@ -164,8 +173,11 @@
             <span class='prelude-val'>Ok</span>(<span class='ident'>value</span>)  <span class='op'>=&gt;</span> <span class='ident'>value</span>,
             <span class='prelude-val'>Err</span>(<span class='ident'>error</span>) <span class='op'>=&gt;</span> {
                 <span class='kw'>let</span> <span class='ident'>decorator</span> <span class='op'>=</span> ::<span class='ident'>std</span>::<span class='ident'>iter</span>::<span class='ident'>repeat</span>(<span class='string'>&#39;-&#39;</span>).<span class='ident'>take</span>(<span class='number'>50</span>).<span class='ident'>collect</span>::<span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>();
-                <span class='macro'>error</span><span class='macro'>!</span>(<span class='string'>&quot;\n\n {}\n| {:?}\n {}\n\n&quot;</span>, <span class='ident'>decorator</span>, <span class='ident'>error</span>, <span class='ident'>decorator</span>);
-                ::<span class='ident'>std</span>::<span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>out</span>, <span class='ident'>error</span>.<span class='ident'>into</span>());
+                <span class='kw'>let</span> <span class='ident'>err_str</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>error</span>);
+                <span class='kw'>let</span> <span class='ident'>err_code</span> <span class='op'>=</span> <span class='ident'>error</span>.<span class='ident'>into</span>();
+                <span class='macro'>info</span><span class='macro'>!</span>(<span class='string'>&quot;\nFFI cross-boundary error propagation:\n {}\n| **ERRNO: {}** {}\n {}\n\n&quot;</span>,
+                      <span class='ident'>decorator</span>, <span class='ident'>err_code</span>, <span class='ident'>err_str</span>, <span class='ident'>decorator</span>);
+                ::<span class='ident'>std</span>::<span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>out</span>, <span class='ident'>err_code</span>);
                 <span class='kw'>return</span> ::<span class='ident'>std</span>::<span class='ident'>ptr</span>::<span class='ident'>null</span>();
             },
         }

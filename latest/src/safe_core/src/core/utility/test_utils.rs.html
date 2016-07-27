@@ -107,6 +107,7 @@
 <span id="63">63</span>
 <span id="64">64</span>
 <span id="65">65</span>
+<span id="66">66</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>// This SAFE Network Software is licensed to you under (1) the MaidSafe.net Commercial License,</span>
@@ -131,8 +132,9 @@
 
 <span class='doccomment'>/// Generates a random mock client for testing</span>
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_client</span>() <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Client</span>, <span class='ident'>CoreError</span><span class='op'>&gt;</span> {
-    <span class='kw'>let</span> <span class='ident'>pass_phrase</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
-    <span class='ident'>Client</span>::<span class='ident'>create_account</span>(<span class='kw-2'>&amp;</span><span class='ident'>pass_phrase</span>)
+    <span class='kw'>let</span> <span class='ident'>acc_locator</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
+    <span class='kw'>let</span> <span class='ident'>acc_password</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_string</span>(<span class='number'>10</span>));
+    <span class='ident'>Client</span>::<span class='ident'>create_account</span>(<span class='kw-2'>&amp;</span><span class='ident'>acc_locator</span>, <span class='kw-2'>&amp;</span><span class='ident'>acc_password</span>)
 }
 
 <span class='doccomment'>/// Generates random public keys</span>

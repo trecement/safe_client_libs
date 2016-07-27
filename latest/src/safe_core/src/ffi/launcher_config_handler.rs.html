@@ -225,6 +225,16 @@
 <span id="181">181</span>
 <span id="182">182</span>
 <span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -286,6 +296,9 @@
             .<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>config</span><span class='op'>|</span> <span class='ident'>config</span>) {
             <span class='prelude-val'>Some</span>(<span class='ident'>config</span>) <span class='op'>=&gt;</span> <span class='ident'>config</span>.<span class='ident'>app_root_dir_key</span>.<span class='ident'>clone</span>(),
             <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> {
+                <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;App&#39;s exclusive directory is not mapped inside Launcher&#39;s config. This \
+                        must imply it&#39;s not present inside user-root-dir also - creating one.&quot;</span>);
+
                 <span class='kw'>let</span> <span class='ident'>dir_helper</span> <span class='op'>=</span> <span class='ident'>DirectoryHelper</span>::<span class='ident'>new</span>(<span class='self'>self</span>.<span class='ident'>client</span>.<span class='ident'>clone</span>());
                 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>root_dir_listing</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dir_helper</span>.<span class='ident'>get_user_root_directory_listing</span>());
                 <span class='kw'>let</span> <span class='ident'>app_dir_name</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>get_app_dir_name</span>(<span class='kw-2'>&amp;</span><span class='ident'>app_name</span>, <span class='kw-2'>&amp;</span><span class='ident'>root_dir_listing</span>);
@@ -318,11 +331,11 @@
     }
 
     <span class='kw'>fn</span> <span class='ident'>get_app_dir_name</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>app_name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>directory_listing</span>: <span class='kw-2'>&amp;</span><span class='ident'>DirectoryListing</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>dir_name</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}-Root-Dir&quot;</span>, <span class='kw-2'>&amp;</span><span class='ident'>app_name</span>);
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>dir_name</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}-Root-Dir&quot;</span>, <span class='ident'>app_name</span>);
         <span class='kw'>if</span> <span class='ident'>directory_listing</span>.<span class='ident'>find_sub_directory</span>(<span class='kw-2'>&amp;</span><span class='ident'>dir_name</span>).<span class='ident'>is_some</span>() {
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>index</span> <span class='op'>=</span> <span class='number'>1u8</span>;
             <span class='kw'>loop</span> {
-                <span class='ident'>dir_name</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}-{}-Root-Dir&quot;</span>, <span class='kw-2'>&amp;</span><span class='ident'>app_name</span>, <span class='ident'>index</span>);
+                <span class='ident'>dir_name</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}-{}-Root-Dir&quot;</span>, <span class='ident'>app_name</span>, <span class='ident'>index</span>);
                 <span class='kw'>if</span> <span class='ident'>directory_listing</span>.<span class='ident'>find_sub_directory</span>(<span class='kw-2'>&amp;</span><span class='ident'>dir_name</span>).<span class='ident'>is_some</span>() {
                     <span class='ident'>index</span> <span class='op'>+=</span> <span class='number'>1</span>;
                 } <span class='kw'>else</span> {
@@ -337,6 +350,8 @@
     <span class='kw'>fn</span> <span class='ident'>upsert_to_launcher_global_config</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
                                         <span class='ident'>config</span>: <span class='ident'>LauncherConfiguration</span>)
                                         <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>FfiError</span><span class='op'>&gt;</span> {
+        <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;Update (by overwriting) Launcher&#39;s config file by appending a new config.&quot;</span>);
+
         <span class='kw'>let</span> (<span class='kw-2'>mut</span> <span class='ident'>global_configs</span>, <span class='ident'>dir_listing</span>) <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>get_launcher_global_config_and_dir</span>());
 
         <span class='comment'>// (Spandan)</span>
@@ -361,7 +376,7 @@
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>file_helper</span> <span class='op'>=</span> <span class='ident'>FileHelper</span>::<span class='ident'>new</span>(<span class='self'>self</span>.<span class='ident'>client</span>.<span class='ident'>clone</span>());
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>writer</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>file_helper</span>.<span class='ident'>update_content</span>(<span class='ident'>file</span>, <span class='ident'>Overwrite</span>, <span class='ident'>dir_listing</span>));
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>writer</span>.<span class='ident'>write</span>(<span class='kw-2'>&amp;</span><span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>serialise</span>(<span class='kw-2'>&amp;</span><span class='ident'>global_configs</span>)), <span class='number'>0</span>));
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>writer</span>.<span class='ident'>write</span>(<span class='kw-2'>&amp;</span><span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>serialise</span>(<span class='kw-2'>&amp;</span><span class='ident'>global_configs</span>))));
         <span class='kw'>let</span> _ <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>writer</span>.<span class='ident'>close</span>());
 
         <span class='prelude-val'>Ok</span>(())
@@ -370,6 +385,8 @@
     <span class='kw'>fn</span> <span class='ident'>get_launcher_global_config_and_dir</span>
         (<span class='kw-2'>&amp;</span><span class='self'>self</span>)
          <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(<span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>LauncherConfiguration</span><span class='op'>&gt;</span>, <span class='ident'>DirectoryListing</span>), <span class='ident'>FfiError</span><span class='op'>&gt;</span> {
+        <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;Get Launcher&#39;s config directory.&quot;</span>);
+
         <span class='kw'>let</span> <span class='ident'>dir_helper</span> <span class='op'>=</span> <span class='ident'>DirectoryHelper</span>::<span class='ident'>new</span>(<span class='self'>self</span>.<span class='ident'>client</span>.<span class='ident'>clone</span>());
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>dir_listing</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dir_helper</span>.<span class='ident'>get_configuration_directory_listing</span>(
             <span class='ident'>LAUNCHER_GLOBAL_DIRECTORY_NAME</span>.<span class='ident'>to_string</span>()));
@@ -382,6 +399,9 @@
                 .<span class='ident'>cloned</span>() {
                 <span class='prelude-val'>Some</span>(<span class='ident'>file</span>) <span class='op'>=&gt;</span> <span class='ident'>file</span>,
                 <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> {
+                    <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;Launcher&#39;s config file does not exist inside it&#39;s config dir - \
+                            creating one.&quot;</span>);
+
                     <span class='ident'>dir_listing</span> <span class='op'>=</span>
                         <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>file_helper</span>.<span class='ident'>create</span>(<span class='ident'>LAUNCHER_GLOBAL_CONFIG_FILE_NAME</span>.<span class='ident'>to_string</span>(),
                                             <span class='ident'>Vec</span>::<span class='ident'>new</span>(),

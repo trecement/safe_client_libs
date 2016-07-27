@@ -743,6 +743,14 @@
 <span id="699">699</span>
 <span id="700">700</span>
 <span id="701">701</span>
+<span id="702">702</span>
+<span id="703">703</span>
+<span id="704">704</span>
+<span id="705">705</span>
+<span id="706">706</span>
+<span id="707">707</span>
+<span id="708">708</span>
+<span id="709">709</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -769,7 +777,6 @@
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>structured_data_operations</span>::<span class='ident'>unversioned</span>;
 <span class='kw'>use</span> <span class='ident'>dns</span>::<span class='ident'>errors</span>::<span class='ident'>DnsError</span>;
 <span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::{<span class='ident'>deserialise</span>, <span class='ident'>serialise</span>};
-<span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>errors</span>::<span class='ident'>NfsError</span>;
 <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>metadata</span>::<span class='ident'>directory_key</span>::<span class='ident'>DirectoryKey</span>;
 <span class='kw'>use</span> <span class='ident'>routing</span>::{<span class='ident'>Data</span>, <span class='ident'>DataIdentifier</span>, <span class='ident'>StructuredData</span>, <span class='ident'>XorName</span>};
 <span class='kw'>use</span> <span class='ident'>safe_network_common</span>::<span class='ident'>client_errors</span>::{<span class='ident'>GetError</span>, <span class='ident'>MutationError</span>};
@@ -815,7 +822,8 @@
                                                       <span class='kw-2'>&amp;</span><span class='ident'>box_</span>::<span class='ident'>SecretKey</span>,
                                                       <span class='kw-2'>&amp;</span><span class='ident'>box_</span>::<span class='ident'>Nonce</span>)<span class='op'>&gt;</span>)
                         <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>DnsError</span><span class='op'>&gt;</span> {
-        <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;Registering {:?} dns ...&quot;</span>, <span class='ident'>long_name</span>);
+        <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;Registering dns with name: {}&quot;</span>, <span class='ident'>long_name</span>);
+
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>saved_configs</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dns_configuration</span>::<span class='ident'>get_dns_configuration_data</span>(<span class='self'>self</span>.<span class='ident'>client</span>
             .<span class='ident'>clone</span>()));
         <span class='kw'>if</span> <span class='ident'>saved_configs</span>.<span class='ident'>iter</span>().<span class='ident'>any</span>(<span class='op'>|</span><span class='ident'>config</span><span class='op'>|</span> <span class='ident'>config</span>.<span class='ident'>long_name</span> <span class='op'>==</span> <span class='ident'>long_name</span>) {
@@ -838,7 +846,7 @@
                                                        <span class='macro'>vec</span><span class='macro'>!</span>[],
                                                        <span class='ident'>private_signing_key</span>,
                                                        <span class='ident'>data_encryption_keys</span>));
-            <span class='kw'>match</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>client</span>.<span class='ident'>lock</span>()).<span class='ident'>put_recover</span>(<span class='ident'>Data</span>::<span class='ident'>Structured</span>(<span class='ident'>struct_data</span>), <span class='prelude-val'>None</span>) {
+            <span class='kw'>match</span> <span class='ident'>Client</span>::<span class='ident'>put_recover</span>(<span class='self'>self</span>.<span class='ident'>client</span>.<span class='ident'>clone</span>(), <span class='ident'>Data</span>::<span class='ident'>Structured</span>(<span class='ident'>struct_data</span>), <span class='prelude-val'>None</span>) {
                 <span class='prelude-val'>Ok</span>(()) <span class='op'>=&gt;</span> (),
                 <span class='prelude-val'>Err</span>(<span class='ident'>CoreError</span>::<span class='ident'>MutationFailure</span> { <span class='ident'>reason</span>: <span class='ident'>MutationError</span>::<span class='ident'>DataExists</span>, .. }) <span class='op'>=&gt;</span> {
                     <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>DnsError</span>::<span class='ident'>DnsNameAlreadyRegistered</span>)
@@ -846,7 +854,7 @@
                 <span class='prelude-val'>Err</span>(<span class='ident'>err</span>) <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>From</span>::<span class='ident'>from</span>(<span class='ident'>err</span>)),
             }
 
-            <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;Adding encryption key pair to saved dns configuration ...&quot;</span>);
+            <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;Adding encryption key pair to the retrieved saved dns configuration.&quot;</span>);
             <span class='ident'>saved_configs</span>.<span class='ident'>push</span>(<span class='ident'>dns_configuration</span>::<span class='ident'>DnsConfiguration</span> {
                 <span class='ident'>long_name</span>: <span class='ident'>long_name</span>,
                 <span class='ident'>encryption_keypair</span>: (<span class='op'>*</span><span class='ident'>public_messaging_encryption_key</span>,
@@ -864,6 +872,8 @@
                       <span class='ident'>long_name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>,
                       <span class='ident'>private_signing_key</span>: <span class='kw-2'>&amp;</span><span class='ident'>sign</span>::<span class='ident'>SecretKey</span>)
                       <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>DnsError</span><span class='op'>&gt;</span> {
+        <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;Deleting dns with name: {}&quot;</span>, <span class='ident'>long_name</span>);
+
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>saved_configs</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dns_configuration</span>::<span class='ident'>get_dns_configuration_data</span>(<span class='self'>self</span>.<span class='ident'>client</span>
             .<span class='ident'>clone</span>()));
         <span class='kw'>let</span> <span class='ident'>pos</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>saved_configs</span>.<span class='ident'>iter</span>()
@@ -882,8 +892,9 @@
                                                  .<span class='ident'>clone</span>(),
                                              <span class='ident'>private_signing_key</span>,
                                              <span class='prelude-val'>None</span>));
-                <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>client</span>.<span class='ident'>lock</span>())
-                    .<span class='ident'>delete_recover</span>(<span class='ident'>Data</span>::<span class='ident'>Structured</span>(<span class='ident'>struct_data</span>), <span class='prelude-val'>None</span>));
+                <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>delete_recover</span>(<span class='self'>self</span>.<span class='ident'>client</span>.<span class='ident'>clone</span>(),
+                                            <span class='ident'>Data</span>::<span class='ident'>Structured</span>(<span class='ident'>struct_data</span>),
+                                            <span class='prelude-val'>None</span>));
             }
             <span class='prelude-val'>Err</span>(<span class='ident'>DnsError</span>::<span class='ident'>CoreError</span>(<span class='ident'>CoreError</span>::<span class='ident'>GetFailure</span> {
                 <span class='ident'>reason</span>: <span class='ident'>GetError</span>::<span class='ident'>NoSuchData</span>,
@@ -892,7 +903,7 @@
             <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>e</span>),
         };
 
-        <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;Removing dns saved configs at {:?} position ...&quot;</span>, <span class='ident'>pos</span>);
+        <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;Removing dns entry from the retrieved saved config.&quot;</span>);
         <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>saved_configs</span>.<span class='ident'>remove</span>(<span class='ident'>pos</span>);
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dns_configuration</span>::<span class='ident'>write_dns_configuration_data</span>(<span class='self'>self</span>.<span class='ident'>client</span>.<span class='ident'>clone</span>(), <span class='kw-2'>&amp;</span><span class='ident'>saved_configs</span>));
 
@@ -901,6 +912,8 @@
 
     <span class='doccomment'>/// Get all the Dns-names registered by the user so far in the network.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_all_registered_names</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>, <span class='ident'>DnsError</span><span class='op'>&gt;</span> {
+        <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;Get all dns long names that we own.&quot;</span>);
+
         <span class='ident'>dns_configuration</span>::<span class='ident'>get_dns_configuration_data</span>(<span class='self'>self</span>.<span class='ident'>client</span>.<span class='ident'>clone</span>())
             .<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>v</span><span class='op'>|</span> <span class='ident'>v</span>.<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>a</span><span class='op'>|</span> <span class='ident'>a</span>.<span class='ident'>long_name</span>.<span class='ident'>clone</span>()).<span class='ident'>collect</span>())
     }
@@ -911,6 +924,9 @@
         (<span class='kw-2'>&amp;</span><span class='self'>self</span>,
          <span class='ident'>long_name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>)
          <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(<span class='ident'>box_</span>::<span class='ident'>PublicKey</span>, <span class='ident'>box_</span>::<span class='ident'>SecretKey</span>), <span class='ident'>DnsError</span><span class='op'>&gt;</span> {
+        <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;Get messaging encryption keys for owned dns with name: {}&quot;</span>,
+               <span class='ident'>long_name</span>);
+
         <span class='kw'>let</span> <span class='ident'>dns_config_record</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>find_dns_record</span>(<span class='ident'>long_name</span>));
         <span class='prelude-val'>Ok</span>(<span class='ident'>dns_config_record</span>.<span class='ident'>encryption_keypair</span>.<span class='ident'>clone</span>())
     }
@@ -923,14 +939,7 @@
                                                           <span class='kw-2'>&amp;</span><span class='ident'>box_</span>::<span class='ident'>SecretKey</span>,
                                                           <span class='kw-2'>&amp;</span><span class='ident'>box_</span>::<span class='ident'>Nonce</span>)<span class='op'>&gt;</span>)
                             <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>, <span class='ident'>DnsError</span><span class='op'>&gt;</span> {
-        <span class='comment'>// Allow unregistered clients to access this function</span>
-        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>find_dns_record</span>(<span class='ident'>long_name</span>) {
-            <span class='prelude-val'>Ok</span>(_) <span class='op'>|</span>
-            <span class='prelude-val'>Err</span>(<span class='ident'>DnsError</span>::<span class='ident'>CoreError</span>(<span class='ident'>CoreError</span>::<span class='ident'>OperationForbiddenForClient</span>)) <span class='op'>|</span>
-            <span class='prelude-val'>Err</span>(<span class='ident'>DnsError</span>::<span class='ident'>NfsError</span>(<span class='ident'>NfsError</span>::<span class='ident'>CoreError</span>(
-                <span class='ident'>CoreError</span>::<span class='ident'>OperationForbiddenForClient</span>))) <span class='op'>=&gt;</span> (),
-            <span class='prelude-val'>Err</span>(<span class='ident'>error</span>) <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>error</span>),
-        };
+        <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;Get all services for the dns with name: {}&quot;</span>, <span class='ident'>long_name</span>);
 
         <span class='kw'>let</span> (_, <span class='ident'>dns_record</span>) <span class='op'>=</span>
             <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>get_housing_structured_data_and_dns_record</span>(<span class='ident'>long_name</span>, <span class='ident'>data_decryption_keys</span>));
@@ -946,15 +955,11 @@
                                                                         <span class='kw-2'>&amp;</span><span class='ident'>box_</span>::<span class='ident'>SecretKey</span>,
                                                                         <span class='kw-2'>&amp;</span><span class='ident'>box_</span>::<span class='ident'>Nonce</span>)<span class='op'>&gt;</span>)
                                           <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>DirectoryKey</span>, <span class='ident'>DnsError</span><span class='op'>&gt;</span> {
-        <span class='comment'>// Allow unregistered clients to access this function</span>
-        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>find_dns_record</span>(<span class='ident'>long_name</span>) {
-            <span class='prelude-val'>Ok</span>(_) <span class='op'>|</span>
-            <span class='prelude-val'>Err</span>(<span class='ident'>DnsError</span>::<span class='ident'>CoreError</span>(<span class='ident'>CoreError</span>::<span class='ident'>OperationForbiddenForClient</span>)) <span class='op'>|</span>
-            <span class='prelude-val'>Err</span>(<span class='ident'>DnsError</span>::<span class='ident'>NfsError</span>(<span class='ident'>NfsError</span>::<span class='ident'>CoreError</span>(
-                <span class='ident'>CoreError</span>::<span class='ident'>OperationForbiddenForClient</span>))) <span class='op'>|</span>
-            <span class='prelude-val'>Err</span>(<span class='ident'>DnsError</span>::<span class='ident'>DnsRecordNotFound</span>) <span class='op'>=&gt;</span> (),
-            <span class='prelude-val'>Err</span>(<span class='ident'>error</span>) <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>error</span>),
-        };
+        <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;Get service home directory key (to locate the home directory on SAFE Network) \
+                for \&quot;//{}.{}\&quot;.&quot;</span>,
+               <span class='ident'>service_name</span>,
+               <span class='ident'>long_name</span>);
+
         <span class='kw'>let</span> (_, <span class='ident'>dns_record</span>) <span class='op'>=</span>
             <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>get_housing_structured_data_and_dns_record</span>(<span class='ident'>long_name</span>, <span class='ident'>data_decryption_keys</span>));
         <span class='ident'>dns_record</span>.<span class='ident'>services</span>
@@ -972,6 +977,10 @@
                                                                 <span class='kw-2'>&amp;</span><span class='ident'>box_</span>::<span class='ident'>SecretKey</span>,
                                                                 <span class='kw-2'>&amp;</span><span class='ident'>box_</span>::<span class='ident'>Nonce</span>)<span class='op'>&gt;</span>)
                        <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>DnsError</span><span class='op'>&gt;</span> {
+        <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;Add service {:?} to dns with name: {}&quot;</span>,
+               <span class='ident'>new_service</span>,
+               <span class='ident'>long_name</span>);
+
         <span class='self'>self</span>.<span class='ident'>add_remove_service_impl</span>(<span class='ident'>long_name</span>,
                                      (<span class='ident'>new_service</span>.<span class='number'>0</span>, <span class='prelude-val'>Some</span>(<span class='ident'>new_service</span>.<span class='number'>1</span>)),
                                      <span class='ident'>private_signing_key</span>,
@@ -987,6 +996,10 @@
                                                                    <span class='kw-2'>&amp;</span><span class='ident'>box_</span>::<span class='ident'>SecretKey</span>,
                                                                    <span class='kw-2'>&amp;</span><span class='ident'>box_</span>::<span class='ident'>Nonce</span>)<span class='op'>&gt;</span>)
                           <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>DnsError</span><span class='op'>&gt;</span> {
+        <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;Remove service {:?} from dns with name: {}&quot;</span>,
+               <span class='ident'>service_to_remove</span>,
+               <span class='ident'>long_name</span>);
+
         <span class='self'>self</span>.<span class='ident'>add_remove_service_impl</span>(<span class='ident'>long_name</span>,
                                      (<span class='ident'>service_to_remove</span>, <span class='prelude-val'>None</span>),
                                      <span class='ident'>private_signing_key</span>,
@@ -1044,7 +1057,9 @@
                                                            .<span class='ident'>clone</span>(),
                                                        <span class='ident'>private_signing_key</span>,
                                                        <span class='ident'>data_encryption_decryption_keys</span>));
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>client</span>.<span class='ident'>lock</span>()).<span class='ident'>post</span>(<span class='ident'>Data</span>::<span class='ident'>Structured</span>(<span class='ident'>struct_data</span>), <span class='prelude-val'>None</span>)).<span class='ident'>get</span>());
+            <span class='kw'>let</span> <span class='ident'>resp_getter</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>client</span>.<span class='ident'>lock</span>())
+                .<span class='ident'>post</span>(<span class='ident'>Data</span>::<span class='ident'>Structured</span>(<span class='ident'>struct_data</span>), <span class='prelude-val'>None</span>));
+            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>resp_getter</span>.<span class='ident'>get</span>());
 
             <span class='prelude-val'>Ok</span>(())
         }
@@ -1064,10 +1079,11 @@
     }
 
     <span class='kw'>fn</span> <span class='ident'>get_housing_structured_data</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>long_name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>StructuredData</span>, <span class='ident'>DnsError</span><span class='op'>&gt;</span> {
+        <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;Fetch capsule from network for dns with name: {}&quot;</span>,
+               <span class='ident'>long_name</span>);
+
         <span class='kw'>let</span> <span class='ident'>identifier</span> <span class='op'>=</span> <span class='ident'>XorName</span>(<span class='ident'>sha256</span>::<span class='ident'>hash</span>(<span class='ident'>long_name</span>.<span class='ident'>as_bytes</span>()).<span class='number'>0</span>);
         <span class='kw'>let</span> <span class='ident'>request</span> <span class='op'>=</span> <span class='ident'>DataIdentifier</span>::<span class='ident'>Structured</span>(<span class='ident'>identifier</span>, <span class='ident'>TYPE_TAG_DNS_PACKET</span>);
-        <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;Retrieving structured data from network for {:?} dns ...&quot;</span>,
-               <span class='ident'>long_name</span>);
         <span class='kw'>let</span> <span class='ident'>response_getter</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>client</span>.<span class='ident'>lock</span>()).<span class='ident'>get</span>(<span class='ident'>request</span>, <span class='prelude-val'>None</span>));
         <span class='kw'>if</span> <span class='kw'>let</span> <span class='ident'>Data</span>::<span class='ident'>Structured</span>(<span class='ident'>struct_data</span>) <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>response_getter</span>.<span class='ident'>get</span>()) {
             <span class='prelude-val'>Ok</span>(<span class='ident'>struct_data</span>)
@@ -1340,7 +1356,7 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;use-mock-routing&quot;</span>)]</span>
-    <span class='kw'>fn</span> <span class='ident'>register_dns_internal_error_recovery</span>() {
+    <span class='kw'>fn</span> <span class='ident'>register_and_delete_dns_internal_error_recovery</span>() {
         <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>errors</span>::<span class='ident'>CoreError</span>;
         <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>errors</span>::<span class='ident'>NfsError</span>;
         <span class='kw'>use</span> <span class='ident'>safe_network_common</span>::<span class='ident'>client_errors</span>::<span class='ident'>GetError</span>;
