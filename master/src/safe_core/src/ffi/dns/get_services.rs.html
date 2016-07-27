@@ -76,6 +76,9 @@
 <span id="32">32</span>
 <span id="33">33</span>
 <span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -105,6 +108,9 @@
 
 <span class='kw'>impl</span> <span class='ident'>Action</span> <span class='kw'>for</span> <span class='ident'>GetServices</span> {
     <span class='kw'>fn</span> <span class='ident'>execute</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>params</span>: <span class='ident'>ParameterPacket</span>) <span class='op'>-&gt;</span> <span class='ident'>ResponseType</span> {
+        <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;JSON Get all services for dns with name: {}&quot;</span>,
+               <span class='self'>self</span>.<span class='ident'>long_name</span>);
+
         <span class='kw'>let</span> <span class='ident'>dns_ops</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>DnsOperations</span>::<span class='ident'>new</span>(<span class='ident'>params</span>.<span class='ident'>client</span>));
         <span class='kw'>let</span> <span class='ident'>list</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dns_ops</span>.<span class='ident'>get_all_services</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>long_name</span>, <span class='prelude-val'>None</span>));
 

@@ -111,6 +111,8 @@
 <span id="67">67</span>
 <span id="68">68</span>
 <span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2016 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -146,6 +148,8 @@
 <span class='kw'>impl</span> <span class='ident'>GetFileWriter</span> {
     <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>unsafe_code</span>)]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>params</span>: <span class='ident'>ParameterPacket</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>FfiWriterHandle</span>, <span class='ident'>FfiError</span><span class='op'>&gt;</span> {
+        <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;JSON get file writer, given the path.&quot;</span>);
+
         <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>is_path_shared</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='ident'>params</span>.<span class='ident'>safe_drive_access</span> {
             <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>FfiError</span>::<span class='ident'>PermissionDenied</span>);
         }

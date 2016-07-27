@@ -93,6 +93,7 @@
 <span id="49">49</span>
 <span id="50">50</span>
 <span id="51">51</span>
+<span id="52">52</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -123,6 +124,7 @@
 
 <span class='kw'>impl</span> <span class='ident'>Action</span> <span class='kw'>for</span> <span class='ident'>GetFileMetadata</span> {
     <span class='kw'>fn</span> <span class='ident'>execute</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>params</span>: <span class='ident'>ParameterPacket</span>) <span class='op'>-&gt;</span> <span class='ident'>ResponseType</span> {
+        <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;JSON get file metadata, given the path.&quot;</span>);
 
         <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>is_path_shared</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='ident'>params</span>.<span class='ident'>safe_drive_access</span> {
             <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>FfiError</span>::<span class='ident'>PermissionDenied</span>);

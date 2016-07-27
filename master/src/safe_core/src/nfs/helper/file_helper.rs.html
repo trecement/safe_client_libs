@@ -298,6 +298,24 @@
 <span id="254">254</span>
 <span id="255">255</span>
 <span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -354,6 +372,8 @@
                   <span class='ident'>user_metatdata</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
                   <span class='ident'>parent_directory</span>: <span class='ident'>DirectoryListing</span>)
                   <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Writer</span>, <span class='ident'>NfsError</span><span class='op'>&gt;</span> {
+        <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;Creating file with name: {}&quot;</span>, <span class='ident'>name</span>);
+
         <span class='kw'>match</span> <span class='ident'>parent_directory</span>.<span class='ident'>find_file</span>(<span class='kw-2'>&amp;</span><span class='ident'>name</span>) {
             <span class='prelude-val'>Some</span>(_) <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='ident'>NfsError</span>::<span class='ident'>FileAlreadyExistsWithSameName</span>),
             <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> {
@@ -373,8 +393,9 @@
                   <span class='ident'>file_name</span>: <span class='ident'>String</span>,
                   <span class='ident'>parent_directory</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>DirectoryListing</span>)
                   <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>DirectoryListing</span><span class='op'>&gt;</span>, <span class='ident'>NfsError</span><span class='op'>&gt;</span> {
-        <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;Deleting {:?} file from directory listing ...&quot;</span>, <span class='ident'>file_name</span>);
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>parent_directory</span>.<span class='ident'>remove_file</span>(<span class='kw-2'>&amp;</span><span class='ident'>file_name</span>));
+        <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;Deleting file with name {}.&quot;</span>, <span class='ident'>file_name</span>);
+
+        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>parent_directory</span>.<span class='ident'>remove_file</span>(<span class='kw-2'>&amp;</span><span class='ident'>file_name</span>));
         <span class='kw'>let</span> <span class='ident'>directory_helper</span> <span class='op'>=</span> <span class='ident'>DirectoryHelper</span>::<span class='ident'>new</span>(<span class='self'>self</span>.<span class='ident'>client</span>.<span class='ident'>clone</span>());
         <span class='ident'>directory_helper</span>.<span class='ident'>update</span>(<span class='ident'>parent_directory</span>)
     }
@@ -385,6 +406,8 @@
                            <span class='ident'>file</span>: <span class='ident'>File</span>,
                            <span class='ident'>parent_directory</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>DirectoryListing</span>)
                            <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>DirectoryListing</span><span class='op'>&gt;</span>, <span class='ident'>NfsError</span><span class='op'>&gt;</span> {
+        <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;Updating metadata for file.&quot;</span>);
+
         {
             <span class='kw'>let</span> <span class='ident'>existing_file</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>parent_directory</span>.<span class='ident'>find_file_by_id</span>(<span class='ident'>file</span>.<span class='ident'>get_id</span>())
                 .<span class='ident'>ok_or</span>(<span class='ident'>NfsError</span>::<span class='ident'>FileNotFound</span>));
@@ -408,6 +431,8 @@
                           <span class='ident'>mode</span>: <span class='ident'>Mode</span>,
                           <span class='ident'>parent_directory</span>: <span class='ident'>DirectoryListing</span>)
                           <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Writer</span>, <span class='ident'>NfsError</span><span class='op'>&gt;</span> {
+        <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;Updating content in file with name {}&quot;</span>, <span class='ident'>file</span>.<span class='ident'>get_name</span>());
+
         {
             <span class='kw'>let</span> <span class='ident'>existing_file</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>parent_directory</span>.<span class='ident'>find_file</span>(<span class='ident'>file</span>.<span class='ident'>get_name</span>())
                 .<span class='ident'>ok_or</span>(<span class='ident'>NfsError</span>::<span class='ident'>FileNotFound</span>));
@@ -428,6 +453,8 @@
                         <span class='ident'>file</span>: <span class='kw-2'>&amp;</span><span class='ident'>File</span>,
                         <span class='ident'>parent_directory</span>: <span class='kw-2'>&amp;</span><span class='ident'>DirectoryListing</span>)
                         <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>File</span><span class='op'>&gt;</span>, <span class='ident'>NfsError</span><span class='op'>&gt;</span> {
+        <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;Getting versions of a file with name {}&quot;</span>, <span class='ident'>file</span>.<span class='ident'>get_name</span>());
+
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>versions</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='op'>&lt;</span><span class='ident'>File</span><span class='op'>&gt;</span>::<span class='ident'>new</span>();
         <span class='kw'>let</span> <span class='ident'>directory_helper</span> <span class='op'>=</span> <span class='ident'>DirectoryHelper</span>::<span class='ident'>new</span>(<span class='self'>self</span>.<span class='ident'>client</span>.<span class='ident'>clone</span>());
 
@@ -457,6 +484,7 @@
 
     <span class='doccomment'>/// Returns a reader for reading the file contents</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>read</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>file</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>File</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Reader</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>, <span class='ident'>NfsError</span><span class='op'>&gt;</span> {
+        <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;Reading file with name: {}&quot;</span>, <span class='ident'>file</span>.<span class='ident'>get_name</span>());
         <span class='ident'>Reader</span>::<span class='ident'>new</span>(<span class='self'>self</span>.<span class='ident'>client</span>.<span class='ident'>clone</span>(), <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>storage</span>, <span class='ident'>file</span>)
     }
 }
@@ -488,10 +516,12 @@
                     <span class='prelude-val'>None</span>));
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>file_helper</span> <span class='op'>=</span> <span class='ident'>FileHelper</span>::<span class='ident'>new</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>());
         <span class='kw'>let</span> <span class='ident'>file_name</span> <span class='op'>=</span> <span class='string'>&quot;hello.txt&quot;</span>.<span class='ident'>to_string</span>();
+
+        <span class='kw'>const</span> <span class='ident'>ORIG_SIZE</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>100</span>;
         {
             <span class='comment'>// create</span>
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>writer</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>file_helper</span>.<span class='ident'>create</span>(<span class='ident'>file_name</span>.<span class='ident'>clone</span>(), <span class='ident'>Vec</span>::<span class='ident'>new</span>(), <span class='ident'>directory</span>));
-            <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>writer</span>.<span class='ident'>write</span>(<span class='kw-2'>&amp;</span>[<span class='number'>0u8</span>; <span class='number'>100</span>], <span class='number'>0</span>), <span class='string'>&quot;&quot;</span>);
+            <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>writer</span>.<span class='ident'>write</span>(<span class='kw-2'>&amp;</span>[<span class='number'>0u8</span>; <span class='ident'>ORIG_SIZE</span>]), <span class='string'>&quot;&quot;</span>);
             <span class='kw'>let</span> (<span class='ident'>updated_directory</span>, _) <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>writer</span>.<span class='ident'>close</span>());
             <span class='ident'>directory</span> <span class='op'>=</span> <span class='ident'>updated_directory</span>;
             <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>directory</span>.<span class='ident'>find_file</span>(<span class='kw-2'>&amp;</span><span class='ident'>file_name</span>).<span class='ident'>is_some</span>());
@@ -503,13 +533,15 @@
             <span class='kw'>let</span> <span class='ident'>size</span> <span class='op'>=</span> <span class='ident'>reader</span>.<span class='ident'>size</span>();
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>reader</span>.<span class='ident'>read</span>(<span class='number'>0</span>, <span class='ident'>size</span>)), <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>0u8</span>; <span class='number'>100</span>]);
         }
+
+        <span class='kw'>const</span> <span class='ident'>NEW_SIZE</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>50</span>;
         {
             <span class='comment'>// update - full rewrite</span>
             <span class='kw'>let</span> <span class='ident'>file</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>directory</span>.<span class='ident'>find_file</span>(<span class='kw-2'>&amp;</span><span class='ident'>file_name</span>).<span class='ident'>cloned</span>(), <span class='string'>&quot;File not found&quot;</span>);
             {
                 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>writer</span> <span class='op'>=</span>
                     <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>file_helper</span>.<span class='ident'>update_content</span>(<span class='ident'>file</span>, <span class='ident'>Mode</span>::<span class='ident'>Overwrite</span>, <span class='ident'>directory</span>));
-                <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>writer</span>.<span class='ident'>write</span>(<span class='kw-2'>&amp;</span>[<span class='number'>1u8</span>; <span class='number'>50</span>], <span class='number'>0</span>), <span class='string'>&quot;&quot;</span>);
+                <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>writer</span>.<span class='ident'>write</span>(<span class='kw-2'>&amp;</span>[<span class='number'>1u8</span>; <span class='ident'>NEW_SIZE</span>]));
                 <span class='kw'>let</span> (<span class='ident'>updated_directory</span>, _) <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>writer</span>.<span class='ident'>close</span>());
                 <span class='ident'>directory</span> <span class='op'>=</span> <span class='ident'>updated_directory</span>;
             }
@@ -518,12 +550,14 @@
             <span class='kw'>let</span> <span class='ident'>size</span> <span class='op'>=</span> <span class='ident'>reader</span>.<span class='ident'>size</span>();
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>reader</span>.<span class='ident'>read</span>(<span class='number'>0</span>, <span class='ident'>size</span>)), <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1u8</span>; <span class='number'>50</span>]);
         }
+
+        <span class='kw'>const</span> <span class='ident'>APPEND_SIZE</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>10</span>;
         {
-            <span class='comment'>// update - partial rewrite</span>
+            <span class='comment'>// update - should append (after S.E behaviour changed)</span>
             <span class='kw'>let</span> <span class='ident'>file</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>directory</span>.<span class='ident'>find_file</span>(<span class='kw-2'>&amp;</span><span class='ident'>file_name</span>).<span class='ident'>cloned</span>(), <span class='string'>&quot;File not found&quot;</span>);
             {
                 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>writer</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>file_helper</span>.<span class='ident'>update_content</span>(<span class='ident'>file</span>, <span class='ident'>Mode</span>::<span class='ident'>Modify</span>, <span class='ident'>directory</span>));
-                <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>writer</span>.<span class='ident'>write</span>(<span class='kw-2'>&amp;</span>[<span class='number'>2u8</span>; <span class='number'>10</span>], <span class='number'>0</span>), <span class='string'>&quot;&quot;</span>);
+                <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>writer</span>.<span class='ident'>write</span>(<span class='kw-2'>&amp;</span>[<span class='number'>2u8</span>; <span class='ident'>APPEND_SIZE</span>]));
                 <span class='kw'>let</span> (<span class='ident'>updated_directory</span>, _) <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>writer</span>.<span class='ident'>close</span>());
                 <span class='ident'>directory</span> <span class='op'>=</span> <span class='ident'>updated_directory</span>;
             }
@@ -531,8 +565,10 @@
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>reader</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>file_helper</span>.<span class='ident'>read</span>(<span class='ident'>file</span>), <span class='string'>&quot;&quot;</span>);
             <span class='kw'>let</span> <span class='ident'>size</span> <span class='op'>=</span> <span class='ident'>reader</span>.<span class='ident'>size</span>();
             <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>reader</span>.<span class='ident'>read</span>(<span class='number'>0</span>, <span class='ident'>size</span>));
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw-2'>&amp;</span><span class='ident'>data</span>[<span class='number'>0</span>..<span class='number'>10</span>], [<span class='number'>2u8</span>; <span class='number'>10</span>]);
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw-2'>&amp;</span><span class='ident'>data</span>[<span class='number'>10</span>..<span class='number'>20</span>], [<span class='number'>1u8</span>; <span class='number'>10</span>]);
+
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>size</span>, (<span class='ident'>NEW_SIZE</span> <span class='op'>+</span> <span class='ident'>APPEND_SIZE</span>) <span class='kw'>as</span> <span class='ident'>u64</span>);
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>data</span>[<span class='number'>0</span>..<span class='ident'>NEW_SIZE</span>].<span class='ident'>to_owned</span>(), <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>1u8</span>; <span class='ident'>NEW_SIZE</span>]);
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw-2'>&amp;</span><span class='ident'>data</span>[<span class='ident'>NEW_SIZE</span>..], [<span class='number'>2u8</span>; <span class='ident'>APPEND_SIZE</span>]);
         }
         {
             <span class='comment'>// versions</span>

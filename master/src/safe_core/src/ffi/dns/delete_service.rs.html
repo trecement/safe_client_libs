@@ -80,6 +80,8 @@
 <span id="36">36</span>
 <span id="37">37</span>
 <span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -109,6 +111,8 @@
 
 <span class='kw'>impl</span> <span class='ident'>Action</span> <span class='kw'>for</span> <span class='ident'>DeleteService</span> {
     <span class='kw'>fn</span> <span class='ident'>execute</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>params</span>: <span class='ident'>ParameterPacket</span>) <span class='op'>-&gt;</span> <span class='ident'>ResponseType</span> {
+        <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;JSON delete service.&quot;</span>);
+
         <span class='kw'>let</span> <span class='ident'>signing_key</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>params</span>.<span class='ident'>client</span>.<span class='ident'>lock</span>()).<span class='ident'>get_secret_signing_key</span>()).<span class='ident'>clone</span>();
         <span class='kw'>let</span> <span class='ident'>dns_ops</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>DnsOperations</span>::<span class='ident'>new</span>(<span class='ident'>params</span>.<span class='ident'>client</span>));
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dns_ops</span>.<span class='ident'>remove_service</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>long_name</span>,

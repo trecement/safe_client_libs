@@ -281,7 +281,6 @@
 <span id="237">237</span>
 <span id="238">238</span>
 <span id="239">239</span>
-<span id="240">240</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -454,6 +453,8 @@
         <span class='kw'>let</span> <span class='ident'>message_queue_cloned</span> <span class='op'>=</span> <span class='ident'>message_queue</span>.<span class='ident'>clone</span>();
         <span class='kw'>let</span> <span class='ident'>receiver_joiner</span> <span class='op'>=</span> <span class='ident'>thread</span>::<span class='ident'>named</span>(<span class='ident'>EVENT_RECEIVER_THREAD_NAME</span>, <span class='kw'>move</span> <span class='op'>||</span> {
             <span class='kw'>for</span> <span class='ident'>it</span> <span class='kw'>in</span> <span class='ident'>routing_event_receiver</span>.<span class='ident'>iter</span>() {
+                <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;{} received: {:?}&quot;</span>, <span class='ident'>EVENT_RECEIVER_THREAD_NAME</span>, <span class='ident'>it</span>);
+
                 <span class='kw'>match</span> <span class='ident'>it</span> {
                     <span class='ident'>Event</span>::<span class='ident'>Response</span> { <span class='ident'>response</span>, .. } <span class='op'>=&gt;</span> {
                         <span class='ident'>handle_response</span>(<span class='ident'>response</span>, <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>message_queue_cloned</span>.<span class='ident'>lock</span>()));
@@ -484,10 +485,7 @@
                         <span class='ident'>MessageQueue</span>::<span class='ident'>purge_dead_senders</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>queue_guard</span>.<span class='ident'>network_event_observers</span>,
                                                          <span class='ident'>dead_sender_positions</span>);
                     }
-                    _ <span class='op'>=&gt;</span> {
-                        <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;Received Routing Event: {:?} ;; This is currently not supported.&quot;</span>,
-                               <span class='ident'>it</span>)
-                    }
+                    _ <span class='op'>=&gt;</span> <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;Received unsupported routing event: {:?}.&quot;</span>, <span class='ident'>it</span>),
                 }
             }
         });

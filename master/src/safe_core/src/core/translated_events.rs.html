@@ -100,6 +100,8 @@
 <span id="56">56</span>
 <span id="57">57</span>
 <span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -134,6 +136,8 @@
     <span class='ident'>GetAccountInfoResp</span>(<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(<span class='ident'>u64</span>, <span class='ident'>u64</span>), <span class='ident'>CoreError</span><span class='op'>&gt;</span>),
     <span class='doccomment'>/// Response to a previous Mutating (PUT/POST/DELETE) request</span>
     <span class='ident'>MutationResp</span>(<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>CoreError</span><span class='op'>&gt;</span>),
+    <span class='doccomment'>/// Request timed out</span>
+    <span class='ident'>RequestTimeout</span>,
     <span class='doccomment'>/// Graceful Exit Condition</span>
     <span class='ident'>Terminated</span>,
 }

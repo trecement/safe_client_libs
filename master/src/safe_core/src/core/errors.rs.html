@@ -470,6 +470,12 @@
 <span id="426">426</span>
 <span id="427">427</span>
 <span id="428">428</span>
+<span id="429">429</span>
+<span id="430">430</span>
+<span id="431">431</span>
+<span id="432">432</span>
+<span id="433">433</span>
+<span id="434">434</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -559,6 +565,8 @@
     },
     <span class='doccomment'>/// Error while self-encrypting data</span>
     <span class='ident'>SelfEncryption</span>(<span class='ident'>SelfEncryptionError</span><span class='op'>&lt;</span><span class='ident'>SelfEncryptionStorageError</span><span class='op'>&gt;</span>),
+    <span class='doccomment'>/// The request has timed out</span>
+    <span class='ident'>RequestTimeout</span>,
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>CoreError</span> {
@@ -658,12 +666,12 @@
             <span class='ident'>CoreError</span>::<span class='ident'>MutationFailure</span> { <span class='ident'>reason</span>: <span class='ident'>MutationError</span>::<span class='ident'>NetworkFull</span>, .. } <span class='op'>=&gt;</span> {
                 <span class='ident'>CLIENT_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>27</span>
             }
-            <span class='ident'>CoreError</span>::<span class='ident'>SelfEncryption</span>(<span class='ident'>SelfEncryptionError</span>
-                                      ::<span class='ident'>Compression</span>::<span class='op'>&lt;</span><span class='ident'>SelfEncryptionStorageError</span><span class='op'>&gt;</span>) <span class='op'>=&gt;</span> {
+            <span class='ident'>CoreError</span>::<span class='ident'>SelfEncryption</span>(
+                <span class='ident'>SelfEncryptionError</span>::<span class='ident'>Compression</span>::<span class='op'>&lt;</span><span class='ident'>SelfEncryptionStorageError</span><span class='op'>&gt;</span>) <span class='op'>=&gt;</span> {
                 <span class='ident'>CLIENT_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>28</span>
             }
-            <span class='ident'>CoreError</span>::<span class='ident'>SelfEncryption</span>(<span class='ident'>SelfEncryptionError</span>
-                                      ::<span class='ident'>Decryption</span>::<span class='op'>&lt;</span><span class='ident'>SelfEncryptionStorageError</span><span class='op'>&gt;</span>) <span class='op'>=&gt;</span> {
+            <span class='ident'>CoreError</span>::<span class='ident'>SelfEncryption</span>(
+                <span class='ident'>SelfEncryptionError</span>::<span class='ident'>Decryption</span>::<span class='op'>&lt;</span><span class='ident'>SelfEncryptionStorageError</span><span class='op'>&gt;</span>) <span class='op'>=&gt;</span> {
                 <span class='ident'>CLIENT_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>29</span>
             }
             <span class='ident'>CoreError</span>::<span class='ident'>SelfEncryption</span>(<span class='ident'>SelfEncryptionError</span>::<span class='ident'>Io</span>::<span class='op'>&lt;</span><span class='ident'>SelfEncryptionStorageError</span><span class='op'>&gt;</span>(_)) <span class='op'>=&gt;</span> {
@@ -673,6 +681,7 @@
                 <span class='ident'>CLIENT_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>31</span>
             }
             <span class='ident'>CoreError</span>::<span class='ident'>GetAccountInfoFailure</span> { .. } <span class='op'>=&gt;</span> <span class='ident'>CLIENT_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>32</span>,
+            <span class='ident'>CoreError</span>::<span class='ident'>RequestTimeout</span> <span class='op'>=&gt;</span> <span class='ident'>CLIENT_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>33</span>,
             <span class='ident'>CoreError</span>::<span class='ident'>SelfEncryption</span>(<span class='ident'>SelfEncryptionError</span>
                                       ::<span class='ident'>Storage</span>
                                       ::<span class='op'>&lt;</span><span class='ident'>SelfEncryptionStorageError</span><span class='op'>&gt;</span>(
@@ -731,24 +740,25 @@
             }
             <span class='ident'>CoreError</span>::<span class='ident'>GetFailure</span> { <span class='kw-2'>ref</span> <span class='ident'>data_id</span>, <span class='kw-2'>ref</span> <span class='ident'>reason</span> } <span class='op'>=&gt;</span> {
                 <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>formatter</span>,
-                       <span class='string'>&quot;CoreError::GetFailure::{{ reason: {:?}, data_id: {:?} }}&quot;</span>,
+                       <span class='string'>&quot;CoreError::GetFailure::{{ reason: {:?}, data_id: {:?}}}&quot;</span>,
                        <span class='ident'>reason</span>,
                        <span class='ident'>data_id</span>)
             }
             <span class='ident'>CoreError</span>::<span class='ident'>GetAccountInfoFailure</span> { <span class='kw-2'>ref</span> <span class='ident'>reason</span> } <span class='op'>=&gt;</span> {
                 <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>formatter</span>,
-                       <span class='string'>&quot;CoreError::GetAccountInfoFailure::{{ reason: {:?} }}&quot;</span>,
+                       <span class='string'>&quot;CoreError::GetAccountInfoFailure::{{ reason: {:?}}}&quot;</span>,
                        <span class='ident'>reason</span>)
             }
             <span class='ident'>CoreError</span>::<span class='ident'>MutationFailure</span> { <span class='kw-2'>ref</span> <span class='ident'>data_id</span>, <span class='kw-2'>ref</span> <span class='ident'>reason</span> } <span class='op'>=&gt;</span> {
                 <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>formatter</span>,
-                       <span class='string'>&quot;CoreError::MutationFailure::{{ reason: {:?}, data_id: {:?} }}&quot;</span>,
+                       <span class='string'>&quot;CoreError::MutationFailure::{{ reason: {:?}, data_id: {:?}}}&quot;</span>,
                        <span class='ident'>reason</span>,
                        <span class='ident'>data_id</span>)
             }
             <span class='ident'>CoreError</span>::<span class='ident'>SelfEncryption</span>(<span class='kw-2'>ref</span> <span class='ident'>error</span>) <span class='op'>=&gt;</span> {
                 <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>formatter</span>, <span class='string'>&quot;CoreError::SelfEncryption -&gt; {:?}&quot;</span>, <span class='ident'>error</span>)
             }
+            <span class='ident'>CoreError</span>::<span class='ident'>RequestTimeout</span> <span class='op'>=&gt;</span> <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>formatter</span>, <span class='string'>&quot;CoreError::RequestTimeout&quot;</span>),
         }
     }
 }
@@ -823,6 +833,7 @@
             <span class='ident'>CoreError</span>::<span class='ident'>SelfEncryption</span>(<span class='kw-2'>ref</span> <span class='ident'>error</span>) <span class='op'>=&gt;</span> {
                 <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>formatter</span>, <span class='string'>&quot;Self-encryption error: {}&quot;</span>, <span class='ident'>error</span>)
             }
+            <span class='ident'>CoreError</span>::<span class='ident'>RequestTimeout</span> <span class='op'>=&gt;</span> <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>formatter</span>, <span class='string'>&quot;CoreError::RequestTimeout&quot;</span>),
         }
     }
 }
@@ -852,6 +863,7 @@
             <span class='ident'>CoreError</span>::<span class='ident'>GetAccountInfoFailure</span> { <span class='kw-2'>ref</span> <span class='ident'>reason</span> } <span class='op'>=&gt;</span> <span class='ident'>reason</span>.<span class='ident'>description</span>(),
             <span class='ident'>CoreError</span>::<span class='ident'>MutationFailure</span> { <span class='kw-2'>ref</span> <span class='ident'>reason</span>, .. } <span class='op'>=&gt;</span> <span class='ident'>reason</span>.<span class='ident'>description</span>(),
             <span class='ident'>CoreError</span>::<span class='ident'>SelfEncryption</span>(<span class='kw-2'>ref</span> <span class='ident'>error</span>) <span class='op'>=&gt;</span> <span class='ident'>error</span>.<span class='ident'>description</span>(),
+            <span class='ident'>CoreError</span>::<span class='ident'>RequestTimeout</span> <span class='op'>=&gt;</span> <span class='string'>&quot;Request has timed out&quot;</span>,
         }
     }
 
