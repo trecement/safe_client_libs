@@ -54,7 +54,7 @@
 
 <h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
 <pre class='rust rust-example-rendered'>
-<span class='comment'>// Generating public and secret keys using sodiumoxide</span>
+<span class='comment'>// Generating public and secret keys using rust_sodium</span>
 <span class='comment'>// Create RevocationIdType</span>
 <span class='kw'>use</span> <span class='ident'>safe_core</span>::<span class='ident'>core</span>::<span class='ident'>id</span>;
 <span class='kw'>let</span> <span class='ident'>_an_maid</span> <span class='op'>=</span> <span class='ident'>id</span>::<span class='ident'>RevocationIdType</span>::<span class='ident'>new</span>::<span class='op'>&lt;</span><span class='ident'>id</span>::<span class='ident'>MaidTypeTags</span><span class='op'>&gt;</span>();</pre>
@@ -68,9 +68,9 @@ Default contructed RevocationIdType instance is returned</p>
 <div class='docblock'><p>Returns type tags</p>
 </div><h4 id='method.type_tag' class='method'><code>fn <a href='#method.type_tag' class='fnname'>type_tag</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a></code></h4>
 <div class='docblock'><p>Returns type tag</p>
-</div><h4 id='method.secret_key' class='method'><code>fn <a href='#method.secret_key' class='fnname'>secret_key</a>(&amp;self) -&gt; &amp;<a class='struct' href='../../../../sodiumoxide/crypto/sign/ed25519/struct.SecretKey.html' title='sodiumoxide::crypto::sign::ed25519::SecretKey'>SecretKey</a></code></h4>
+</div><h4 id='method.secret_key' class='method'><code>fn <a href='#method.secret_key' class='fnname'>secret_key</a>(&amp;self) -&gt; &amp;<a class='struct' href='../../../../rust_sodium/crypto/sign/ed25519/struct.SecretKey.html' title='rust_sodium::crypto::sign::ed25519::SecretKey'>SecretKey</a></code></h4>
 <div class='docblock'><p>Returns the SecretKey of the RevocationIdType</p>
-</div><h4 id='method.public_key' class='method'><code>fn <a href='#method.public_key' class='fnname'>public_key</a>(&amp;self) -&gt; &amp;<a class='struct' href='../../../../sodiumoxide/crypto/sign/ed25519/struct.PublicKey.html' title='sodiumoxide::crypto::sign::ed25519::PublicKey'>PublicKey</a></code></h4>
+</div><h4 id='method.public_key' class='method'><code>fn <a href='#method.public_key' class='fnname'>public_key</a>(&amp;self) -&gt; &amp;<a class='struct' href='../../../../rust_sodium/crypto/sign/ed25519/struct.PublicKey.html' title='rust_sodium::crypto::sign::ed25519::PublicKey'>PublicKey</a></code></h4>
 <div class='docblock'><p>Returns the PublicKey of the AnMaid</p>
 </div><h4 id='method.sign' class='method'><code>fn <a href='#method.sign' class='fnname'>sign</a>(&amp;self, data: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;</code></h4>
 <div class='docblock'><p>Signs the data with the SecretKey of the AnMaid and recturns the Signed Data</p>

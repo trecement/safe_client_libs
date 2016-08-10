@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-4597' class='srclink' href='../../src/safe_core/src/ffi/mod.rs.html#18-755' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-4597' class='srclink' href='../../src/safe_core/src/ffi/mod.rs.html#18-788' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Ffi module;
 This module provides FFI-bindings to the Client Modules (<code>core</code>, <code>nfs</code>, <code>dns</code>)
 In the current implementation the allocations made by this crate are managed within the crate
@@ -251,6 +251,15 @@ undefined.</p>
                                   title='safe_core::ffi::nfs_stream_write'>nfs_stream_write</a></td>
                            <td class='docblock short'>
                                 <p>Write data to the Network using the NFS Writer handle</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.output_log_path.html'
+                                  title='safe_core::ffi::output_log_path'>output_log_path</a></td>
+                           <td class='docblock short'>
+                                <p>This function should be called to find where log file will be created. It will additionally
+create an empty log file in the path in the deduced location and will return the file name
+along with complete path to it.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>

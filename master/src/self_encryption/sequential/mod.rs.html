@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/self_encryption-0.6.0/src/sequential/mod.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/self_encryption-0.7.0/src/sequential/mod.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>mod.rs.html -- source</title>
@@ -99,7 +99,7 @@
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>utils</span>;
 
 <span class='kw'>use</span> <span class='ident'>encryption</span>::{<span class='ident'>IV_SIZE</span>, <span class='ident'>KEY_SIZE</span>};
-<span class='kw'>use</span> <span class='ident'>sodiumoxide</span>::<span class='ident'>crypto</span>::<span class='ident'>hash</span>::<span class='ident'>sha256</span>;
+<span class='kw'>use</span> <span class='ident'>rust_sodium</span>::<span class='ident'>crypto</span>::<span class='ident'>hash</span>::<span class='ident'>sha256</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>COMPRESSION_QUALITY</span>, <span class='ident'>MAX_CHUNK_SIZE</span>, <span class='ident'>MAX_FILE_SIZE</span>, <span class='ident'>MIN_CHUNK_SIZE</span>,
                 <span class='ident'>SelfEncryptionError</span>, <span class='ident'>Storage</span>, <span class='ident'>StorageError</span>};
 

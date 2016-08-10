@@ -242,7 +242,7 @@
 <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>helper</span>::<span class='ident'>writer</span>::<span class='ident'>Mode</span>;
 <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>helper</span>::<span class='ident'>directory_helper</span>::<span class='ident'>DirectoryHelper</span>;
 <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>helper</span>::<span class='ident'>file_helper</span>::<span class='ident'>FileHelper</span>;
-<span class='kw'>use</span> <span class='ident'>sodiumoxide</span>::<span class='ident'>crypto</span>::<span class='ident'>box_</span>;
+<span class='kw'>use</span> <span class='ident'>rust_sodium</span>::<span class='ident'>crypto</span>::<span class='ident'>box_</span>;
 
 <span class='kw'>const</span> <span class='ident'>DNS_CONFIG_DIR_NAME</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;DnsReservedDirectory&quot;</span>;
 <span class='kw'>const</span> <span class='ident'>DNS_CONFIG_FILE_NAME</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;DnsConfigurationFile&quot;</span>;
@@ -325,7 +325,7 @@
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>test</span> {
     <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
-    <span class='kw'>use</span> <span class='ident'>sodiumoxide</span>::<span class='ident'>crypto</span>::<span class='ident'>box_</span>;
+    <span class='kw'>use</span> <span class='ident'>rust_sodium</span>::<span class='ident'>crypto</span>::<span class='ident'>box_</span>;
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::{<span class='ident'>Arc</span>, <span class='ident'>Mutex</span>};
     <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>utility</span>;
     <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>utility</span>::<span class='ident'>test_utils</span>;

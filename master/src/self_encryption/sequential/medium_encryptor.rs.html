@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/self_encryption-0.6.0/src/sequential/medium_encryptor.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/self_encryption-0.7.0/src/sequential/medium_encryptor.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>medium_encryptor.rs.html -- source</title>
@@ -294,7 +294,7 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
 
 <span class='kw'>use</span> <span class='ident'>data_map</span>::{<span class='ident'>ChunkDetails</span>, <span class='ident'>DataMap</span>};
-<span class='kw'>use</span> <span class='ident'>sodiumoxide</span>::<span class='ident'>crypto</span>::<span class='ident'>hash</span>::<span class='ident'>sha256</span>;
+<span class='kw'>use</span> <span class='ident'>rust_sodium</span>::<span class='ident'>crypto</span>::<span class='ident'>hash</span>::<span class='ident'>sha256</span>;
 <span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>MAX_CHUNK_SIZE</span>, <span class='ident'>MIN_CHUNK_SIZE</span>, <span class='ident'>SelfEncryptionError</span>, <span class='ident'>Storage</span>, <span class='ident'>StorageError</span>, <span class='ident'>utils</span>};
 <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>small_encryptor</span>::<span class='ident'>SmallEncryptor</span>;
 
