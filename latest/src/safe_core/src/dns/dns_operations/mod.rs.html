@@ -779,10 +779,10 @@
 <span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::{<span class='ident'>deserialise</span>, <span class='ident'>serialise</span>};
 <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>metadata</span>::<span class='ident'>directory_key</span>::<span class='ident'>DirectoryKey</span>;
 <span class='kw'>use</span> <span class='ident'>routing</span>::{<span class='ident'>Data</span>, <span class='ident'>DataIdentifier</span>, <span class='ident'>StructuredData</span>, <span class='ident'>XorName</span>};
-<span class='kw'>use</span> <span class='ident'>safe_network_common</span>::<span class='ident'>client_errors</span>::{<span class='ident'>GetError</span>, <span class='ident'>MutationError</span>};
-<span class='kw'>use</span> <span class='ident'>safe_network_common</span>::<span class='ident'>TYPE_TAG_DNS_PACKET</span>;
-<span class='kw'>use</span> <span class='ident'>sodiumoxide</span>::<span class='ident'>crypto</span>::{<span class='ident'>box_</span>, <span class='ident'>sign</span>};
-<span class='kw'>use</span> <span class='ident'>sodiumoxide</span>::<span class='ident'>crypto</span>::<span class='ident'>hash</span>::<span class='ident'>sha256</span>;
+<span class='kw'>use</span> <span class='ident'>routing</span>::<span class='ident'>client_errors</span>::{<span class='ident'>GetError</span>, <span class='ident'>MutationError</span>};
+<span class='kw'>use</span> <span class='ident'>routing</span>::<span class='ident'>TYPE_TAG_DNS_PACKET</span>;
+<span class='kw'>use</span> <span class='ident'>rust_sodium</span>::<span class='ident'>crypto</span>::{<span class='ident'>box_</span>, <span class='ident'>sign</span>};
+<span class='kw'>use</span> <span class='ident'>rust_sodium</span>::<span class='ident'>crypto</span>::<span class='ident'>hash</span>::<span class='ident'>sha256</span>;
 
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>dns_configuration</span>;
 
@@ -1109,7 +1109,7 @@
     <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>AccessLevel</span>;
     <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>metadata</span>::<span class='ident'>directory_key</span>::<span class='ident'>DirectoryKey</span>;
     <span class='kw'>use</span> <span class='ident'>routing</span>::{<span class='ident'>XOR_NAME_LEN</span>, <span class='ident'>XorName</span>};
-    <span class='kw'>use</span> <span class='ident'>sodiumoxide</span>::<span class='ident'>crypto</span>::<span class='ident'>box_</span>;
+    <span class='kw'>use</span> <span class='ident'>rust_sodium</span>::<span class='ident'>crypto</span>::<span class='ident'>box_</span>;
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::{<span class='ident'>Arc</span>, <span class='ident'>Mutex</span>};
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
@@ -1359,7 +1359,7 @@
     <span class='kw'>fn</span> <span class='ident'>register_and_delete_dns_internal_error_recovery</span>() {
         <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>errors</span>::<span class='ident'>CoreError</span>;
         <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>errors</span>::<span class='ident'>NfsError</span>;
-        <span class='kw'>use</span> <span class='ident'>safe_network_common</span>::<span class='ident'>client_errors</span>::<span class='ident'>GetError</span>;
+        <span class='kw'>use</span> <span class='ident'>routing</span>::<span class='ident'>client_errors</span>::<span class='ident'>GetError</span>;
         <span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>;
 
         <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>maidsafe_utilities</span>::<span class='ident'>log</span>::<span class='ident'>init</span>(<span class='boolvalue'>true</span>));

@@ -797,6 +797,39 @@
 <span id="753">753</span>
 <span id="754">754</span>
 <span id="755">755</span>
+<span id="756">756</span>
+<span id="757">757</span>
+<span id="758">758</span>
+<span id="759">759</span>
+<span id="760">760</span>
+<span id="761">761</span>
+<span id="762">762</span>
+<span id="763">763</span>
+<span id="764">764</span>
+<span id="765">765</span>
+<span id="766">766</span>
+<span id="767">767</span>
+<span id="768">768</span>
+<span id="769">769</span>
+<span id="770">770</span>
+<span id="771">771</span>
+<span id="772">772</span>
+<span id="773">773</span>
+<span id="774">774</span>
+<span id="775">775</span>
+<span id="776">776</span>
+<span id="777">777</span>
+<span id="778">778</span>
+<span id="779">779</span>
+<span id="780">780</span>
+<span id="781">781</span>
+<span id="782">782</span>
+<span id="783">783</span>
+<span id="784">784</span>
+<span id="785">785</span>
+<span id="786">786</span>
+<span id="787">787</span>
+<span id="788">788</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -847,10 +880,11 @@
 <span class='kw'>mod</span> <span class='ident'>nfs</span>;
 <span class='kw'>mod</span> <span class='ident'>test_utils</span>;
 
-<span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>fs</span>, <span class='ident'>mem</span>, <span class='ident'>panic</span>, <span class='ident'>ptr</span>, <span class='ident'>slice</span>};
+<span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>mem</span>, <span class='ident'>panic</span>, <span class='ident'>ptr</span>, <span class='ident'>slice</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::{<span class='ident'>Arc</span>, <span class='ident'>Mutex</span>, <span class='ident'>mpsc</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>mpsc</span>::<span class='ident'>Sender</span>;
 
+<span class='kw'>use</span> <span class='ident'>config_file_handler</span>::<span class='ident'>FileHandler</span>;
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>client</span>::<span class='ident'>Client</span>;
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>errors</span>::<span class='ident'>CoreError</span>;
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>translated_events</span>::<span class='ident'>NetworkEvent</span>;
@@ -933,10 +967,42 @@
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
 <span class='kw'>pub</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>init_logging</span>() <span class='op'>-&gt;</span> <span class='ident'>int32_t</span> {
     <span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
-        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>fs</span>::<span class='ident'>remove_file</span>(<span class='string'>&quot;Client.log&quot;</span>);
         <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>safe_log</span>::<span class='ident'>init</span>(<span class='boolvalue'>false</span>).<span class='ident'>map_err</span>(<span class='ident'>CoreError</span>::<span class='ident'>Unexpected</span>));
-
         <span class='number'>0</span>
+    })
+}
+
+<span class='doccomment'>/// This function should be called to find where log file will be created. It will additionally</span>
+<span class='doccomment'>/// create an empty log file in the path in the deduced location and will return the file name</span>
+<span class='doccomment'>/// along with complete path to it.</span>
+<span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
+<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>output_log_path</span>(<span class='ident'>c_output_flie_name</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>,
+                                         <span class='ident'>c_size</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>int32_t</span>,
+                                         <span class='ident'>c_capacity</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>int32_t</span>,
+                                         <span class='ident'>c_result</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>int32_t</span>)
+                                         <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span> {
+    <span class='ident'>catch_unwind_ptr</span>(<span class='op'>||</span> {
+        <span class='kw'>let</span> <span class='ident'>op_file</span> <span class='op'>=</span> <span class='macro'>ffi_ptr_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_char_ptr_to_string</span>(<span class='ident'>c_output_flie_name</span>), <span class='ident'>c_result</span>);
+        <span class='kw'>let</span> <span class='ident'>fh</span> <span class='op'>=</span> <span class='macro'>ffi_ptr_try</span><span class='macro'>!</span>(<span class='ident'>FileHandler</span>::<span class='op'>&lt;</span>()<span class='op'>&gt;</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='ident'>op_file</span>, <span class='boolvalue'>true</span>)
+                                  .<span class='ident'>map_err</span>(<span class='op'>|</span><span class='ident'>e</span><span class='op'>|</span> <span class='ident'>CoreError</span>::<span class='ident'>Unexpected</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>e</span>))),
+                              <span class='ident'>c_result</span>);
+        <span class='kw'>let</span> <span class='ident'>op_file_path</span> <span class='op'>=</span>
+            <span class='macro'>ffi_ptr_try</span><span class='macro'>!</span>(<span class='ident'>fh</span>.<span class='ident'>path</span>()
+                             .<span class='ident'>to_path_buf</span>()
+                             .<span class='ident'>into_os_string</span>()
+                             .<span class='ident'>into_string</span>()
+                             .<span class='ident'>map_err</span>(<span class='op'>|</span><span class='ident'>e</span><span class='op'>|</span> <span class='ident'>CoreError</span>::<span class='ident'>Unexpected</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>e</span>))),
+                         <span class='ident'>c_result</span>)
+                .<span class='ident'>into_bytes</span>();
+
+        <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>c_size</span>, <span class='ident'>op_file_path</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>i32</span>);
+        <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>c_capacity</span>, <span class='ident'>op_file_path</span>.<span class='ident'>capacity</span>() <span class='kw'>as</span> <span class='ident'>i32</span>);
+        <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>c_result</span>, <span class='number'>0</span>);
+
+        <span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> <span class='ident'>op_file_path</span>.<span class='ident'>as_ptr</span>();
+        <span class='ident'>mem</span>::<span class='ident'>forget</span>(<span class='ident'>op_file_path</span>);
+
+        <span class='ident'>ptr</span>
     })
 }
 

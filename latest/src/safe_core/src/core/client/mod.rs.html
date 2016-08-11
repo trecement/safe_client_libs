@@ -1145,13 +1145,13 @@
 
 <span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::<span class='ident'>serialise</span>;
 <span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>thread</span>::<span class='ident'>RaiiThreadJoiner</span>;
-<span class='kw'>use</span> <span class='ident'>safe_network_common</span>::<span class='ident'>client_errors</span>::<span class='ident'>MutationError</span>;
-<span class='kw'>use</span> <span class='ident'>safe_network_common</span>::<span class='ident'>messaging</span>::{<span class='ident'>MpidMessage</span>, <span class='ident'>MpidMessageWrapper</span>};
-<span class='kw'>use</span> <span class='ident'>safe_network_common</span>::<span class='ident'>TYPE_TAG_SESSION_PACKET</span>;
+<span class='kw'>use</span> <span class='ident'>routing</span>::<span class='ident'>client_errors</span>::<span class='ident'>MutationError</span>;
+<span class='kw'>use</span> <span class='ident'>routing</span>::<span class='ident'>messaging</span>::{<span class='ident'>MpidMessage</span>, <span class='ident'>MpidMessageWrapper</span>};
+<span class='kw'>use</span> <span class='ident'>routing</span>::<span class='ident'>TYPE_TAG_SESSION_PACKET</span>;
 <span class='kw'>use</span> <span class='ident'>routing</span>::{<span class='ident'>Authority</span>, <span class='ident'>Data</span>, <span class='ident'>DataIdentifier</span>, <span class='ident'>FullId</span>, <span class='ident'>MessageId</span>, <span class='ident'>PlainData</span>, <span class='ident'>StructuredData</span>,
               <span class='ident'>XorName</span>};
-<span class='kw'>use</span> <span class='ident'>sodiumoxide</span>::<span class='ident'>crypto</span>::{<span class='ident'>box_</span>, <span class='ident'>sign</span>};
-<span class='kw'>use</span> <span class='ident'>sodiumoxide</span>::<span class='ident'>crypto</span>::<span class='ident'>hash</span>::<span class='ident'>sha256</span>;
+<span class='kw'>use</span> <span class='ident'>rust_sodium</span>::<span class='ident'>crypto</span>::{<span class='ident'>box_</span>, <span class='ident'>sign</span>};
+<span class='kw'>use</span> <span class='ident'>rust_sodium</span>::<span class='ident'>crypto</span>::<span class='ident'>hash</span>::<span class='ident'>sha256</span>;
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;use-mock-routing&quot;</span>)]</span>
 <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>non_networking_test_framework</span>::<span class='ident'>RoutingMock</span> <span class='kw'>as</span> <span class='ident'>Routing</span>;
@@ -1916,7 +1916,7 @@
 
     <span class='kw'>use</span> <span class='ident'>rand</span>;
     <span class='kw'>use</span> <span class='ident'>routing</span>::{<span class='ident'>Data</span>, <span class='ident'>DataIdentifier</span>, <span class='ident'>ImmutableData</span>, <span class='ident'>StructuredData</span>, <span class='ident'>XOR_NAME_LEN</span>, <span class='ident'>XorName</span>};
-    <span class='kw'>use</span> <span class='ident'>safe_network_common</span>::<span class='ident'>client_errors</span>::<span class='ident'>MutationError</span>;
+    <span class='kw'>use</span> <span class='ident'>routing</span>::<span class='ident'>client_errors</span>::<span class='ident'>MutationError</span>;
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>account_creation</span>() {
@@ -2039,7 +2039,7 @@
         <span class='kw'>let</span> <span class='ident'>plain_text_original_1</span> <span class='op'>=</span> <span class='ident'>plain_text_original_0</span>.<span class='ident'>clone</span>();
 
         <span class='comment'>// Encrypt passing Nonce</span>
-        <span class='kw'>let</span> <span class='ident'>nonce</span> <span class='op'>=</span> ::<span class='ident'>sodiumoxide</span>::<span class='ident'>crypto</span>::<span class='ident'>box_</span>::<span class='ident'>gen_nonce</span>();
+        <span class='kw'>let</span> <span class='ident'>nonce</span> <span class='op'>=</span> ::<span class='ident'>rust_sodium</span>::<span class='ident'>crypto</span>::<span class='ident'>box_</span>::<span class='ident'>gen_nonce</span>();
         <span class='kw'>let</span> <span class='ident'>cipher_text_0</span> <span class='op'>=</span>
             <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>hybrid_encrypt</span>(<span class='kw-2'>&amp;</span><span class='ident'>plain_text_original_0</span>[..], <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='ident'>nonce</span>)));
         <span class='kw'>let</span> <span class='ident'>cipher_text_1</span> <span class='op'>=</span>

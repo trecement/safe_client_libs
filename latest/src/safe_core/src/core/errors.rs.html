@@ -502,8 +502,8 @@
 <span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::<span class='ident'>SerialisationError</span>;
 <span class='kw'>use</span> <span class='ident'>routing</span>::<span class='ident'>DataIdentifier</span>;
 <span class='kw'>use</span> <span class='ident'>self_encryption</span>::<span class='ident'>SelfEncryptionError</span>;
-<span class='kw'>use</span> <span class='ident'>safe_network_common</span>::<span class='ident'>client_errors</span>::{<span class='ident'>GetError</span>, <span class='ident'>MutationError</span>};
-<span class='kw'>use</span> <span class='ident'>safe_network_common</span>::<span class='ident'>messaging</span>;
+<span class='kw'>use</span> <span class='ident'>routing</span>::<span class='ident'>client_errors</span>::{<span class='ident'>GetError</span>, <span class='ident'>MutationError</span>};
+<span class='kw'>use</span> <span class='ident'>routing</span>::<span class='ident'>messaging</span>;
 
 <span class='doccomment'>/// Intended for converting Client Errors into numeric codes for propagating some error information</span>
 <span class='doccomment'>/// across FFI boundaries and specially to C.</span>
@@ -888,7 +888,7 @@
     <span class='kw'>use</span> <span class='ident'>rand</span>;
     <span class='kw'>use</span> <span class='ident'>routing</span>::<span class='ident'>DataIdentifier</span>;
     <span class='kw'>use</span> <span class='ident'>self_encryption</span>::<span class='ident'>SelfEncryptionError</span>;
-    <span class='kw'>use</span> <span class='ident'>safe_network_common</span>::<span class='ident'>client_errors</span>::<span class='ident'>MutationError</span>;
+    <span class='kw'>use</span> <span class='ident'>routing</span>::<span class='ident'>client_errors</span>::<span class='ident'>MutationError</span>;
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>self_encryption_error</span>() {
