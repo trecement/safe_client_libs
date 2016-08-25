@@ -632,7 +632,7 @@
                                                        <span class='string'>&quot;some metadata about the directory&quot;</span>
                                                            .<span class='ident'>to_string</span>()
                                                            .<span class='ident'>into_bytes</span>(),
-                                                       <span class='boolvalue'>true</span>,
+                                                       <span class='bool-val'>true</span>,
                                                        <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>,
                                                        <span class='prelude-val'>None</span>));
 
@@ -648,7 +648,7 @@
         <span class='kw'>let</span> <span class='ident'>directory_listing</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>DirectoryListing</span>::<span class='ident'>new</span>(<span class='string'>&quot;Home&quot;</span>.<span class='ident'>to_string</span>(),
                                                               <span class='number'>10</span>,
                                                               <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
-                                                              <span class='boolvalue'>true</span>,
+                                                              <span class='bool-val'>true</span>,
                                                               <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>,
                                                               <span class='prelude-val'>None</span>));
         <span class='kw'>let</span> <span class='ident'>encrypted_data</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>directory_listing</span>.<span class='ident'>encrypt</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>()));
@@ -664,7 +664,7 @@
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>directory_listing</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>DirectoryListing</span>::<span class='ident'>new</span>(<span class='string'>&quot;Home&quot;</span>.<span class='ident'>to_string</span>(),
                                                                   <span class='number'>10</span>,
                                                                   <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
-                                                                  <span class='boolvalue'>true</span>,
+                                                                  <span class='bool-val'>true</span>,
                                                                   <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>,
                                                                   <span class='prelude-val'>None</span>));
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>file</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>File</span>::<span class='ident'>new</span>(<span class='ident'>FileMetadata</span>::<span class='ident'>new</span>(<span class='string'>&quot;index.html&quot;</span>.<span class='ident'>to_string</span>(), <span class='ident'>Vec</span>::<span class='ident'>new</span>()),
@@ -700,13 +700,13 @@
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>directory_listing</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>DirectoryListing</span>::<span class='ident'>new</span>(<span class='string'>&quot;Home&quot;</span>.<span class='ident'>to_string</span>(),
                                                                   <span class='number'>10</span>,
                                                                   <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
-                                                                  <span class='boolvalue'>true</span>,
+                                                                  <span class='bool-val'>true</span>,
                                                                   <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>,
                                                                   <span class='prelude-val'>None</span>));
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>sub_directory</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>DirectoryListing</span>::<span class='ident'>new</span>(<span class='string'>&quot;Child one&quot;</span>.<span class='ident'>to_string</span>(),
                                                               <span class='number'>10</span>,
                                                               <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
-                                                              <span class='boolvalue'>true</span>,
+                                                              <span class='bool-val'>true</span>,
                                                               <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>,
                                                               <span class='prelude-val'>None</span>));
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>directory_listing</span>.<span class='ident'>find_sub_directory</span>(<span class='ident'>sub_directory</span>.<span class='ident'>get_metadata</span>().<span class='ident'>get_name</span>())
@@ -721,7 +721,7 @@
         <span class='kw'>let</span> <span class='ident'>sub_directory_two</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>DirectoryListing</span>::<span class='ident'>new</span>(<span class='string'>&quot;Child Two&quot;</span>.<span class='ident'>to_string</span>(),
                                                               <span class='number'>10</span>,
                                                               <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
-                                                              <span class='boolvalue'>true</span>,
+                                                              <span class='bool-val'>true</span>,
                                                               <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>,
                                                               <span class='prelude-val'>None</span>));
         <span class='ident'>directory_listing</span>.<span class='ident'>upsert_sub_directory</span>(<span class='ident'>sub_directory_two</span>.<span class='ident'>get_metadata</span>().<span class='ident'>clone</span>());

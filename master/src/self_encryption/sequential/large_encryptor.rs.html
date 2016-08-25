@@ -553,9 +553,9 @@
         <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>buffer</span>.<span class='ident'>len</span>() <span class='op'>&gt;=</span> <span class='ident'>MIN_CHUNK_SIZE</span> <span class='kw'>as</span> <span class='ident'>usize</span>);
         <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>buffer</span>.<span class='ident'>len</span>() <span class='op'>&lt;=</span> <span class='ident'>MAX_BUFFER_LEN</span>);
         <span class='kw'>let</span> (<span class='ident'>first_len</span>, <span class='ident'>need_two_chunks</span>) <span class='op'>=</span> <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>buffer</span>.<span class='ident'>len</span>() <span class='op'>&lt;=</span> <span class='ident'>MAX_CHUNK_SIZE</span> <span class='kw'>as</span> <span class='ident'>usize</span> {
-            (<span class='self'>self</span>.<span class='ident'>buffer</span>.<span class='ident'>len</span>(), <span class='boolvalue'>false</span>)
+            (<span class='self'>self</span>.<span class='ident'>buffer</span>.<span class='ident'>len</span>(), <span class='bool-val'>false</span>)
         } <span class='kw'>else</span> {
-            ((<span class='ident'>MAX_CHUNK_SIZE</span> <span class='op'>-</span> <span class='ident'>MIN_CHUNK_SIZE</span>) <span class='kw'>as</span> <span class='ident'>usize</span>, <span class='boolvalue'>true</span>)
+            ((<span class='ident'>MAX_CHUNK_SIZE</span> <span class='op'>-</span> <span class='ident'>MIN_CHUNK_SIZE</span>) <span class='kw'>as</span> <span class='ident'>usize</span>, <span class='bool-val'>true</span>)
         };
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>index</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>chunks</span>.<span class='ident'>len</span>();
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>swapped_buffer</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[];

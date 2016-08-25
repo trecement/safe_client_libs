@@ -141,13 +141,13 @@
     <span class='kw'>let</span> (<span class='ident'>safe_drive</span>, _) <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>directory_helper</span>.<span class='ident'>create</span>(<span class='ident'>SAFE_DRIVE_DIR_NAME</span>.<span class='ident'>to_string</span>(),
                                                        <span class='ident'>UNVERSIONED_DIRECTORY_LISTING_TAG</span>,
                                                        <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
-                                                       <span class='boolvalue'>false</span>,
+                                                       <span class='bool-val'>false</span>,
                                                        <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>,
                                                        <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>user_root_dir</span>)));
     <span class='kw'>let</span> (<span class='ident'>test_app</span>, _) <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>directory_helper</span>.<span class='ident'>create</span>(<span class='string'>&quot;Test_Application&quot;</span>.<span class='ident'>to_string</span>(),
                                                      <span class='ident'>UNVERSIONED_DIRECTORY_LISTING_TAG</span>,
                                                      <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
-                                                     <span class='boolvalue'>false</span>,
+                                                     <span class='bool-val'>false</span>,
                                                      <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>,
                                                      <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>user_root_dir</span>)));
     <span class='prelude-val'>Ok</span>(<span class='ident'>ParameterPacket</span> {
@@ -165,7 +165,7 @@
     <span class='prelude-val'>Ok</span>(<span class='ident'>ParameterPacket</span> {
         <span class='ident'>client</span>: <span class='ident'>client</span>,
         <span class='ident'>app_root_dir_key</span>: <span class='prelude-val'>None</span>,
-        <span class='ident'>safe_drive_access</span>: <span class='boolvalue'>false</span>,
+        <span class='ident'>safe_drive_access</span>: <span class='bool-val'>false</span>,
         <span class='ident'>safe_drive_dir_key</span>: <span class='prelude-val'>None</span>,
     })
 }
