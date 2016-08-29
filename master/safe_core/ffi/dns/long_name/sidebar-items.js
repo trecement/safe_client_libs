@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["dns_delete_long_name","Delete DNS."],["dns_get_long_names","Get all registered long names."],["dns_register_long_name","Register DNS long name (for calling via FFI)."],["register_long_name","Register DNS long name (for calling from rust)."]]});

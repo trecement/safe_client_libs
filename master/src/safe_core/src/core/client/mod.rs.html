@@ -1131,13 +1131,6 @@
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;use-mock-routing&quot;</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>non_networking_test_framework</span>;
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>mpsc</span>::<span class='ident'>Sender</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::{<span class='ident'>Arc</span>, <span class='ident'>Mutex</span>, <span class='ident'>mpsc</span>};
-
-<span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>message_queue</span>::<span class='ident'>MessageQueue</span>;
-<span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>response_getter</span>::{<span class='ident'>GetAccountInfoResponseGetter</span>, <span class='ident'>GetResponseGetter</span>,
-                            <span class='ident'>MutationResponseGetter</span>};
-<span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>user_account</span>::<span class='ident'>Account</span>;
 
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>errors</span>::<span class='ident'>CoreError</span>;
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>translated_events</span>::<span class='ident'>NetworkEvent</span>;
@@ -1145,18 +1138,25 @@
 
 <span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::<span class='ident'>serialise</span>;
 <span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>thread</span>::<span class='ident'>RaiiThreadJoiner</span>;
-<span class='kw'>use</span> <span class='ident'>routing</span>::<span class='ident'>client_errors</span>::<span class='ident'>MutationError</span>;
-<span class='kw'>use</span> <span class='ident'>routing</span>::<span class='ident'>messaging</span>::{<span class='ident'>MpidMessage</span>, <span class='ident'>MpidMessageWrapper</span>};
-<span class='kw'>use</span> <span class='ident'>routing</span>::<span class='ident'>TYPE_TAG_SESSION_PACKET</span>;
 <span class='kw'>use</span> <span class='ident'>routing</span>::{<span class='ident'>Authority</span>, <span class='ident'>Data</span>, <span class='ident'>DataIdentifier</span>, <span class='ident'>FullId</span>, <span class='ident'>MessageId</span>, <span class='ident'>PlainData</span>, <span class='ident'>StructuredData</span>,
               <span class='ident'>XorName</span>};
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;use-mock-routing&quot;</span>))]</span>
+<span class='kw'>use</span> <span class='ident'>routing</span>::<span class='ident'>Client</span> <span class='kw'>as</span> <span class='ident'>Routing</span>;
+<span class='kw'>use</span> <span class='ident'>routing</span>::<span class='ident'>TYPE_TAG_SESSION_PACKET</span>;
+<span class='kw'>use</span> <span class='ident'>routing</span>::<span class='ident'>client_errors</span>::<span class='ident'>MutationError</span>;
+<span class='kw'>use</span> <span class='ident'>routing</span>::<span class='ident'>messaging</span>::{<span class='ident'>MpidMessage</span>, <span class='ident'>MpidMessageWrapper</span>};
 <span class='kw'>use</span> <span class='ident'>rust_sodium</span>::<span class='ident'>crypto</span>::{<span class='ident'>box_</span>, <span class='ident'>sign</span>};
 <span class='kw'>use</span> <span class='ident'>rust_sodium</span>::<span class='ident'>crypto</span>::<span class='ident'>hash</span>::<span class='ident'>sha256</span>;
 
+<span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>message_queue</span>::<span class='ident'>MessageQueue</span>;
+
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;use-mock-routing&quot;</span>)]</span>
 <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>non_networking_test_framework</span>::<span class='ident'>RoutingMock</span> <span class='kw'>as</span> <span class='ident'>Routing</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;use-mock-routing&quot;</span>))]</span>
-<span class='kw'>use</span> <span class='ident'>routing</span>::<span class='ident'>Client</span> <span class='kw'>as</span> <span class='ident'>Routing</span>;
+<span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>response_getter</span>::{<span class='ident'>GetAccountInfoResponseGetter</span>, <span class='ident'>GetResponseGetter</span>,
+                            <span class='ident'>MutationResponseGetter</span>};
+<span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>user_account</span>::<span class='ident'>Account</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::{<span class='ident'>Arc</span>, <span class='ident'>Mutex</span>, <span class='ident'>mpsc</span>};
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>mpsc</span>::<span class='ident'>Sender</span>;
 
 <span class='doccomment'>/// The main self-authentication client instance that will interface all the request from high</span>
 <span class='doccomment'>/// level API&#39;s to the actual routing layer and manage all interactions with it. This is</span>
@@ -1908,7 +1908,6 @@
 <span class='doccomment'>/// //////////////////////////////////////////////////////////////</span>
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>test</span> {
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
 
     <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>client</span>::<span class='ident'>response_getter</span>::<span class='ident'>GetResponseGetter</span>;
     <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>errors</span>::<span class='ident'>CoreError</span>;
@@ -1917,6 +1916,7 @@
     <span class='kw'>use</span> <span class='ident'>rand</span>;
     <span class='kw'>use</span> <span class='ident'>routing</span>::{<span class='ident'>Data</span>, <span class='ident'>DataIdentifier</span>, <span class='ident'>ImmutableData</span>, <span class='ident'>StructuredData</span>, <span class='ident'>XOR_NAME_LEN</span>, <span class='ident'>XorName</span>};
     <span class='kw'>use</span> <span class='ident'>routing</span>::<span class='ident'>client_errors</span>::<span class='ident'>MutationError</span>;
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>account_creation</span>() {

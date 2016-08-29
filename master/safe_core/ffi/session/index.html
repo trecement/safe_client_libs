@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `session` mod in crate `safe_core`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, session">
+
+    <title>safe_core::ffi::session - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    
+
+    <link rel="shortcut icon" href="http://maidsafe.net/img/favicon.ico">
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <a href='../../../safe_core/index.html'><img src='https://raw.githubusercontent.com/maidsafe/QA/master/Images/maidsafe_logo.png' alt='logo' width='100'></a>
+        <p class='location'><a href='../../index.html'>safe_core</a>::<wbr><a href='../index.html'>ffi</a></p><script>window.sidebarCurrent = {name: 'session', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content mod">
+<h1 class='fqn'><span class='in-band'>Module <a href='../../index.html'>safe_core</a>::<wbr><a href='../index.html'>ffi</a>::<wbr><a class='mod' href=''>session</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-6681' class='srclink' href='../../../src/safe_core/src/ffi/session.rs.html#18-343' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>Session management</p>
+</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Session.html'
+                                  title='safe_core::ffi::session::Session'>Session</a></td>
+                           <td class='docblock short'>
+                                <p>Represents user session on the SAFE network. There should be one session per launcher.</p>
+                           </td>
+                       </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.client_issued_deletes.html'
+                                  title='safe_core::ffi::session::client_issued_deletes'>client_issued_deletes</a></td>
+                           <td class='docblock short'>
+                                <p>Return the amount of calls that were done to <code>delete</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.client_issued_gets.html'
+                                  title='safe_core::ffi::session::client_issued_gets'>client_issued_gets</a></td>
+                           <td class='docblock short'>
+                                <p>Return the amount of calls that were done to <code>get</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.client_issued_posts.html'
+                                  title='safe_core::ffi::session::client_issued_posts'>client_issued_posts</a></td>
+                           <td class='docblock short'>
+                                <p>Return the amount of calls that were done to <code>post</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.client_issued_puts.html'
+                                  title='safe_core::ffi::session::client_issued_puts'>client_issued_puts</a></td>
+                           <td class='docblock short'>
+                                <p>Return the amount of calls that were done to <code>put</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.create_account.html'
+                                  title='safe_core::ffi::session::create_account'>create_account</a></td>
+                           <td class='docblock short'>
+                                <p>Create a registered client. This or any one of the other companion functions to get a
+session must be called before initiating any operation allowed by this crate. <code>session_handle</code> is
+a pointer to a pointer and must point to a valid pointer not junk, else the consequences are
+undefined.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.create_unregistered_client.html'
+                                  title='safe_core::ffi::session::create_unregistered_client'>create_unregistered_client</a></td>
+                           <td class='docblock short'>
+                                <p>Create a session as an unregistered client. This or any one of the other companion functions to get a
+session must be called before initiating any operation allowed by this crate.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.drop_session.html'
+                                  title='safe_core::ffi::session::drop_session'>drop_session</a></td>
+                           <td class='docblock short'>
+                                <p>Discard and clean up the previously allocated session. Use this only if the session is obtained
+from one of the session obtainment functions in this crate (<code>create_account</code>, <code>log_in</code>,
+<code>create_unregistered_client</code>). Using <code>session</code> after a call to this functions is
+undefined behaviour.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.get_account_info.html'
+                                  title='safe_core::ffi::session::get_account_info'>get_account_info</a></td>
+                           <td class='docblock short'>
+                                <p>Get data from the network. This is non-blocking. <code>data_stored</code> means number
+of chunks Put. <code>space_available</code> means number of chunks which can still be
+Put.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.log_in.html'
+                                  title='safe_core::ffi::session::log_in'>log_in</a></td>
+                           <td class='docblock short'>
+                                <p>Log into a registered client. This or any one of the other companion functions to get a
+session must be called before initiating any operation allowed by this crate. <code>session_handle</code> is
+a pointer to a pointer and must point to a valid pointer not junk, else the consequences are
+undefined.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.register_network_event_observer.html'
+                                  title='safe_core::ffi::session::register_network_event_observer'>register_network_event_observer</a></td>
+                           <td class='docblock short'>
+                                <p>Register an observer to network events like Connected, Disconnected etc. as provided by the
+core module</p>
+                           </td>
+                       </tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.SessionHandle.html'
+                                  title='safe_core::ffi::session::SessionHandle'>SessionHandle</a></td>
+                           <td class='docblock short'>
+                                <p>Clonable handle to Session.</p>
+                           </td>
+                       </tr></table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../";
+        window.currentCrate = "safe_core";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../../../jquery.js"></script>
+    <script src="../../../main.js"></script>
+    
+    <script defer src="../../../search-index.js"></script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["drop_app","Discard and clean up the previously allocated app."],["register_app","Register an app with the launcher. The returned app handle must be disposed of by calling `drop_app` once no longer needed."]],"struct":[["App","Represents an application connected to the launcher."]]});

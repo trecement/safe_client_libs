@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["into_ptr","Convert vec of strings to an owning raw pointer to StringList. Consumes the vector."],["string_list_at","Get the string at the given index, or NULL if the index is out of range."],["string_list_drop","Dispose of the string list."],["string_list_len","Get number of elements in the string list."]],"type":[["StringList","List of strings."]]});

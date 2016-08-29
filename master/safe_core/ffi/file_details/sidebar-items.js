@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["file_details_drop","Dispose of the FileDetails instance."],["file_metadata_drop","Dispose of the FileMetadata instance."]],"struct":[["FileDetails","Details of a file and its content."],["FileMetadata","FFI-enabled wrapper for file metadata."]]});

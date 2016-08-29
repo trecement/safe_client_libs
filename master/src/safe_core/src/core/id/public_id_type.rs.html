@@ -361,10 +361,10 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>test</span> {
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
-    <span class='kw'>use</span> <span class='ident'>rust_sodium</span>::<span class='ident'>crypto</span>::<span class='ident'>sign</span>;
-    <span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::{<span class='ident'>deserialise</span>, <span class='ident'>serialise</span>};
     <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>id</span>::{<span class='ident'>IdType</span>, <span class='ident'>MaidTypeTags</span>, <span class='ident'>MpidTypeTags</span>, <span class='ident'>Random</span>, <span class='ident'>RevocationIdType</span>};
+    <span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::{<span class='ident'>deserialise</span>, <span class='ident'>serialise</span>};
+    <span class='kw'>use</span> <span class='ident'>rust_sodium</span>::<span class='ident'>crypto</span>::<span class='ident'>sign</span>;
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
 
     <span class='kw'>impl</span> <span class='ident'>Random</span> <span class='kw'>for</span> <span class='ident'>PublicIdType</span> {
         <span class='kw'>fn</span> <span class='ident'>generate_random</span>() <span class='op'>-&gt;</span> <span class='ident'>PublicIdType</span> {

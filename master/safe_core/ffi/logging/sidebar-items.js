@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["init_logging","This function should be called to enable logging to a file"],["output_log_path","This function should be called to find where log file will be created. It will additionally create an empty log file in the path in the deduced location and will return the file name along with complete path to it."]]});
