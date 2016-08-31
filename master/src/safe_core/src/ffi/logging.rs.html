@@ -153,6 +153,10 @@
 <span id="109">109</span>
 <span id="110">110</span>
 <span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2016 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -176,7 +180,7 @@
 <span class='kw'>use</span> <span class='ident'>config_file_handler</span>::<span class='ident'>FileHandler</span>;
 
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>errors</span>::<span class='ident'>CoreError</span>;
-<span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>c_char</span>, <span class='ident'>int32_t</span>};
+<span class='kw'>use</span> <span class='ident'>libc</span>::<span class='ident'>int32_t</span>;
 <span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>log</span> <span class='kw'>as</span> <span class='ident'>safe_log</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
@@ -195,13 +199,17 @@
 <span class='doccomment'>/// create an empty log file in the path in the deduced location and will return the file name</span>
 <span class='doccomment'>/// along with complete path to it.</span>
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
-<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>output_log_path</span>(<span class='ident'>c_output_flie_name</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>,
+<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>output_log_path</span>(<span class='ident'>c_output_file_name</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
+                                         <span class='ident'>c_output_file_name_len</span>: <span class='ident'>usize</span>,
                                          <span class='ident'>c_size</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>int32_t</span>,
                                          <span class='ident'>c_capacity</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>int32_t</span>,
                                          <span class='ident'>c_result</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>int32_t</span>)
                                          <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span> {
     <span class='ident'>helper</span>::<span class='ident'>catch_unwind_ptr</span>(<span class='op'>||</span> {
-        <span class='kw'>let</span> <span class='ident'>op_file</span> <span class='op'>=</span> <span class='macro'>ffi_ptr_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_char_ptr_to_string</span>(<span class='ident'>c_output_flie_name</span>), <span class='ident'>c_result</span>);
+        <span class='kw'>let</span> <span class='ident'>op_file</span>
+            <span class='op'>=</span> <span class='macro'>ffi_ptr_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>c_output_file_name</span>,
+                                                    <span class='ident'>c_output_file_name_len</span>),
+                           <span class='ident'>c_result</span>);
         <span class='kw'>let</span> <span class='ident'>fh</span> <span class='op'>=</span> <span class='macro'>ffi_ptr_try</span><span class='macro'>!</span>(<span class='ident'>FileHandler</span>::<span class='op'>&lt;</span>()<span class='op'>&gt;</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='ident'>op_file</span>, <span class='bool-val'>true</span>)
                                   .<span class='ident'>map_err</span>(<span class='op'>|</span><span class='ident'>e</span><span class='op'>|</span> <span class='ident'>CoreError</span>::<span class='ident'>Unexpected</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>e</span>))),
                               <span class='ident'>c_result</span>);

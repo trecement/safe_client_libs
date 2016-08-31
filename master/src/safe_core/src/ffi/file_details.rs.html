@@ -189,6 +189,17 @@
 <span id="145">145</span>
 <span id="146">146</span>
 <span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -210,15 +221,14 @@
 <span class='doccomment'>//! FFI-enabled types containing details (content and metadata) about a file.</span>
 
 
+<span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>helper</span>;
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>client</span>::<span class='ident'>Client</span>;
 <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>config</span>;
 <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>errors</span>::<span class='ident'>FfiError</span>;
-<span class='kw'>use</span> <span class='ident'>libc</span>::<span class='ident'>c_char</span>;
 <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>file</span>::<span class='ident'>File</span>;
 <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>helper</span>::<span class='ident'>file_helper</span>::<span class='ident'>FileHelper</span>;
 <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>metadata</span>::<span class='ident'>file_metadata</span>::<span class='ident'>FileMetadata</span> <span class='kw'>as</span> <span class='ident'>NfsFileMetadata</span>;
 <span class='kw'>use</span> <span class='ident'>rustc_serialize</span>::<span class='ident'>base64</span>::<span class='ident'>ToBase64</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ffi</span>::<span class='ident'>CString</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::{<span class='ident'>Arc</span>, <span class='ident'>Mutex</span>};
 
@@ -226,8 +236,10 @@
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
 <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>C</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>FileDetails</span> {
-    <span class='doccomment'>/// Content of the file, in a nul-terminated, base64 encoded string.</span>
-    <span class='kw'>pub</span> <span class='ident'>content</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_char</span>,
+    <span class='doccomment'>/// Content of the file, base64 encoded string.</span>
+    <span class='kw'>pub</span> <span class='ident'>content</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
+    <span class='doccomment'>/// Size of `content`</span>
+    <span class='kw'>pub</span> <span class='ident'>content_len</span>: <span class='ident'>usize</span>,
     <span class='doccomment'>/// Metadata of the file.</span>
     <span class='kw'>pub</span> <span class='ident'>metadata</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FileMetadata</span>,
 }
@@ -250,9 +262,7 @@
 
         <span class='kw'>let</span> <span class='ident'>content</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>reader</span>.<span class='ident'>read</span>(<span class='ident'>start_position</span>, <span class='ident'>size</span>));
         <span class='kw'>let</span> <span class='ident'>content</span> <span class='op'>=</span> <span class='ident'>content</span>.<span class='ident'>to_base64</span>(<span class='ident'>config</span>::<span class='ident'>get_base64_config</span>());
-        <span class='comment'>// Note: it&#39;s OK to unwrap here. The base64 encoding assures there are</span>
-        <span class='comment'>//       no nul bytes in the string.</span>
-        <span class='kw'>let</span> <span class='ident'>content</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>CString</span>::<span class='ident'>new</span>(<span class='ident'>content</span>));
+        <span class='kw'>let</span> (<span class='ident'>content</span>, <span class='ident'>content_len</span>) <span class='op'>=</span> <span class='ident'>helper</span>::<span class='ident'>string_to_c_utf8</span>(<span class='ident'>content</span>);
 
         <span class='kw'>let</span> <span class='ident'>file_metadata_ptr</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='ident'>include_metadata</span> {
             <span class='ident'>Box</span>::<span class='ident'>into_raw</span>(<span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>FileMetadata</span>::<span class='ident'>new</span>(<span class='ident'>file</span>.<span class='ident'>get_metadata</span>()))))
@@ -261,7 +271,8 @@
         };
 
         <span class='prelude-val'>Ok</span>(<span class='ident'>FileDetails</span> {
-            <span class='ident'>content</span>: <span class='ident'>content</span>.<span class='ident'>into_raw</span>(),
+            <span class='ident'>content</span>: <span class='ident'>content</span>,
+            <span class='ident'>content_len</span>: <span class='ident'>content_len</span>,
             <span class='ident'>metadata</span>: <span class='ident'>file_metadata_ptr</span>,
         })
     }
@@ -269,7 +280,10 @@
     <span class='comment'>// TODO: when drop-flag removal lands in stable, we should turn this into</span>
     <span class='comment'>// a proper impl Drop.</span>
     <span class='kw'>fn</span> <span class='ident'>deallocate</span>(<span class='self'>self</span>) {
-        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>CString</span>::<span class='ident'>from_raw</span>(<span class='self'>self</span>.<span class='ident'>content</span>) };
+        <span class='kw'>unsafe</span> {
+            <span class='ident'>helper</span>::<span class='ident'>dealloc_c_utf8_alloced_from_rust</span>(<span class='self'>self</span>.<span class='ident'>content</span>,
+                                                     <span class='self'>self</span>.<span class='ident'>content_len</span>);
+        }
 
         <span class='kw'>if</span> <span class='op'>!</span><span class='self'>self</span>.<span class='ident'>metadata</span>.<span class='ident'>is_null</span>() {
             <span class='kw'>let</span> _ <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>Box</span>::<span class='ident'>from_raw</span>(<span class='self'>self</span>.<span class='ident'>metadata</span>) };
@@ -282,8 +296,10 @@
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
 <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>C</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>FileMetadata</span> {
-    <span class='kw'>pub</span> <span class='ident'>name</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_char</span>,
-    <span class='kw'>pub</span> <span class='ident'>user_metadata</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_char</span>,
+    <span class='kw'>pub</span> <span class='ident'>name</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
+    <span class='kw'>pub</span> <span class='ident'>name_len</span>: <span class='ident'>usize</span>,
+    <span class='kw'>pub</span> <span class='ident'>user_metadata</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
+    <span class='kw'>pub</span> <span class='ident'>user_metadata_len</span>: <span class='ident'>usize</span>,
     <span class='kw'>pub</span> <span class='ident'>size</span>: <span class='ident'>i64</span>,
     <span class='kw'>pub</span> <span class='ident'>creation_time_sec</span>: <span class='ident'>i64</span>,
     <span class='kw'>pub</span> <span class='ident'>creation_time_nsec</span>: <span class='ident'>i64</span>,
@@ -299,15 +315,20 @@
         <span class='kw'>let</span> <span class='ident'>created_time</span> <span class='op'>=</span> <span class='ident'>file_metadata</span>.<span class='ident'>get_created_time</span>().<span class='ident'>to_timespec</span>();
         <span class='kw'>let</span> <span class='ident'>modified_time</span> <span class='op'>=</span> <span class='ident'>file_metadata</span>.<span class='ident'>get_modified_time</span>().<span class='ident'>to_timespec</span>();
 
-        <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>CString</span>::<span class='ident'>new</span>(<span class='ident'>file_metadata</span>.<span class='ident'>get_name</span>().<span class='ident'>to_string</span>()));
+        <span class='kw'>let</span> (<span class='ident'>name</span>, <span class='ident'>name_len</span>)
+            <span class='op'>=</span> <span class='ident'>helper</span>::<span class='ident'>string_to_c_utf8</span>(<span class='ident'>file_metadata</span>.<span class='ident'>get_name</span>().<span class='ident'>to_string</span>());
+
         <span class='kw'>let</span> <span class='ident'>user_metadata</span> <span class='op'>=</span> <span class='ident'>file_metadata</span>.<span class='ident'>get_user_metadata</span>()
             .<span class='ident'>to_base64</span>(<span class='ident'>config</span>::<span class='ident'>get_base64_config</span>());
-        <span class='kw'>let</span> <span class='ident'>user_metadata</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>CString</span>::<span class='ident'>new</span>(<span class='ident'>user_metadata</span>));
+        <span class='kw'>let</span> (<span class='ident'>user_metadata</span>, <span class='ident'>user_metadata_len</span>)
+            <span class='op'>=</span> <span class='ident'>helper</span>::<span class='ident'>string_to_c_utf8</span>(<span class='ident'>user_metadata</span>);
 
         <span class='prelude-val'>Ok</span>(<span class='ident'>FileMetadata</span> {
-            <span class='ident'>name</span>: <span class='ident'>name</span>.<span class='ident'>into_raw</span>(),
+            <span class='ident'>name</span>: <span class='ident'>name</span>,
+            <span class='ident'>name_len</span>: <span class='ident'>name_len</span>,
             <span class='ident'>size</span>: <span class='ident'>file_metadata</span>.<span class='ident'>get_size</span>() <span class='kw'>as</span> <span class='ident'>i64</span>,
-            <span class='ident'>user_metadata</span>: <span class='ident'>user_metadata</span>.<span class='ident'>into_raw</span>(),
+            <span class='ident'>user_metadata</span>: <span class='ident'>user_metadata</span>,
+            <span class='ident'>user_metadata_len</span>: <span class='ident'>user_metadata_len</span>,
             <span class='ident'>creation_time_sec</span>: <span class='ident'>created_time</span>.<span class='ident'>sec</span>,
             <span class='ident'>creation_time_nsec</span>: <span class='ident'>created_time</span>.<span class='ident'>nsec</span> <span class='kw'>as</span> <span class='ident'>i64</span>,
             <span class='ident'>modification_time_sec</span>: <span class='ident'>modified_time</span>.<span class='ident'>sec</span>,
@@ -320,8 +341,9 @@
     <span class='comment'>// a proper impl Drop.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>deallocate</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
         <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>CString</span>::<span class='ident'>from_raw</span>(<span class='self'>self</span>.<span class='ident'>name</span>);
-            <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>CString</span>::<span class='ident'>from_raw</span>(<span class='self'>self</span>.<span class='ident'>user_metadata</span>);
+            <span class='ident'>helper</span>::<span class='ident'>dealloc_c_utf8_alloced_from_rust</span>(<span class='self'>self</span>.<span class='ident'>name</span>, <span class='self'>self</span>.<span class='ident'>name_len</span>);
+            <span class='ident'>helper</span>::<span class='ident'>dealloc_c_utf8_alloced_from_rust</span>(<span class='self'>self</span>.<span class='ident'>user_metadata</span>,
+                                                     <span class='self'>self</span>.<span class='ident'>user_metadata_len</span>);
         }
     }
 }
