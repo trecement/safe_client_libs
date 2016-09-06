@@ -553,11 +553,6 @@
 <span id="509">509</span>
 <span id="510">510</span>
 <span id="511">511</span>
-<span id="512">512</span>
-<span id="513">513</span>
-<span id="514">514</span>
-<span id="515">515</span>
-<span id="516">516</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2016 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -577,7 +572,6 @@
 <span class='comment'>// relating to use of the SAFE Network Software.</span>
 
 <span class='doccomment'>//! Directory operations.</span>
-
 
 <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>app</span>::<span class='ident'>App</span>;
 <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>directory_details</span>::<span class='ident'>DirectoryDetails</span>;
@@ -605,8 +599,7 @@
         <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;FFI create directory, given the path.&quot;</span>);
 
         <span class='kw'>let</span> <span class='ident'>dir_path</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_str</span>(<span class='ident'>dir_path</span>, <span class='ident'>dir_path_len</span>));
-        <span class='kw'>let</span> <span class='ident'>user_metadata</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_str</span>(<span class='ident'>user_metadata</span>,
-                                                           <span class='ident'>user_metadata_len</span>));
+        <span class='kw'>let</span> <span class='ident'>user_metadata</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_str</span>(<span class='ident'>user_metadata</span>, <span class='ident'>user_metadata_len</span>));
 
         <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>create_dir</span>(<span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>app_handle</span>,
                             <span class='ident'>dir_path</span>,
@@ -664,11 +657,9 @@
     <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
         <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;JSON modify directory, given the path.&quot;</span>);
         <span class='kw'>let</span> <span class='ident'>dir_path</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_str</span>(<span class='ident'>dir_path</span>, <span class='ident'>dir_path_len</span>));
-        <span class='kw'>let</span> <span class='ident'>new_name</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_opt_string</span>(<span class='ident'>new_name</span>,
-                                                             <span class='ident'>new_name_len</span>));
-        <span class='kw'>let</span> <span class='ident'>new_user_metadata</span>
-            <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_opt_string</span>(<span class='ident'>new_user_metadata</span>,
-                                                    <span class='ident'>new_user_metadata_len</span>));
+        <span class='kw'>let</span> <span class='ident'>new_name</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_opt_string</span>(<span class='ident'>new_name</span>, <span class='ident'>new_name_len</span>));
+        <span class='kw'>let</span> <span class='ident'>new_user_metadata</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_opt_string</span>(<span class='ident'>new_user_metadata</span>,
+                                                                      <span class='ident'>new_user_metadata_len</span>));
 
         <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>modify_dir</span>(<span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>app_handle</span>,
                             <span class='ident'>dir_path</span>,
@@ -867,7 +858,6 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>test</span> {
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>slice</span>;
 
     <span class='kw'>use</span> <span class='ident'>ffi</span>::{<span class='ident'>config</span>, <span class='ident'>test_utils</span>};
 
@@ -875,6 +865,7 @@
     <span class='kw'>use</span> <span class='ident'>nfs</span>::{<span class='ident'>AccessLevel</span>, <span class='ident'>UNVERSIONED_DIRECTORY_LISTING_TAG</span>};
     <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>helper</span>::<span class='ident'>directory_helper</span>::<span class='ident'>DirectoryHelper</span>;
     <span class='kw'>use</span> <span class='ident'>rustc_serialize</span>::<span class='ident'>base64</span>::<span class='ident'>ToBase64</span>;
+    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>slice</span>;
 
     <span class='kw'>fn</span> <span class='ident'>create_test_dir</span>(<span class='ident'>app</span>: <span class='kw-2'>&amp;</span><span class='ident'>App</span>, <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) {
         <span class='kw'>let</span> <span class='ident'>app_dir_key</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>app</span>.<span class='ident'>get_app_dir_key</span>());
@@ -958,8 +949,7 @@
         <span class='kw'>let</span> <span class='ident'>details</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='kw'>super</span>::<span class='ident'>get_dir</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='string'>&quot;/test_dir&quot;</span>, <span class='bool-val'>false</span>));
 
         <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='ident'>slice</span>::<span class='ident'>from_raw_parts</span>(<span class='ident'>details</span>.<span class='ident'>metadata</span>.<span class='ident'>name</span>,
-                                             <span class='ident'>details</span>.<span class='ident'>metadata</span>.<span class='ident'>name_len</span>);
+            <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='ident'>slice</span>::<span class='ident'>from_raw_parts</span>(<span class='ident'>details</span>.<span class='ident'>metadata</span>.<span class='ident'>name</span>, <span class='ident'>details</span>.<span class='ident'>metadata</span>.<span class='ident'>name_len</span>);
             <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>from_utf8</span>(<span class='ident'>name</span>.<span class='ident'>to_owned</span>()).<span class='ident'>unwrap</span>();
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>name</span>, <span class='string'>&quot;test_dir&quot;</span>);
         }

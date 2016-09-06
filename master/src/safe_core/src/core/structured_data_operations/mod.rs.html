@@ -288,6 +288,8 @@
 <span id="244">244</span>
 <span id="245">245</span>
 <span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -306,11 +308,13 @@
 <span class='comment'>// Please review the Licences for the specific language governing permissions and limitations</span>
 <span class='comment'>// relating to use of the SAFE Network Software.</span>
 
+<span class='comment'>// TODO Remove type_tag parameter from api&#39;s of unversioned and versioned SD&#39;s as they are now</span>
+<span class='comment'>// consolidated to 500 and 501</span>
+
 <span class='doccomment'>/// Unversioned-Structured Data</span>
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>unversioned</span>;
 <span class='doccomment'>/// Versioned-Structured Data</span>
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>versioned</span>;
-
 
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>errors</span>::<span class='ident'>CoreError</span>;
 <span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::<span class='ident'>serialise</span>;

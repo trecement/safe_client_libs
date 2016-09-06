@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["CipherOpt","Cipher Options"]],"fn":[["cipher_opt_free","Free CipherOpt handle"],["cipher_opt_new_asymmetric","Construct CipherOpt::Asymmetric handle"],["cipher_opt_new_plaintext","Construct CipherOpt::PlainText handle"],["cipher_opt_new_symmetric","Construct CipherOpt::Symmetric handle"]]});

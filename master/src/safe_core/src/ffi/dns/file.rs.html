@@ -269,12 +269,6 @@
 <span id="225">225</span>
 <span id="226">226</span>
 <span id="227">227</span>
-<span id="228">228</span>
-<span id="229">229</span>
-<span id="230">230</span>
-<span id="231">231</span>
-<span id="232">232</span>
-<span id="233">233</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2016 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -319,12 +313,9 @@
                                       <span class='ident'>details_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FileDetails</span>)
                                       <span class='op'>-&gt;</span> <span class='ident'>int32_t</span> {
     <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
-        <span class='kw'>let</span> <span class='ident'>long_name</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>long_name</span>,
-                                                          <span class='ident'>long_name_len</span>));
-        <span class='kw'>let</span> <span class='ident'>service_name</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>service_name</span>,
-                                                             <span class='ident'>service_name_len</span>));
-        <span class='kw'>let</span> <span class='ident'>file_path</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>file_path</span>,
-                                                          <span class='ident'>file_path_len</span>));
+        <span class='kw'>let</span> <span class='ident'>long_name</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>long_name</span>, <span class='ident'>long_name_len</span>));
+        <span class='kw'>let</span> <span class='ident'>service_name</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>service_name</span>, <span class='ident'>service_name_len</span>));
+        <span class='kw'>let</span> <span class='ident'>file_path</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>file_path</span>, <span class='ident'>file_path_len</span>));
 
         <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;FFI get file located at given path starting from home directory of \&quot;//{}.{}\&quot;.&quot;</span>,
                <span class='ident'>service_name</span>,
@@ -355,12 +346,9 @@
                                                <span class='ident'>metadata_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FileMetadata</span>)
                                                <span class='op'>-&gt;</span> <span class='ident'>int32_t</span> {
     <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
-        <span class='kw'>let</span> <span class='ident'>long_name</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>long_name</span>,
-                                                          <span class='ident'>long_name_len</span>));
-        <span class='kw'>let</span> <span class='ident'>service_name</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>service_name</span>,
-                                                             <span class='ident'>service_name_len</span>));
-        <span class='kw'>let</span> <span class='ident'>file_path</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>file_path</span>,
-                                                          <span class='ident'>file_path_len</span>));
+        <span class='kw'>let</span> <span class='ident'>long_name</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>long_name</span>, <span class='ident'>long_name_len</span>));
+        <span class='kw'>let</span> <span class='ident'>service_name</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>service_name</span>, <span class='ident'>service_name_len</span>));
+        <span class='kw'>let</span> <span class='ident'>file_path</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>file_path</span>, <span class='ident'>file_path_len</span>));
 
         <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;FFI get file metadata for file located at given path starting from home \
                 directory of \&quot;//{}.{}\&quot;.&quot;</span>,

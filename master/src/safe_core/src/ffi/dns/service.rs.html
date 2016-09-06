@@ -271,14 +271,6 @@
 <span id="227">227</span>
 <span id="228">228</span>
 <span id="229">229</span>
-<span id="230">230</span>
-<span id="231">231</span>
-<span id="232">232</span>
-<span id="233">233</span>
-<span id="234">234</span>
-<span id="235">235</span>
-<span id="236">236</span>
-<span id="237">237</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -322,13 +314,10 @@
     <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
         <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;FFI add service.&quot;</span>);
 
-        <span class='kw'>let</span> <span class='ident'>long_name</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>long_name</span>,
-                                                          <span class='ident'>long_name_len</span>));
-        <span class='kw'>let</span> <span class='ident'>service_name</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>service_name</span>,
-                                                             <span class='ident'>service_name_len</span>));
-        <span class='kw'>let</span> <span class='ident'>service_home_dir_path</span>
-            <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>service_home_dir_path</span>,
-                                                <span class='ident'>service_home_dir_path_len</span>));
+        <span class='kw'>let</span> <span class='ident'>long_name</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>long_name</span>, <span class='ident'>long_name_len</span>));
+        <span class='kw'>let</span> <span class='ident'>service_name</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>service_name</span>, <span class='ident'>service_name_len</span>));
+        <span class='kw'>let</span> <span class='ident'>service_home_dir_path</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>service_home_dir_path</span>,
+                                                                      <span class='ident'>service_home_dir_path_len</span>));
 
         <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>add_service</span>(<span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>app_handle</span>,
                              <span class='ident'>long_name</span>,
@@ -350,10 +339,8 @@
     <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
         <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;FFI delete service.&quot;</span>);
 
-        <span class='kw'>let</span> <span class='ident'>long_name</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>long_name</span>,
-                                                          <span class='ident'>long_name_len</span>));
-        <span class='kw'>let</span> <span class='ident'>service_name</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>service_name</span>,
-                                                             <span class='ident'>service_name_len</span>));
+        <span class='kw'>let</span> <span class='ident'>long_name</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>long_name</span>, <span class='ident'>long_name_len</span>));
+        <span class='kw'>let</span> <span class='ident'>service_name</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>service_name</span>, <span class='ident'>service_name_len</span>));
 
         <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>delete_service</span>(<span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>app_handle</span>, <span class='ident'>long_name</span>, <span class='ident'>service_name</span>));
         <span class='number'>0</span>
@@ -370,10 +357,8 @@
                                              <span class='ident'>details_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>DirectoryDetails</span>)
                                              <span class='op'>-&gt;</span> <span class='ident'>int32_t</span> {
     <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
-        <span class='kw'>let</span> <span class='ident'>long_name</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>long_name</span>,
-                                                          <span class='ident'>long_name_len</span>));
-        <span class='kw'>let</span> <span class='ident'>service_name</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>service_name</span>,
-                                                             <span class='ident'>service_name_len</span>));
+        <span class='kw'>let</span> <span class='ident'>long_name</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>long_name</span>, <span class='ident'>long_name_len</span>));
+        <span class='kw'>let</span> <span class='ident'>service_name</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>service_name</span>, <span class='ident'>service_name_len</span>));
 
         <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;FFI Get service home directory for \&quot;//{}.{}\&quot;.&quot;</span>,
                <span class='ident'>service_name</span>,
@@ -393,8 +378,7 @@
                                           <span class='ident'>list_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>StringList</span>)
                                           <span class='op'>-&gt;</span> <span class='ident'>int32_t</span> {
     <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
-        <span class='kw'>let</span> <span class='ident'>long_name</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>long_name</span>,
-                                                          <span class='ident'>long_name_len</span>));
+        <span class='kw'>let</span> <span class='ident'>long_name</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>long_name</span>, <span class='ident'>long_name_len</span>));
 
         <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;FFI Get all services for dns with name: {}&quot;</span>, <span class='ident'>long_name</span>);
 

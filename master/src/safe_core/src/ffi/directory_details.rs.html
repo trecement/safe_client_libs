@@ -242,8 +242,6 @@
 <span id="198">198</span>
 <span id="199">199</span>
 <span id="200">200</span>
-<span id="201">201</span>
-<span id="202">202</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -265,7 +263,6 @@
 <span class='doccomment'>//! Details about directory and its content.</span>
 
 
-<span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>helper</span>;
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>client</span>::<span class='ident'>Client</span>;
 <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>config</span>;
 <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>errors</span>::<span class='ident'>FfiError</span>;
@@ -276,6 +273,7 @@
 <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>metadata</span>::<span class='ident'>directory_metadata</span>::<span class='ident'>DirectoryMetadata</span> <span class='kw'>as</span> <span class='ident'>NfsDirectoryMetadata</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::{<span class='ident'>Arc</span>, <span class='ident'>Mutex</span>};
+<span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>helper</span>;
 
 <span class='doccomment'>/// Details about a directory and its content.</span>
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
@@ -360,10 +358,9 @@
         <span class='kw'>let</span> <span class='ident'>modified_time</span> <span class='op'>=</span> <span class='ident'>dir_metadata</span>.<span class='ident'>get_modified_time</span>().<span class='ident'>to_timespec</span>();
 
         <span class='kw'>let</span> (<span class='ident'>name</span>, <span class='ident'>name_len</span>) <span class='op'>=</span> <span class='ident'>helper</span>::<span class='ident'>string_to_c_utf8</span>(<span class='ident'>dir_metadata</span>.<span class='ident'>get_name</span>()
-                                                        .<span class='ident'>to_string</span>());
+            .<span class='ident'>to_string</span>());
         <span class='kw'>let</span> <span class='ident'>user_metadata</span> <span class='op'>=</span> <span class='ident'>dir_metadata</span>.<span class='ident'>get_user_metadata</span>().<span class='ident'>to_base64</span>(<span class='ident'>config</span>::<span class='ident'>get_base64_config</span>());
-        <span class='kw'>let</span> (<span class='ident'>user_metadata</span>, <span class='ident'>user_metadata_len</span>)
-            <span class='op'>=</span> <span class='ident'>helper</span>::<span class='ident'>string_to_c_utf8</span>(<span class='ident'>user_metadata</span>);
+        <span class='kw'>let</span> (<span class='ident'>user_metadata</span>, <span class='ident'>user_metadata_len</span>) <span class='op'>=</span> <span class='ident'>helper</span>::<span class='ident'>string_to_c_utf8</span>(<span class='ident'>user_metadata</span>);
 
         <span class='prelude-val'>Ok</span>(<span class='ident'>DirectoryMetadata</span> {
             <span class='ident'>name</span>: <span class='ident'>name</span>,
@@ -383,8 +380,7 @@
     <span class='comment'>// a proper impl Drop.</span>
     <span class='kw'>fn</span> <span class='ident'>deallocate</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
         <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>helper</span>::<span class='ident'>dealloc_c_utf8_alloced_from_rust</span>(<span class='self'>self</span>.<span class='ident'>name</span>,
-                                                             <span class='self'>self</span>.<span class='ident'>name_len</span>);
+            <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>helper</span>::<span class='ident'>dealloc_c_utf8_alloced_from_rust</span>(<span class='self'>self</span>.<span class='ident'>name</span>, <span class='self'>self</span>.<span class='ident'>name_len</span>);
             <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>helper</span>::<span class='ident'>dealloc_c_utf8_alloced_from_rust</span>(<span class='self'>self</span>.<span class='ident'>user_metadata</span>,
                                                              <span class='self'>self</span>.<span class='ident'>user_metadata_len</span>);
         }

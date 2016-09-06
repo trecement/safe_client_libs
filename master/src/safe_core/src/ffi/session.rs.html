@@ -394,11 +394,6 @@
 <span id="350">350</span>
 <span id="351">351</span>
 <span id="352">352</span>
-<span id="353">353</span>
-<span id="354">354</span>
-<span id="355">355</span>
-<span id="356">356</span>
-<span id="357">357</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2016 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -419,11 +414,10 @@
 
 <span class='doccomment'>//! Session management</span>
 
-
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>client</span>::<span class='ident'>Client</span>;
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>translated_events</span>::<span class='ident'>NetworkEvent</span>;
 <span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>int32_t</span>, <span class='ident'>int64_t</span>};
-<span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>thread</span>::{<span class='self'>self</span>, <span class='ident'>RaiiThreadJoiner</span>};
+<span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>thread</span>::{<span class='self'>self</span>, <span class='ident'>Joiner</span>};
 <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>metadata</span>::<span class='ident'>directory_key</span>::<span class='ident'>DirectoryKey</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cell</span>::<span class='ident'>RefCell</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
@@ -439,7 +433,7 @@
     <span class='ident'>safe_drive_dir_key</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>DirectoryKey</span><span class='op'>&gt;</span>,
 
     <span class='ident'>network_event_observers</span>: <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>Mutex</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span>(<span class='ident'>i32</span>)<span class='op'>&gt;&gt;</span><span class='op'>&gt;</span>,
-    <span class='ident'>network_thread</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span>(<span class='ident'>Sender</span><span class='op'>&lt;</span><span class='ident'>NetworkEvent</span><span class='op'>&gt;</span>, <span class='ident'>RaiiThreadJoiner</span>)<span class='op'>&gt;</span>,
+    <span class='ident'>network_thread</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span>(<span class='ident'>Sender</span><span class='op'>&lt;</span><span class='ident'>NetworkEvent</span><span class='op'>&gt;</span>, <span class='ident'>Joiner</span>)<span class='op'>&gt;</span>,
 }
 
 <span class='kw'>impl</span> <span class='ident'>Session</span> {
@@ -549,8 +543,8 @@
 <span class='doccomment'>/// Clonable handle to Session.</span>
 <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>SessionHandle</span> <span class='op'>=</span> <span class='ident'>Rc</span><span class='op'>&lt;</span><span class='ident'>RefCell</span><span class='op'>&lt;</span><span class='ident'>Session</span><span class='op'>&gt;&gt;</span>;
 
-<span class='doccomment'>/// Create a session as an unregistered client. This or any one of the other companion functions to get a</span>
-<span class='doccomment'>/// session must be called before initiating any operation allowed by this crate.</span>
+<span class='doccomment'>/// Create a session as an unregistered client. This or any one of the other companion functions to</span>
+<span class='doccomment'>/// get a session must be called before initiating any operation allowed by this crate.</span>
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
 <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>create_unregistered_client</span>(<span class='ident'>session_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>SessionHandle</span>)
                                                     <span class='op'>-&gt;</span> <span class='ident'>int32_t</span> {
@@ -564,8 +558,8 @@
 }
 
 <span class='doccomment'>/// Create a registered client. This or any one of the other companion functions to get a</span>
-<span class='doccomment'>/// session must be called before initiating any operation allowed by this crate. `session_handle` is</span>
-<span class='doccomment'>/// a pointer to a pointer and must point to a valid pointer not junk, else the consequences are</span>
+<span class='doccomment'>/// session must be called before initiating any operation allowed by this crate. `session_handle`</span>
+<span class='doccomment'>/// is a pointer to a pointer and must point to a valid pointer not junk, else the consequences are</span>
 <span class='doccomment'>/// undefined.</span>
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
 <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>create_account</span>(<span class='ident'>account_locator</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
@@ -578,8 +572,7 @@
         <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;FFI create a client account.&quot;</span>);
 
         <span class='comment'>// TODO: convert the locator/password to &amp;str, not String</span>
-        <span class='kw'>let</span> <span class='ident'>acc_locator</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>account_locator</span>,
-                                                            <span class='ident'>account_locator_len</span>));
+        <span class='kw'>let</span> <span class='ident'>acc_locator</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>account_locator</span>, <span class='ident'>account_locator_len</span>));
         <span class='kw'>let</span> <span class='ident'>acc_password</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>account_password</span>,
                                                              <span class='ident'>account_password_len</span>));
         <span class='kw'>let</span> <span class='ident'>session</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>Session</span>::<span class='ident'>create_account</span>(<span class='kw-2'>&amp;</span><span class='ident'>acc_locator</span>, <span class='kw-2'>&amp;</span><span class='ident'>acc_password</span>));
@@ -590,8 +583,8 @@
 }
 
 <span class='doccomment'>/// Log into a registered client. This or any one of the other companion functions to get a</span>
-<span class='doccomment'>/// session must be called before initiating any operation allowed by this crate. `session_handle` is</span>
-<span class='doccomment'>/// a pointer to a pointer and must point to a valid pointer not junk, else the consequences are</span>
+<span class='doccomment'>/// session must be called before initiating any operation allowed by this crate. `session_handle`</span>
+<span class='doccomment'>/// is a pointer to a pointer and must point to a valid pointer not junk, else the consequences are</span>
 <span class='doccomment'>/// undefined.</span>
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
 <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>log_in</span>(<span class='ident'>account_locator</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
@@ -603,12 +596,9 @@
     <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
         <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;FFI login a registered client.&quot;</span>);
 
-        <span class='kw'>let</span> <span class='ident'>acc_locator</span>
-            <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>account_locator</span>,
-                                                <span class='ident'>account_locator_len</span>));
-        <span class='kw'>let</span> <span class='ident'>acc_password</span>
-            <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>account_password</span>,
-                                                <span class='ident'>account_password_len</span>));
+        <span class='kw'>let</span> <span class='ident'>acc_locator</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>account_locator</span>, <span class='ident'>account_locator_len</span>));
+        <span class='kw'>let</span> <span class='ident'>acc_password</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_string</span>(<span class='ident'>account_password</span>,
+                                                             <span class='ident'>account_password_len</span>));
         <span class='kw'>let</span> <span class='ident'>session</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>Session</span>::<span class='ident'>log_in</span>(<span class='kw-2'>&amp;</span><span class='ident'>acc_locator</span>, <span class='kw-2'>&amp;</span><span class='ident'>acc_password</span>));
 
         <span class='op'>*</span><span class='ident'>session_handle</span> <span class='op'>=</span> <span class='ident'>allocate_handle</span>(<span class='ident'>session</span>);
