@@ -409,6 +409,10 @@
 <span id="365">365</span>
 <span id="366">366</span>
 <span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2016 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -503,6 +507,7 @@
 }
 
 <span class='doccomment'>/// Close Self Encryptor</span>
+<span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
 <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>immut_data_close_self_encryptor</span>(<span class='ident'>app</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>App</span>,
                                                          <span class='ident'>se_h</span>: <span class='ident'>SelfEncryptorWriterHandle</span>,
                                                          <span class='ident'>cipher_opt_h</span>: <span class='ident'>CipherOptHandle</span>,
@@ -552,6 +557,7 @@
 }
 
 <span class='doccomment'>/// Fetch Self Encryptor</span>
+<span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
 <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>immut_data_fetch_self_encryptor</span>(<span class='ident'>app</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>App</span>,
                                                          <span class='ident'>data_id_h</span>: <span class='ident'>DataIdHandle</span>,
                                                          <span class='ident'>o_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>SelfEncryptorReaderHandle</span>)
@@ -602,6 +608,7 @@
 }
 
 <span class='doccomment'>/// Get data size from Self Encryptor</span>
+<span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
 <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>immut_data_size</span>(<span class='ident'>se_h</span>: <span class='ident'>SelfEncryptorReaderHandle</span>, <span class='ident'>o_size</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u64</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
     <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
         <span class='kw'>let</span> <span class='ident'>size</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>().<span class='ident'>lock</span>())
@@ -617,6 +624,7 @@
 }
 
 <span class='doccomment'>/// Read from Self Encryptor</span>
+<span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
 <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>immut_data_read_from_self_encryptor</span>(<span class='ident'>se_h</span>: <span class='ident'>SelfEncryptorReaderHandle</span>,
                                                              <span class='ident'>from_pos</span>: <span class='ident'>u64</span>,
                                                              <span class='ident'>len</span>: <span class='ident'>u64</span>,

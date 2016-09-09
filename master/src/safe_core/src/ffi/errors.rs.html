@@ -276,6 +276,14 @@
 <span id="232">232</span>
 <span id="233">233</span>
 <span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -367,6 +375,10 @@
     <span class='doccomment'>/// Invalid offsets (from-position and lenght combination) provided for reading form Self</span>
     <span class='doccomment'>/// Encryptor. Would have probably caused an overflow.</span>
     <span class='ident'>InvalidSelfEncryptorReadOffsets</span>,
+    <span class='doccomment'>/// Invalid indexing</span>
+    <span class='ident'>InvalidIndex</span>,
+    <span class='doccomment'>/// Unsupported Operation (e.g. mixing Pub/PrivAppendableData operations</span>
+    <span class='ident'>UnsupportedOperation</span>,
 }
 
 <span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>SerialisationError</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>FfiError</span> {
@@ -456,6 +468,8 @@
             <span class='ident'>FfiError</span>::<span class='ident'>InvalidStructuredDataTypeTag</span> <span class='op'>=&gt;</span> <span class='ident'>FFI_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>20</span>,
             <span class='ident'>FfiError</span>::<span class='ident'>InvalidVersionNumber</span> <span class='op'>=&gt;</span> <span class='ident'>FFI_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>21</span>,
             <span class='ident'>FfiError</span>::<span class='ident'>InvalidSelfEncryptorReadOffsets</span> <span class='op'>=&gt;</span> <span class='ident'>FFI_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>22</span>,
+            <span class='ident'>FfiError</span>::<span class='ident'>InvalidIndex</span> <span class='op'>=&gt;</span> <span class='ident'>FFI_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>23</span>,
+            <span class='ident'>FfiError</span>::<span class='ident'>UnsupportedOperation</span> <span class='op'>=&gt;</span> <span class='ident'>FFI_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>24</span>,
         }
     }
 }
@@ -508,6 +522,8 @@
             <span class='ident'>FfiError</span>::<span class='ident'>InvalidSelfEncryptorReadOffsets</span> <span class='op'>=&gt;</span> {
                 <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;FfiError::InvalidSelfEncryptorReadOffsets&quot;</span>)
             }
+            <span class='ident'>FfiError</span>::<span class='ident'>InvalidIndex</span> <span class='op'>=&gt;</span> <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;FfiError::InvalidIndex&quot;</span>),
+            <span class='ident'>FfiError</span>::<span class='ident'>UnsupportedOperation</span> <span class='op'>=&gt;</span> <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;FfiError::UnsupportedOperation&quot;</span>),
         }
     }
 }

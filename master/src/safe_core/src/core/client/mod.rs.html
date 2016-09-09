@@ -1104,6 +1104,44 @@
 <span id="1060">1060</span>
 <span id="1061">1061</span>
 <span id="1062">1062</span>
+<span id="1063">1063</span>
+<span id="1064">1064</span>
+<span id="1065">1065</span>
+<span id="1066">1066</span>
+<span id="1067">1067</span>
+<span id="1068">1068</span>
+<span id="1069">1069</span>
+<span id="1070">1070</span>
+<span id="1071">1071</span>
+<span id="1072">1072</span>
+<span id="1073">1073</span>
+<span id="1074">1074</span>
+<span id="1075">1075</span>
+<span id="1076">1076</span>
+<span id="1077">1077</span>
+<span id="1078">1078</span>
+<span id="1079">1079</span>
+<span id="1080">1080</span>
+<span id="1081">1081</span>
+<span id="1082">1082</span>
+<span id="1083">1083</span>
+<span id="1084">1084</span>
+<span id="1085">1085</span>
+<span id="1086">1086</span>
+<span id="1087">1087</span>
+<span id="1088">1088</span>
+<span id="1089">1089</span>
+<span id="1090">1090</span>
+<span id="1091">1091</span>
+<span id="1092">1092</span>
+<span id="1093">1093</span>
+<span id="1094">1094</span>
+<span id="1095">1095</span>
+<span id="1096">1096</span>
+<span id="1097">1097</span>
+<span id="1098">1098</span>
+<span id="1099">1099</span>
+<span id="1100">1100</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -1138,8 +1176,8 @@
 
 <span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::<span class='ident'>serialise</span>;
 <span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>thread</span>::<span class='ident'>RaiiThreadJoiner</span>;
-<span class='kw'>use</span> <span class='ident'>routing</span>::{<span class='ident'>Authority</span>, <span class='ident'>Data</span>, <span class='ident'>DataIdentifier</span>, <span class='ident'>FullId</span>, <span class='ident'>MessageId</span>, <span class='ident'>PlainData</span>, <span class='ident'>StructuredData</span>,
-              <span class='ident'>XorName</span>};
+<span class='kw'>use</span> <span class='ident'>routing</span>::{<span class='ident'>AppendWrapper</span>, <span class='ident'>Authority</span>, <span class='ident'>Data</span>, <span class='ident'>DataIdentifier</span>, <span class='ident'>FullId</span>, <span class='ident'>MessageId</span>, <span class='ident'>PlainData</span>,
+              <span class='ident'>StructuredData</span>, <span class='ident'>XorName</span>};
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;use-mock-routing&quot;</span>))]</span>
 <span class='kw'>use</span> <span class='ident'>routing</span>::<span class='ident'>Client</span> <span class='kw'>as</span> <span class='ident'>Routing</span>;
 <span class='kw'>use</span> <span class='ident'>routing</span>::<span class='ident'>TYPE_TAG_SESSION_PACKET</span>;
@@ -1175,6 +1213,7 @@
     <span class='ident'>issued_puts</span>: <span class='ident'>u64</span>,
     <span class='ident'>issued_posts</span>: <span class='ident'>u64</span>,
     <span class='ident'>issued_deletes</span>: <span class='ident'>u64</span>,
+    <span class='ident'>issued_appends</span>: <span class='ident'>u64</span>,
 }
 
 <span class='kw'>impl</span> <span class='ident'>Client</span> {
@@ -1213,6 +1252,7 @@
             <span class='ident'>issued_puts</span>: <span class='number'>0</span>,
             <span class='ident'>issued_posts</span>: <span class='number'>0</span>,
             <span class='ident'>issued_deletes</span>: <span class='number'>0</span>,
+            <span class='ident'>issued_appends</span>: <span class='number'>0</span>,
         })
     }
 
@@ -1261,6 +1301,7 @@
             <span class='ident'>issued_puts</span>: <span class='number'>0</span>,
             <span class='ident'>issued_posts</span>: <span class='number'>0</span>,
             <span class='ident'>issued_deletes</span>: <span class='number'>0</span>,
+            <span class='ident'>issued_appends</span>: <span class='number'>0</span>,
         };
 
         {
@@ -1349,6 +1390,7 @@
                 <span class='ident'>issued_puts</span>: <span class='number'>0</span>,
                 <span class='ident'>issued_posts</span>: <span class='number'>0</span>,
                 <span class='ident'>issued_deletes</span>: <span class='number'>0</span>,
+                <span class='ident'>issued_appends</span>: <span class='number'>0</span>,
             };
 
             <span class='prelude-val'>Ok</span>(<span class='ident'>client</span>)
@@ -1643,6 +1685,35 @@
         }
     }
 
+    <span class='doccomment'>/// Append request</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>append</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>,
+                  <span class='ident'>appender</span>: <span class='ident'>AppendWrapper</span>,
+                  <span class='ident'>opt_dst</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Authority</span><span class='op'>&gt;</span>)
+                  <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>MutationResponseGetter</span>, <span class='ident'>CoreError</span><span class='op'>&gt;</span> {
+        <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;APPEND for {:?}&quot;</span>, <span class='ident'>appender</span>);
+
+        <span class='self'>self</span>.<span class='ident'>issued_appends</span> <span class='op'>+=</span> <span class='number'>1</span>;
+
+        <span class='kw'>let</span> <span class='ident'>dst</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>opt_dst</span> {
+            <span class='prelude-val'>Some</span>(<span class='ident'>auth</span>) <span class='op'>=&gt;</span> <span class='ident'>auth</span>,
+            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> {
+                <span class='kw'>let</span> <span class='ident'>append_to</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>appender</span> {
+                    <span class='ident'>AppendWrapper</span>::<span class='ident'>Pub</span> { <span class='kw-2'>ref</span> <span class='ident'>append_to</span>, .. } <span class='op'>|</span>
+                    <span class='ident'>AppendWrapper</span>::<span class='ident'>Priv</span> { <span class='kw-2'>ref</span> <span class='ident'>append_to</span>, .. } <span class='op'>=&gt;</span> <span class='op'>*</span><span class='ident'>append_to</span>,
+                };
+                <span class='ident'>Authority</span>::<span class='ident'>NaeManager</span>(<span class='ident'>append_to</span>)
+            }
+        };
+
+        <span class='kw'>let</span> (<span class='ident'>tx</span>, <span class='ident'>rx</span>) <span class='op'>=</span> <span class='ident'>mpsc</span>::<span class='ident'>channel</span>();
+        <span class='kw'>let</span> <span class='ident'>msg_id</span> <span class='op'>=</span> <span class='ident'>MessageId</span>::<span class='ident'>new</span>();
+        <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>message_queue</span>.<span class='ident'>lock</span>()).<span class='ident'>register_response_observer</span>(<span class='ident'>msg_id</span>, <span class='ident'>tx</span>.<span class='ident'>clone</span>());
+
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>routing</span>.<span class='ident'>send_append_request</span>(<span class='ident'>dst</span>, <span class='ident'>appender</span>, <span class='ident'>msg_id</span>));
+
+        <span class='prelude-val'>Ok</span>(<span class='ident'>MutationResponseGetter</span>::<span class='ident'>new</span>((<span class='ident'>tx</span>, <span class='ident'>rx</span>)))
+    }
+
     <span class='doccomment'>/// Get data from the network. This is non-blocking.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_account_info</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>,
                             <span class='ident'>opt_dst</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Authority</span><span class='op'>&gt;</span>)
@@ -1871,6 +1942,11 @@
     <span class='doccomment'>/// Return the amount of calls that were done to `delete`</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>issued_deletes</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u64</span> {
         <span class='self'>self</span>.<span class='ident'>issued_deletes</span>
+    }
+
+    <span class='doccomment'>/// Return the amount of calls that were done to `append`</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>issued_appends</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u64</span> {
+        <span class='self'>self</span>.<span class='ident'>issued_appends</span>
     }
 
     <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>all</span>(<span class='ident'>test</span>, <span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;use-mock-routing&quot;</span>))]</span>

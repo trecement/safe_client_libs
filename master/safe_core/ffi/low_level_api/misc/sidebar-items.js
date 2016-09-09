@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["misc_deserailise_data_id","Deserialise DataIdentifier"],["misc_encrypt_key_free","Free Encrypt Key handle"],["misc_serailise_data_id","Serialise DataIdentifier"],["misc_sign_key_free","Free Sign Key handle"],["misc_u8_ptr_free","Deallocate pointer obtained via FFI and allocated by safe_core"]]});

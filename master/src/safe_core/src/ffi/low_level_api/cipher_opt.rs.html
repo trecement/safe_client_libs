@@ -338,19 +338,6 @@
 <span id="294">294</span>
 <span id="295">295</span>
 <span id="296">296</span>
-<span id="297">297</span>
-<span id="298">298</span>
-<span id="299">299</span>
-<span id="300">300</span>
-<span id="301">301</span>
-<span id="302">302</span>
-<span id="303">303</span>
-<span id="304">304</span>
-<span id="305">305</span>
-<span id="306">306</span>
-<span id="307">307</span>
-<span id="308">308</span>
-<span id="309">309</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2016 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -374,7 +361,7 @@
 <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>errors</span>::<span class='ident'>FfiError</span>;
 <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>helper</span>;
 <span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::{<span class='ident'>deserialise</span>, <span class='ident'>serialise</span>};
-<span class='kw'>use</span> <span class='ident'>rust_sodium</span>::<span class='ident'>crypto</span>::{<span class='ident'>box_</span>, <span class='ident'>secretbox</span>};
+<span class='kw'>use</span> <span class='ident'>rust_sodium</span>::<span class='ident'>crypto</span>::{<span class='ident'>box_</span>, <span class='ident'>sealedbox</span>, <span class='ident'>secretbox</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
 <span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>CipherOptHandle</span>, <span class='ident'>EncryptKeyHandle</span>};
 <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>object_cache</span>::<span class='ident'>object_cache</span>;
@@ -399,21 +386,16 @@
         <span class='ident'>nonce</span>: <span class='ident'>secretbox</span>::<span class='ident'>Nonce</span>,
         <span class='ident'>cipher_text</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
     },
-    <span class='ident'>Asymmetric</span> {
-        <span class='ident'>nonce</span>: <span class='ident'>box_</span>::<span class='ident'>Nonce</span>,
-        <span class='ident'>peer_pk</span>: <span class='ident'>box_</span>::<span class='ident'>PublicKey</span>,
-        <span class='ident'>cipher_text</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
-    },
+    <span class='ident'>Asymmetric</span>(<span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>),
 }
 
 <span class='kw'>impl</span> <span class='ident'>CipherOpt</span> {
     <span class='doccomment'>/// Encrypt plain text</span>
-    <span class='comment'>// TODO Take a serialisable type directly to prevent double serialisation</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>encrypt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>app</span>: <span class='kw-2'>&amp;</span><span class='ident'>App</span>, <span class='ident'>plain_text</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>, <span class='ident'>FfiError</span><span class='op'>&gt;</span> {
         <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
             <span class='ident'>CipherOpt</span>::<span class='ident'>PlainText</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>serialise</span>(<span class='kw-2'>&amp;</span><span class='ident'>WireFormat</span>::<span class='ident'>Plain</span>(<span class='ident'>plain_text</span>.<span class='ident'>to_owned</span>())))),
             <span class='ident'>CipherOpt</span>::<span class='ident'>Symmetric</span> <span class='op'>=&gt;</span> {
-                <span class='kw'>let</span> <span class='ident'>sym_key</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>app</span>.<span class='ident'>sym_key</span>().<span class='ident'>ok_or</span>(<span class='ident'>FfiError</span>::<span class='ident'>OperationForbiddenForApp</span>));
+                <span class='kw'>let</span> <span class='ident'>sym_key</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>app</span>.<span class='ident'>sym_key</span>());
                 <span class='kw'>let</span> <span class='ident'>nonce</span> <span class='op'>=</span> <span class='ident'>secretbox</span>::<span class='ident'>gen_nonce</span>();
                 <span class='kw'>let</span> <span class='ident'>cipher_text</span> <span class='op'>=</span> <span class='ident'>secretbox</span>::<span class='ident'>seal</span>(<span class='ident'>plain_text</span>, <span class='kw-2'>&amp;</span><span class='ident'>nonce</span>, <span class='ident'>sym_key</span>);
                 <span class='kw'>let</span> <span class='ident'>wire_format</span> <span class='op'>=</span> <span class='ident'>WireFormat</span>::<span class='ident'>Symmetric</span> {
@@ -424,16 +406,8 @@
                 <span class='prelude-val'>Ok</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>serialise</span>(<span class='kw-2'>&amp;</span><span class='ident'>wire_format</span>)))
             }
             <span class='ident'>CipherOpt</span>::<span class='ident'>Asymmetric</span> { <span class='kw-2'>ref</span> <span class='ident'>peer_encrypt_key</span> } <span class='op'>=&gt;</span> {
-                <span class='kw'>let</span> (<span class='ident'>pk</span>, <span class='ident'>sk</span>) <span class='op'>=</span> <span class='ident'>box_</span>::<span class='ident'>gen_keypair</span>();
-                <span class='kw'>let</span> <span class='ident'>nonce</span> <span class='op'>=</span> <span class='ident'>box_</span>::<span class='ident'>gen_nonce</span>();
-                <span class='kw'>let</span> <span class='ident'>cipher_text</span> <span class='op'>=</span> <span class='ident'>box_</span>::<span class='ident'>seal</span>(<span class='ident'>plain_text</span>, <span class='kw-2'>&amp;</span><span class='ident'>nonce</span>, <span class='ident'>peer_encrypt_key</span>, <span class='kw-2'>&amp;</span><span class='ident'>sk</span>);
-                <span class='kw'>let</span> <span class='ident'>wire_format</span> <span class='op'>=</span> <span class='ident'>WireFormat</span>::<span class='ident'>Asymmetric</span> {
-                    <span class='ident'>nonce</span>: <span class='ident'>nonce</span>,
-                    <span class='ident'>peer_pk</span>: <span class='ident'>pk</span>,
-                    <span class='ident'>cipher_text</span>: <span class='ident'>cipher_text</span>,
-                };
-
-                <span class='prelude-val'>Ok</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>serialise</span>(<span class='kw-2'>&amp;</span><span class='ident'>wire_format</span>)))
+                <span class='kw'>let</span> <span class='ident'>cipher_text</span> <span class='op'>=</span> <span class='ident'>sealedbox</span>::<span class='ident'>seal</span>(<span class='ident'>plain_text</span>, <span class='ident'>peer_encrypt_key</span>);
+                <span class='prelude-val'>Ok</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>serialise</span>(<span class='kw-2'>&amp;</span><span class='ident'>WireFormat</span>::<span class='ident'>Asymmetric</span>(<span class='ident'>cipher_text</span>))))
             }
         }
     }
@@ -443,13 +417,13 @@
         <span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>deserialise</span>::<span class='op'>&lt;</span><span class='ident'>WireFormat</span><span class='op'>&gt;</span>(<span class='ident'>raw_data</span>)) {
             <span class='ident'>WireFormat</span>::<span class='ident'>Plain</span>(<span class='ident'>plain_text</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>plain_text</span>),
             <span class='ident'>WireFormat</span>::<span class='ident'>Symmetric</span> { <span class='ident'>nonce</span>, <span class='ident'>cipher_text</span> } <span class='op'>=&gt;</span> {
-                <span class='kw'>let</span> <span class='ident'>sym_key</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>app</span>.<span class='ident'>sym_key</span>().<span class='ident'>ok_or</span>(<span class='ident'>FfiError</span>::<span class='ident'>OperationForbiddenForApp</span>));
+                <span class='kw'>let</span> <span class='ident'>sym_key</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>app</span>.<span class='ident'>sym_key</span>());
                 <span class='prelude-val'>Ok</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>secretbox</span>::<span class='ident'>open</span>(<span class='kw-2'>&amp;</span><span class='ident'>cipher_text</span>, <span class='kw-2'>&amp;</span><span class='ident'>nonce</span>, <span class='ident'>sym_key</span>)
                     .<span class='ident'>map_err</span>(<span class='op'>|</span>()<span class='op'>|</span> <span class='ident'>CoreError</span>::<span class='ident'>SymmetricDecipherFailure</span>)))
             }
-            <span class='ident'>WireFormat</span>::<span class='ident'>Asymmetric</span> { <span class='ident'>nonce</span>, <span class='ident'>peer_pk</span>, <span class='ident'>cipher_text</span> } <span class='op'>=&gt;</span> {
-                <span class='kw'>let</span> <span class='ident'>asym_sk</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>app</span>.<span class='ident'>asym_keys</span>().<span class='ident'>ok_or</span>(<span class='ident'>FfiError</span>::<span class='ident'>OperationForbiddenForApp</span>)).<span class='number'>1</span>;
-                <span class='prelude-val'>Ok</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>box_</span>::<span class='ident'>open</span>(<span class='kw-2'>&amp;</span><span class='ident'>cipher_text</span>, <span class='kw-2'>&amp;</span><span class='ident'>nonce</span>, <span class='kw-2'>&amp;</span><span class='ident'>peer_pk</span>, <span class='ident'>asym_sk</span>)
+            <span class='ident'>WireFormat</span>::<span class='ident'>Asymmetric</span>(<span class='ident'>cipher_text</span>) <span class='op'>=&gt;</span> {
+                <span class='kw'>let</span> <span class='kw-2'>&amp;</span>(<span class='kw-2'>ref</span> <span class='ident'>pk</span>, <span class='kw-2'>ref</span> <span class='ident'>sk</span>) <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>app</span>.<span class='ident'>asym_keys</span>());
+                <span class='prelude-val'>Ok</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>sealedbox</span>::<span class='ident'>open</span>(<span class='kw-2'>&amp;</span><span class='ident'>cipher_text</span>, <span class='ident'>pk</span>, <span class='ident'>sk</span>)
                     .<span class='ident'>map_err</span>(<span class='op'>|</span>()<span class='op'>|</span> <span class='ident'>CoreError</span>::<span class='ident'>SymmetricDecipherFailure</span>)))
             }
         }

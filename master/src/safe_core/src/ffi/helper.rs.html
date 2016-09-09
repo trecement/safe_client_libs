@@ -266,17 +266,17 @@
     }
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>string_to_c_utf8</span>(<span class='ident'>s</span>: <span class='ident'>String</span>) <span class='op'>-&gt;</span> (<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>, <span class='ident'>usize</span>) {
+<span class='doccomment'>/// Returns a heap-allocated raw string, usable by C/FFI-boundary.</span>
+<span class='doccomment'>/// The tuple means (pointer, length_in_bytes, capacity).</span>
+<span class='doccomment'>/// Use `dealloc_c_utf8_alloced_from_rust` to free the memory.</span>
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>string_to_c_utf8</span>(<span class='ident'>s</span>: <span class='ident'>String</span>) <span class='op'>-&gt;</span> (<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>, <span class='ident'>usize</span>, <span class='ident'>usize</span>) {
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>v</span> <span class='op'>=</span> <span class='ident'>s</span>.<span class='ident'>into_bytes</span>();
     <span class='ident'>v</span>.<span class='ident'>shrink_to_fit</span>();
     <span class='kw'>let</span> <span class='ident'>p</span> <span class='op'>=</span> <span class='ident'>v</span>.<span class='ident'>as_mut_ptr</span>();
     <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='ident'>v</span>.<span class='ident'>len</span>();
+    <span class='kw'>let</span> <span class='ident'>cap</span> <span class='op'>=</span> <span class='ident'>v</span>.<span class='ident'>capacity</span>();
     <span class='ident'>mem</span>::<span class='ident'>forget</span>(<span class='ident'>v</span>);
-    (<span class='ident'>p</span>, <span class='ident'>len</span>)
-}
-
-<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>dealloc_c_utf8_alloced_from_rust</span>(<span class='ident'>p</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>, <span class='ident'>len</span>: <span class='ident'>usize</span>) {
-    <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>from_raw_parts</span>(<span class='ident'>p</span>, <span class='ident'>len</span>, <span class='ident'>len</span>);
+    (<span class='ident'>p</span>, <span class='ident'>len</span>, <span class='ident'>cap</span>)
 }
 
 <span class='comment'>// TODO: add c_char_ptr_to_str and c_char_ptr_to_opt_str (return &amp;str instead of String)</span>
