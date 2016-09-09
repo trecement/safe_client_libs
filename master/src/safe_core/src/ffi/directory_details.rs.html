@@ -247,8 +247,6 @@
 <span id="203">203</span>
 <span id="204">204</span>
 <span id="205">205</span>
-<span id="206">206</span>
-<span id="207">207</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -410,17 +408,16 @@
 
 <span class='doccomment'>/// Get the number of files in the directory.</span>
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
-<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>directory_details_get_files_len</span>(<span class='ident'>details</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>DirectoryDetails</span>) <span class='op'>-&gt;</span> <span class='ident'>u64</span> {
-    (<span class='op'>*</span><span class='ident'>details</span>).<span class='ident'>files</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>u64</span>
+<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>directory_details_get_files_len</span>(<span class='ident'>details</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>DirectoryDetails</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
+    (<span class='op'>*</span><span class='ident'>details</span>).<span class='ident'>files</span>.<span class='ident'>len</span>()
 }
 
 <span class='doccomment'>/// Get a non-owning pointer to the metadata of the i-th file in the directory.</span>
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
 <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>directory_details_get_file_at</span>(<span class='ident'>details</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>DirectoryDetails</span>,
-                                                       <span class='ident'>index</span>: <span class='ident'>u64</span>)
+                                                       <span class='ident'>index</span>: <span class='ident'>usize</span>)
                                                        <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>FileMetadata</span> {
     <span class='kw'>let</span> <span class='ident'>details</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>details</span>;
-    <span class='kw'>let</span> <span class='ident'>index</span> <span class='op'>=</span> <span class='ident'>index</span> <span class='kw'>as</span> <span class='ident'>usize</span>;
 
     <span class='kw'>if</span> <span class='ident'>index</span> <span class='op'>&lt;</span> <span class='ident'>details</span>.<span class='ident'>files</span>.<span class='ident'>len</span>() {
         <span class='kw-2'>&amp;</span><span class='ident'>details</span>.<span class='ident'>files</span>[<span class='ident'>index</span>]
@@ -432,18 +429,17 @@
 <span class='doccomment'>/// Get the number of sub-directories in the directory.</span>
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
 <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>directory_details_get_sub_directories_len</span>(
-    <span class='ident'>details</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>DirectoryDetails</span>) <span class='op'>-&gt;</span> <span class='ident'>u64</span> {
-    (<span class='op'>*</span><span class='ident'>details</span>).<span class='ident'>sub_directories</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>u64</span>
+    <span class='ident'>details</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>DirectoryDetails</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
+    (<span class='op'>*</span><span class='ident'>details</span>).<span class='ident'>sub_directories</span>.<span class='ident'>len</span>()
 }
 
 <span class='doccomment'>/// Get a non-owning pointer to the metadata of the i-th sub-directory of the</span>
 <span class='doccomment'>/// directory.</span>
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
 <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>directory_details_get_sub_directory_at</span>(<span class='ident'>details</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>DirectoryDetails</span>,
-                                                                <span class='ident'>index</span>: <span class='ident'>u64</span>)
+                                                                <span class='ident'>index</span>: <span class='ident'>usize</span>)
                                                                 <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>DirectoryMetadata</span> {
     <span class='kw'>let</span> <span class='ident'>details</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>details</span>;
-    <span class='kw'>let</span> <span class='ident'>index</span> <span class='op'>=</span> <span class='ident'>index</span> <span class='kw'>as</span> <span class='ident'>usize</span>;
 
     <span class='kw'>if</span> <span class='ident'>index</span> <span class='op'>&lt;</span> <span class='ident'>details</span>.<span class='ident'>sub_directories</span>.<span class='ident'>len</span>() {
         <span class='kw-2'>&amp;</span><span class='ident'>details</span>.<span class='ident'>sub_directories</span>[<span class='ident'>index</span>]

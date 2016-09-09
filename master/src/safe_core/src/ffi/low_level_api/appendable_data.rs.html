@@ -1115,7 +1115,7 @@
 <span class='doccomment'>/// Get number of appended data items.</span>
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
 <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>appendable_data_num_of_data</span>(<span class='ident'>ad_h</span>: <span class='ident'>AppendableDataHandle</span>,
-                                                     <span class='ident'>o_num</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u64</span>)
+                                                     <span class='ident'>o_num</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>usize</span>)
                                                      <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
     <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>object_cache</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>().<span class='ident'>lock</span>());
@@ -1125,7 +1125,7 @@
             <span class='ident'>AppendableData</span>::<span class='ident'>Priv</span>(<span class='kw-2'>ref</span> <span class='ident'>elt</span>) <span class='op'>=&gt;</span> <span class='ident'>elt</span>.<span class='ident'>data</span>.<span class='ident'>len</span>(),
         };
 
-        <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>o_num</span>, <span class='ident'>num</span> <span class='kw'>as</span> <span class='ident'>u64</span>);
+        <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>o_num</span>, <span class='ident'>num</span>);
         <span class='number'>0</span>
     })
 }
@@ -1134,7 +1134,7 @@
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
 <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>appendable_data_nth_data_id</span>(<span class='ident'>app</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>App</span>,
                                                      <span class='ident'>ad_h</span>: <span class='ident'>AppendableDataHandle</span>,
-                                                     <span class='ident'>n</span>: <span class='ident'>u64</span>,
+                                                     <span class='ident'>n</span>: <span class='ident'>usize</span>,
                                                      <span class='ident'>o_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>DataIdHandle</span>)
                                                      <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
     <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
@@ -1166,7 +1166,7 @@
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
 <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>appendable_data_nth_sign_key</span>(<span class='ident'>app</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>App</span>,
                                                       <span class='ident'>ad_h</span>: <span class='ident'>AppendableDataHandle</span>,
-                                                      <span class='ident'>n</span>: <span class='ident'>u64</span>,
+                                                      <span class='ident'>n</span>: <span class='ident'>usize</span>,
                                                       <span class='ident'>o_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>SignKeyHandle</span>)
                                                       <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
     <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
@@ -1197,7 +1197,7 @@
 <span class='doccomment'>/// Remove the n-th data item from the appendable data. The data has to be</span>
 <span class='doccomment'>/// POST&#39;d afterwards for the change to be registered by the network.</span>
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
-<span class='kw'>pub</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>appendable_data_remove_nth_data</span>(<span class='ident'>ad_h</span>: <span class='ident'>AppendableDataHandle</span>, <span class='ident'>n</span>: <span class='ident'>u64</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
+<span class='kw'>pub</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>appendable_data_remove_nth_data</span>(<span class='ident'>ad_h</span>: <span class='ident'>AppendableDataHandle</span>, <span class='ident'>n</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
     <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>object_cache</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>().<span class='ident'>lock</span>());
         <span class='kw'>match</span> <span class='op'>*</span><span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>.<span class='ident'>get_appendable_data</span>(<span class='ident'>ad_h</span>)) {
@@ -1312,8 +1312,8 @@
 
 <span class='comment'>// Convenience function to access n-th item from the given set, returning FfiError::InvalidIndex</span>
 <span class='comment'>// if not found.</span>
-<span class='kw'>fn</span> <span class='ident'>nth</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>items</span>: <span class='kw-2'>&amp;</span><span class='ident'>BTreeSet</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>n</span>: <span class='ident'>u64</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>T</span>, <span class='ident'>FfiError</span><span class='op'>&gt;</span> {
-    <span class='ident'>items</span>.<span class='ident'>iter</span>().<span class='ident'>nth</span>(<span class='ident'>n</span> <span class='kw'>as</span> <span class='ident'>usize</span>).<span class='ident'>ok_or</span>(<span class='ident'>FfiError</span>::<span class='ident'>InvalidIndex</span>)
+<span class='kw'>fn</span> <span class='ident'>nth</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>items</span>: <span class='kw-2'>&amp;</span><span class='ident'>BTreeSet</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>n</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>T</span>, <span class='ident'>FfiError</span><span class='op'>&gt;</span> {
+    <span class='ident'>items</span>.<span class='ident'>iter</span>().<span class='ident'>nth</span>(<span class='ident'>n</span>).<span class='ident'>ok_or</span>(<span class='ident'>FfiError</span>::<span class='ident'>InvalidIndex</span>)
 }
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
@@ -1364,7 +1364,7 @@
             <span class='comment'>// GET back</span>
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>appendable_data_get</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='ident'>ad_id_h</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>got_ad_h</span>), <span class='number'>0</span>);
 
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>num</span>: <span class='ident'>u64</span> <span class='op'>=</span> <span class='number'>0</span>;
+            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>num</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>0</span>;
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>appendable_data_num_of_data</span>(<span class='ident'>got_ad_h</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>num</span>), <span class='number'>0</span>);
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>num</span>, <span class='number'>2</span>);
 
@@ -1487,7 +1487,7 @@
             <span class='comment'>// GET it back.</span>
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>appendable_data_get</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='ident'>ad_id_h</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ad_h</span>), <span class='number'>0</span>);
 
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>num</span>: <span class='ident'>u64</span> <span class='op'>=</span> <span class='number'>0</span>;
+            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>num</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>0</span>;
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>appendable_data_num_of_data</span>(<span class='ident'>ad_h</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>num</span>), <span class='number'>0</span>);
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>num</span>, <span class='number'>0</span>);
         }

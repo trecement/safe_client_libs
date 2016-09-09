@@ -490,10 +490,10 @@
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
 <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>immut_data_write_to_self_encryptor</span>(<span class='ident'>se_h</span>: <span class='ident'>SelfEncryptorWriterHandle</span>,
                                                             <span class='ident'>data</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
-                                                            <span class='ident'>size</span>: <span class='ident'>u64</span>)
+                                                            <span class='ident'>size</span>: <span class='ident'>usize</span>)
                                                             <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
     <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
-        <span class='kw'>let</span> <span class='ident'>data_slice</span> <span class='op'>=</span> <span class='ident'>slice</span>::<span class='ident'>from_raw_parts</span>(<span class='ident'>data</span>, <span class='ident'>size</span> <span class='kw'>as</span> <span class='ident'>usize</span>);
+        <span class='kw'>let</span> <span class='ident'>data_slice</span> <span class='op'>=</span> <span class='ident'>slice</span>::<span class='ident'>from_raw_parts</span>(<span class='ident'>data</span>, <span class='ident'>size</span>);
         <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>().<span class='ident'>lock</span>())
                 .<span class='ident'>se_writer</span>
                 .<span class='ident'>get_mut</span>(<span class='kw-2'>&amp;</span><span class='ident'>se_h</span>)
@@ -629,8 +629,8 @@
                                                              <span class='ident'>from_pos</span>: <span class='ident'>u64</span>,
                                                              <span class='ident'>len</span>: <span class='ident'>u64</span>,
                                                              <span class='ident'>o_data</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
-                                                             <span class='ident'>o_size</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u64</span>,
-                                                             <span class='ident'>o_capacity</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u64</span>)
+                                                             <span class='ident'>o_size</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>usize</span>,
+                                                             <span class='ident'>o_capacity</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>usize</span>)
                                                              <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
     <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>obj_cache</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>().<span class='ident'>lock</span>());
@@ -646,8 +646,8 @@
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>se</span>.<span class='ident'>read</span>(<span class='ident'>from_pos</span>, <span class='ident'>len</span>).<span class='ident'>map_err</span>(<span class='ident'>CoreError</span>::<span class='ident'>from</span>));
 
         <span class='op'>*</span><span class='ident'>o_data</span> <span class='op'>=</span> <span class='ident'>data</span>.<span class='ident'>as_mut_ptr</span>();
-        <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>o_size</span>, <span class='ident'>data</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>u64</span>);
-        <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>o_capacity</span>, <span class='ident'>data</span>.<span class='ident'>capacity</span>() <span class='kw'>as</span> <span class='ident'>u64</span>);
+        <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>o_size</span>, <span class='ident'>data</span>.<span class='ident'>len</span>());
+        <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>o_capacity</span>, <span class='ident'>data</span>.<span class='ident'>capacity</span>());
         <span class='ident'>mem</span>::<span class='ident'>forget</span>(<span class='ident'>data</span>);
 
         <span class='number'>0</span>
@@ -719,13 +719,13 @@
 
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>immut_data_write_to_self_encryptor</span>(<span class='ident'>se_writer_h</span>,
                                                           <span class='ident'>plain_text</span>.<span class='ident'>as_ptr</span>(),
-                                                          <span class='ident'>plain_text</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>u64</span>),
+                                                          <span class='ident'>plain_text</span>.<span class='ident'>len</span>()),
                        <span class='ident'>FfiError</span>::<span class='ident'>InvalidSelfEncryptorHandle</span>.<span class='ident'>into</span>());
 
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>immut_data_new_self_encryptor</span>(<span class='kw-2'>&amp;</span><span class='ident'>app_0</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>se_writer_h</span>), <span class='number'>0</span>);
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>immut_data_write_to_self_encryptor</span>(<span class='ident'>se_writer_h</span>,
                                                           <span class='ident'>plain_text</span>.<span class='ident'>as_ptr</span>(),
-                                                          <span class='ident'>plain_text</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>u64</span>),
+                                                          <span class='ident'>plain_text</span>.<span class='ident'>len</span>()),
                        <span class='number'>0</span>);
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>immut_data_close_self_encryptor</span>(<span class='kw-2'>&amp;</span><span class='ident'>app_0</span>,
                                                        <span class='ident'>se_writer_h</span>,
@@ -773,7 +773,7 @@
                                                            <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>capacity</span>),
                        <span class='number'>0</span>);
             <span class='kw'>let</span> <span class='ident'>plain_text_rx</span> <span class='op'>=</span>
-                <span class='ident'>Vec</span>::<span class='ident'>from_raw_parts</span>(<span class='ident'>data_ptr</span>, <span class='ident'>data_size</span> <span class='kw'>as</span> <span class='ident'>usize</span>, <span class='ident'>capacity</span> <span class='kw'>as</span> <span class='ident'>usize</span>);
+                <span class='ident'>Vec</span>::<span class='ident'>from_raw_parts</span>(<span class='ident'>data_ptr</span>, <span class='ident'>data_size</span>, <span class='ident'>capacity</span>);
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>plain_text</span>, <span class='ident'>plain_text_rx</span>);
 
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>immut_data_self_encryptor_reader_free</span>(<span class='ident'>se_reader_h</span>), <span class='number'>0</span>);

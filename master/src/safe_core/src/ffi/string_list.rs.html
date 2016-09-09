@@ -128,7 +128,6 @@
 <span id="84">84</span>
 <span id="85">85</span>
 <span id="86">86</span>
-<span id="87">87</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2016 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -173,15 +172,14 @@
 
 <span class='doccomment'>/// Get number of elements in the string list.</span>
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
-<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>string_list_len</span>(<span class='ident'>list</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>StringList</span>) <span class='op'>-&gt;</span> <span class='ident'>u64</span> {
-    (<span class='op'>*</span><span class='ident'>list</span>).<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>u64</span>
+<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>string_list_len</span>(<span class='ident'>list</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>StringList</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
+    (<span class='op'>*</span><span class='ident'>list</span>).<span class='ident'>len</span>()
 }
 
 <span class='doccomment'>/// Get the string at the given index, or NULL if the index is out of range.</span>
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
-<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>string_list_at</span>(<span class='ident'>list</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>StringList</span>, <span class='ident'>index</span>: <span class='ident'>u64</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span> {
+<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>string_list_at</span>(<span class='ident'>list</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>StringList</span>, <span class='ident'>index</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span> {
     <span class='kw'>let</span> <span class='ident'>list</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>list</span>;
-    <span class='kw'>let</span> <span class='ident'>index</span> <span class='op'>=</span> <span class='ident'>index</span> <span class='kw'>as</span> <span class='ident'>usize</span>;
 
     <span class='kw'>if</span> <span class='ident'>index</span> <span class='op'>&lt;</span> <span class='ident'>list</span>.<span class='ident'>len</span>() {
         <span class='ident'>list</span>[<span class='ident'>index</span>].<span class='ident'>as_ptr</span>()
@@ -207,7 +205,7 @@
 
         <span class='kw'>unsafe</span> {
             <span class='kw'>let</span> <span class='ident'>list</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='kw'>super</span>::<span class='ident'>into_ptr</span>(<span class='ident'>strings</span>));
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw'>super</span>::<span class='ident'>string_list_len</span>(<span class='ident'>list</span>), <span class='number'>2u64</span>);
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw'>super</span>::<span class='ident'>string_list_len</span>(<span class='ident'>list</span>), <span class='number'>2</span>);
 
             <span class='kw'>let</span> <span class='ident'>item</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>CStr</span>::<span class='ident'>from_ptr</span>(<span class='kw'>super</span>::<span class='ident'>string_list_at</span>(<span class='ident'>list</span>, <span class='number'>0</span>)).<span class='ident'>to_str</span>());
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>item</span>, <span class='string'>&quot;one&quot;</span>);
