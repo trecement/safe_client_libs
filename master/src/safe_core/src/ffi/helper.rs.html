@@ -210,6 +210,24 @@
 <span id="166">166</span>
 <span id="167">167</span>
 <span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -266,9 +284,11 @@
     }
 }
 
+<span class='comment'>// TODO: add c_utf8_to_opt_str (return Option&lt;&amp;str&gt; instead of Option&lt;String&gt;)</span>
+
 <span class='doccomment'>/// Returns a heap-allocated raw string, usable by C/FFI-boundary.</span>
 <span class='doccomment'>/// The tuple means (pointer, length_in_bytes, capacity).</span>
-<span class='doccomment'>/// Use `dealloc_c_utf8_alloced_from_rust` to free the memory.</span>
+<span class='doccomment'>/// Use `misc_u8_ptr_free` to free the memory.</span>
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>string_to_c_utf8</span>(<span class='ident'>s</span>: <span class='ident'>String</span>) <span class='op'>-&gt;</span> (<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>, <span class='ident'>usize</span>, <span class='ident'>usize</span>) {
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>v</span> <span class='op'>=</span> <span class='ident'>s</span>.<span class='ident'>into_bytes</span>();
     <span class='ident'>v</span>.<span class='ident'>shrink_to_fit</span>();
@@ -278,8 +298,6 @@
     <span class='ident'>mem</span>::<span class='ident'>forget</span>(<span class='ident'>v</span>);
     (<span class='ident'>p</span>, <span class='ident'>len</span>, <span class='ident'>cap</span>)
 }
-
-<span class='comment'>// TODO: add c_char_ptr_to_str and c_char_ptr_to_opt_str (return &amp;str instead of String)</span>
 
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>catch_unwind_i32</span><span class='op'>&lt;</span><span class='ident'>F</span>: <span class='ident'>FnOnce</span>() <span class='op'>-&gt;</span> <span class='ident'>int32_t</span><span class='op'>&gt;</span>(<span class='ident'>f</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='ident'>int32_t</span> {
     <span class='kw'>let</span> <span class='ident'>errno</span>: <span class='ident'>i32</span> <span class='op'>=</span> <span class='ident'>FfiError</span>::<span class='ident'>Unexpected</span>(<span class='ident'>String</span>::<span class='ident'>new</span>()).<span class='ident'>into</span>();
@@ -378,6 +396,24 @@
     <span class='kw'>let</span> <span class='ident'>directory_listing</span> <span class='op'>=</span>
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>get_final_subdirectory</span>(<span class='ident'>app</span>.<span class='ident'>get_client</span>(), <span class='kw-2'>&amp;</span><span class='ident'>tokens</span>, <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='ident'>start_dir_key</span>)));
     <span class='prelude-val'>Ok</span>((<span class='ident'>directory_listing</span>, <span class='ident'>file_name</span>))
+}
+
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
+<span class='kw'>mod</span> <span class='ident'>tests</span> {
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>string_conversion</span>() {
+        <span class='kw'>let</span> (<span class='ident'>ptr</span>, <span class='ident'>size</span>, <span class='ident'>cap</span>) <span class='op'>=</span> <span class='ident'>string_to_c_utf8</span>(<span class='ident'>String</span>::<span class='ident'>new</span>());
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>size</span>, <span class='number'>0</span>);
+        <span class='kw'>unsafe</span> { <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>from_raw_parts</span>(<span class='ident'>ptr</span>, <span class='ident'>size</span>, <span class='ident'>cap</span>); }
+
+        <span class='kw'>let</span> (<span class='ident'>ptr</span>, <span class='ident'>size</span>, <span class='ident'>cap</span>) <span class='op'>=</span> <span class='ident'>string_to_c_utf8</span>(<span class='string'>&quot;hello world&quot;</span>.<span class='ident'>to_owned</span>());
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>ptr</span> <span class='op'>!=</span> <span class='number'>0</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>size</span>, <span class='number'>11</span>);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>cap</span> <span class='op'>&gt;=</span> <span class='number'>11</span>);
+        <span class='kw'>unsafe</span> { <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>from_raw_parts</span>(<span class='ident'>ptr</span>, <span class='ident'>size</span>, <span class='ident'>cap</span>); }
+    }
 }
 </pre>
 </section>

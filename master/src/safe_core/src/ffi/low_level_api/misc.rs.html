@@ -319,7 +319,7 @@
 
 <span class='doccomment'>/// Serialise DataIdentifier</span>
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
-<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>misc_serailise_data_id</span>(<span class='ident'>data_id_h</span>: <span class='ident'>DataIdHandle</span>,
+<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>misc_serialise_data_id</span>(<span class='ident'>data_id_h</span>: <span class='ident'>DataIdHandle</span>,
                                                 <span class='ident'>o_data</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
                                                 <span class='ident'>o_size</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>usize</span>,
                                                 <span class='ident'>o_capacity</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>usize</span>)
@@ -342,7 +342,7 @@
 
 <span class='doccomment'>/// Deserialise DataIdentifier</span>
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
-<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>misc_deserailise_data_id</span>(<span class='ident'>data</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
+<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>misc_deserialise_data_id</span>(<span class='ident'>data</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
                                                   <span class='ident'>size</span>: <span class='ident'>usize</span>,
                                                   <span class='ident'>o_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>DataIdHandle</span>)
                                                   <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
@@ -406,14 +406,14 @@
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>data_ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span> <span class='op'>=</span> <span class='ident'>ptr</span>::<span class='ident'>null_mut</span>();
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>data_size</span> <span class='op'>=</span> <span class='number'>0</span>;
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>capacity</span> <span class='op'>=</span> <span class='number'>0</span>;
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>misc_serailise_data_id</span>(<span class='ident'>sd_data_id_h</span>,
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>misc_serialise_data_id</span>(<span class='ident'>sd_data_id_h</span>,
                                               <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>data_ptr</span>,
                                               <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>data_size</span>,
                                               <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>capacity</span>),
                        <span class='number'>0</span>);
 
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>data_id_h</span> <span class='op'>=</span> <span class='number'>0</span>;
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>misc_deserailise_data_id</span>(<span class='ident'>data_ptr</span>, <span class='ident'>data_size</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>data_id_h</span>),
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>misc_deserialise_data_id</span>(<span class='ident'>data_ptr</span>, <span class='ident'>data_size</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>data_id_h</span>),
                        <span class='number'>0</span>);
             <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>data_id_h</span> <span class='op'>!=</span> <span class='ident'>sd_data_id_h</span>);
 
@@ -434,14 +434,14 @@
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>data_ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span> <span class='op'>=</span> <span class='ident'>ptr</span>::<span class='ident'>null_mut</span>();
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>data_size</span> <span class='op'>=</span> <span class='number'>0</span>;
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>capacity</span> <span class='op'>=</span> <span class='number'>0</span>;
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>misc_serailise_data_id</span>(<span class='ident'>id_data_id_h</span>,
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>misc_serialise_data_id</span>(<span class='ident'>id_data_id_h</span>,
                                               <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>data_ptr</span>,
                                               <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>data_size</span>,
                                               <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>capacity</span>),
                        <span class='number'>0</span>);
 
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>data_id_h</span> <span class='op'>=</span> <span class='number'>0</span>;
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>misc_deserailise_data_id</span>(<span class='ident'>data_ptr</span>, <span class='ident'>data_size</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>data_id_h</span>),
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>misc_deserialise_data_id</span>(<span class='ident'>data_ptr</span>, <span class='ident'>data_size</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>data_id_h</span>),
                        <span class='number'>0</span>);
             <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>data_id_h</span> <span class='op'>!=</span> <span class='ident'>id_data_id_h</span>);
 
@@ -462,14 +462,14 @@
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>data_ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span> <span class='op'>=</span> <span class='ident'>ptr</span>::<span class='ident'>null_mut</span>();
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>data_size</span> <span class='op'>=</span> <span class='number'>0</span>;
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>capacity</span> <span class='op'>=</span> <span class='number'>0</span>;
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>misc_serailise_data_id</span>(<span class='ident'>ad_data_id_h</span>,
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>misc_serialise_data_id</span>(<span class='ident'>ad_data_id_h</span>,
                                               <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>data_ptr</span>,
                                               <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>data_size</span>,
                                               <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>capacity</span>),
                        <span class='number'>0</span>);
 
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>data_id_h</span> <span class='op'>=</span> <span class='number'>0</span>;
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>misc_deserailise_data_id</span>(<span class='ident'>data_ptr</span>, <span class='ident'>data_size</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>data_id_h</span>),
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>misc_deserialise_data_id</span>(<span class='ident'>data_ptr</span>, <span class='ident'>data_size</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>data_id_h</span>),
                        <span class='number'>0</span>);
             <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>data_id_h</span> <span class='op'>!=</span> <span class='ident'>ad_data_id_h</span>);
 

@@ -675,6 +675,7 @@
 <span id="631">631</span>
 <span id="632">632</span>
 <span id="633">633</span>
+<span id="634">634</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -1025,7 +1026,8 @@
             <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>versioned</span>::<span class='ident'>append_version</span>(<span class='self'>self</span>.<span class='ident'>client</span>.<span class='ident'>clone</span>(),
                                            <span class='ident'>structured_data</span>,
                                            <span class='ident'>version</span>,
-                                           <span class='kw-2'>&amp;</span><span class='ident'>signing_key</span>))
+                                           <span class='kw-2'>&amp;</span><span class='ident'>signing_key</span>,
+                                           <span class='bool-val'>true</span>))
         } <span class='kw'>else</span> {
             <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;Updating directory listing with a new one (will convert DL to an unversioned \
                     StructuredData).&quot;</span>);
