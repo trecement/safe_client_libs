@@ -391,6 +391,13 @@
 <span id="347">347</span>
 <span id="348">348</span>
 <span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
+<span id="354">354</span>
+<span id="355">355</span>
+<span id="356">356</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2016 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -416,9 +423,7 @@
 <span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>int32_t</span>, <span class='ident'>int64_t</span>};
 <span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>thread</span>::{<span class='self'>self</span>, <span class='ident'>Joiner</span>};
 <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>metadata</span>::<span class='ident'>directory_key</span>::<span class='ident'>DirectoryKey</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cell</span>::<span class='ident'>RefCell</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>rc</span>::<span class='ident'>Rc</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::{<span class='ident'>Arc</span>, <span class='ident'>Mutex</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>mpsc</span>::{<span class='self'>self</span>, <span class='ident'>Sender</span>};
 <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>errors</span>::<span class='ident'>FfiError</span>;
@@ -538,7 +543,7 @@
 }
 
 <span class='doccomment'>/// Clonable handle to Session.</span>
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>SessionHandle</span> <span class='op'>=</span> <span class='ident'>Rc</span><span class='op'>&lt;</span><span class='ident'>RefCell</span><span class='op'>&lt;</span><span class='ident'>Session</span><span class='op'>&gt;&gt;</span>;
+<span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>SessionHandle</span> <span class='op'>=</span> <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>Mutex</span><span class='op'>&lt;</span><span class='ident'>Session</span><span class='op'>&gt;&gt;</span>;
 
 <span class='doccomment'>/// Create a session as an unregistered client. This or any one of the other companion functions to</span>
 <span class='doccomment'>/// get a session must be called before initiating any operation allowed by this crate.</span>
@@ -608,9 +613,7 @@
                                                          <span class='op'>-&gt;</span> <span class='ident'>int32_t</span> {
     <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
         <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;FFI register a network event observer.&quot;</span>);
-        (<span class='op'>*</span><span class='ident'>session_handle</span>)
-            .<span class='ident'>borrow_mut</span>()
-            .<span class='ident'>register_network_event_observer</span>(<span class='ident'>callback</span>);
+        <span class='macro'>unwrap</span><span class='macro'>!</span>((<span class='op'>*</span><span class='ident'>session_handle</span>).<span class='ident'>lock</span>()).<span class='ident'>register_network_event_observer</span>(<span class='ident'>callback</span>);
         <span class='number'>0</span>
     })
 }
@@ -621,7 +624,7 @@
 <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>client_issued_gets</span>(<span class='ident'>session_handle</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>SessionHandle</span>) <span class='op'>-&gt;</span> <span class='ident'>int64_t</span> {
     <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i64</span>(<span class='op'>||</span> {
         <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;FFI retrieve client issued GETs.&quot;</span>);
-        <span class='kw'>let</span> <span class='ident'>session</span> <span class='op'>=</span> (<span class='op'>*</span><span class='ident'>session_handle</span>).<span class='ident'>borrow</span>();
+        <span class='kw'>let</span> <span class='ident'>session</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>((<span class='op'>*</span><span class='ident'>session_handle</span>).<span class='ident'>lock</span>());
         <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>session</span>.<span class='ident'>client</span>.<span class='ident'>lock</span>());
         <span class='ident'>client</span>.<span class='ident'>issued_gets</span>() <span class='kw'>as</span> <span class='ident'>int64_t</span>
     })
@@ -632,7 +635,7 @@
 <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>client_issued_puts</span>(<span class='ident'>session_handle</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>SessionHandle</span>) <span class='op'>-&gt;</span> <span class='ident'>int64_t</span> {
     <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i64</span>(<span class='op'>||</span> {
         <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;FFI retrieve client issued PUTs.&quot;</span>);
-        <span class='kw'>let</span> <span class='ident'>session</span> <span class='op'>=</span> (<span class='op'>*</span><span class='ident'>session_handle</span>).<span class='ident'>borrow</span>();
+        <span class='kw'>let</span> <span class='ident'>session</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>((<span class='op'>*</span><span class='ident'>session_handle</span>).<span class='ident'>lock</span>());
         <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>session</span>.<span class='ident'>client</span>.<span class='ident'>lock</span>());
         <span class='ident'>client</span>.<span class='ident'>issued_puts</span>() <span class='kw'>as</span> <span class='ident'>int64_t</span>
     })
@@ -643,7 +646,7 @@
 <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>client_issued_posts</span>(<span class='ident'>session_handle</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>SessionHandle</span>) <span class='op'>-&gt;</span> <span class='ident'>int64_t</span> {
     <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i64</span>(<span class='op'>||</span> {
         <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;FFI retrieve client issued POSTs.&quot;</span>);
-        <span class='kw'>let</span> <span class='ident'>session</span> <span class='op'>=</span> (<span class='op'>*</span><span class='ident'>session_handle</span>).<span class='ident'>borrow</span>();
+        <span class='kw'>let</span> <span class='ident'>session</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>((<span class='op'>*</span><span class='ident'>session_handle</span>).<span class='ident'>lock</span>());
         <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>session</span>.<span class='ident'>client</span>.<span class='ident'>lock</span>());
         <span class='ident'>client</span>.<span class='ident'>issued_posts</span>() <span class='kw'>as</span> <span class='ident'>int64_t</span>
     })
@@ -654,9 +657,20 @@
 <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>client_issued_deletes</span>(<span class='ident'>session_handle</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>SessionHandle</span>) <span class='op'>-&gt;</span> <span class='ident'>int64_t</span> {
     <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i64</span>(<span class='op'>||</span> {
         <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;FFI retrieve client issued DELETEs.&quot;</span>);
-        <span class='kw'>let</span> <span class='ident'>session</span> <span class='op'>=</span> (<span class='op'>*</span><span class='ident'>session_handle</span>).<span class='ident'>borrow</span>();
+        <span class='kw'>let</span> <span class='ident'>session</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>((<span class='op'>*</span><span class='ident'>session_handle</span>).<span class='ident'>lock</span>());
         <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>session</span>.<span class='ident'>client</span>.<span class='ident'>lock</span>());
         <span class='ident'>client</span>.<span class='ident'>issued_deletes</span>() <span class='kw'>as</span> <span class='ident'>int64_t</span>
+    })
+}
+
+<span class='doccomment'>/// Return the amount of calls that were done to `append`</span>
+<span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
+<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>client_issued_appends</span>(<span class='ident'>session_handle</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>SessionHandle</span>) <span class='op'>-&gt;</span> <span class='ident'>int64_t</span> {
+    <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i64</span>(<span class='op'>||</span> {
+        <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;FFI retrieve client issued APPENDs.&quot;</span>);
+        <span class='kw'>let</span> <span class='ident'>session</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>((<span class='op'>*</span><span class='ident'>session_handle</span>).<span class='ident'>lock</span>());
+        <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>session</span>.<span class='ident'>client</span>.<span class='ident'>lock</span>());
+        <span class='ident'>client</span>.<span class='ident'>issued_appends</span>() <span class='kw'>as</span> <span class='ident'>int64_t</span>
     })
 }
 
@@ -671,7 +685,7 @@
     <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
         <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;FFI get account information.&quot;</span>);
 
-        <span class='kw'>let</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>((<span class='op'>*</span><span class='ident'>session_handle</span>).<span class='ident'>borrow</span>().<span class='ident'>get_account_info</span>());
+        <span class='kw'>let</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>((<span class='op'>*</span><span class='ident'>session_handle</span>).<span class='ident'>lock</span>()).<span class='ident'>get_account_info</span>());
         <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>data_stored</span>, <span class='ident'>res</span>.<span class='number'>0</span>);
         <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>space_available</span>, <span class='ident'>res</span>.<span class='number'>1</span>);
 
@@ -690,7 +704,7 @@
 
 
 <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>allocate_handle</span>(<span class='ident'>session</span>: <span class='ident'>Session</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>SessionHandle</span> {
-    <span class='ident'>Box</span>::<span class='ident'>into_raw</span>(<span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>Rc</span>::<span class='ident'>new</span>(<span class='ident'>RefCell</span>::<span class='ident'>new</span>(<span class='ident'>session</span>))))
+    <span class='ident'>Box</span>::<span class='ident'>into_raw</span>(<span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='ident'>Mutex</span>::<span class='ident'>new</span>(<span class='ident'>session</span>))))
 }
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>

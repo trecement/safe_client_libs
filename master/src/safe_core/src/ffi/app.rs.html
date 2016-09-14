@@ -197,8 +197,6 @@
 <span id="153">153</span>
 <span id="154">154</span>
 <span id="155">155</span>
-<span id="156">156</span>
-<span id="157">157</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2016 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -227,8 +225,6 @@
 <span class='kw'>use</span> <span class='ident'>libc</span>::<span class='ident'>int32_t</span>;
 <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>metadata</span>::<span class='ident'>directory_key</span>::<span class='ident'>DirectoryKey</span>;
 <span class='kw'>use</span> <span class='ident'>rust_sodium</span>::<span class='ident'>crypto</span>::{<span class='ident'>box_</span>, <span class='ident'>secretbox</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cell</span>::<span class='ident'>RefCell</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>rc</span>::<span class='ident'>Rc</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::{<span class='ident'>Arc</span>, <span class='ident'>Mutex</span>};
 <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>errors</span>::<span class='ident'>FfiError</span>;
 <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>helper</span>;
@@ -237,7 +233,7 @@
 
 <span class='doccomment'>/// Represents an application connected to the launcher.</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>App</span> {
-    <span class='ident'>session</span>: <span class='ident'>Rc</span><span class='op'>&lt;</span><span class='ident'>RefCell</span><span class='op'>&lt;</span><span class='ident'>Session</span><span class='op'>&gt;&gt;</span>,
+    <span class='ident'>session</span>: <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>Mutex</span><span class='op'>&lt;</span><span class='ident'>Session</span><span class='op'>&gt;&gt;</span>,
     <span class='ident'>app_dir_key</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>DirectoryKey</span><span class='op'>&gt;</span>,
     <span class='ident'>safe_drive_access</span>: <span class='ident'>bool</span>,
     <span class='ident'>asym_keys</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span>(<span class='ident'>box_</span>::<span class='ident'>PublicKey</span>, <span class='ident'>box_</span>::<span class='ident'>SecretKey</span>)<span class='op'>&gt;</span>,
@@ -246,13 +242,13 @@
 
 <span class='kw'>impl</span> <span class='ident'>App</span> {
     <span class='doccomment'>/// Create new app for registered client.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>registered</span>(<span class='ident'>session</span>: <span class='ident'>Rc</span><span class='op'>&lt;</span><span class='ident'>RefCell</span><span class='op'>&lt;</span><span class='ident'>Session</span><span class='op'>&gt;&gt;</span>,
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>registered</span>(<span class='ident'>session</span>: <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>Mutex</span><span class='op'>&lt;</span><span class='ident'>Session</span><span class='op'>&gt;&gt;</span>,
                       <span class='ident'>app_name</span>: <span class='ident'>String</span>,
                       <span class='ident'>unique_token</span>: <span class='ident'>String</span>,
                       <span class='ident'>vendor</span>: <span class='ident'>String</span>,
                       <span class='ident'>safe_drive_access</span>: <span class='ident'>bool</span>)
                       <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>, <span class='ident'>FfiError</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='ident'>session</span>.<span class='ident'>borrow</span>().<span class='ident'>get_client</span>();
+        <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>session</span>.<span class='ident'>lock</span>()).<span class='ident'>get_client</span>();
         <span class='kw'>let</span> <span class='ident'>handler</span> <span class='op'>=</span> <span class='ident'>ConfigHandler</span>::<span class='ident'>new</span>(<span class='ident'>client</span>);
         <span class='kw'>let</span> <span class='ident'>app_info</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>handler</span>.<span class='ident'>get_app_info</span>(<span class='ident'>app_name</span>, <span class='ident'>unique_token</span>, <span class='ident'>vendor</span>));
 
@@ -266,7 +262,7 @@
     }
 
     <span class='doccomment'>/// Create new app for unregistered client.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>unregistered</span>(<span class='ident'>session</span>: <span class='ident'>Rc</span><span class='op'>&lt;</span><span class='ident'>RefCell</span><span class='op'>&lt;</span><span class='ident'>Session</span><span class='op'>&gt;&gt;</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>unregistered</span>(<span class='ident'>session</span>: <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>Mutex</span><span class='op'>&lt;</span><span class='ident'>Session</span><span class='op'>&gt;&gt;</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
         <span class='ident'>App</span> {
             <span class='ident'>session</span>: <span class='ident'>session</span>,
             <span class='ident'>app_dir_key</span>: <span class='prelude-val'>None</span>,
@@ -278,7 +274,7 @@
 
     <span class='doccomment'>/// Get the client.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_client</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>Mutex</span><span class='op'>&lt;</span><span class='ident'>Client</span><span class='op'>&gt;&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>session</span>.<span class='ident'>borrow</span>().<span class='ident'>get_client</span>()
+        <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>session</span>.<span class='ident'>lock</span>()).<span class='ident'>get_client</span>()
     }
 
     <span class='comment'>// TODO Maybe change all of these to operation forbidden for app</span>
@@ -299,7 +295,7 @@
 
     <span class='doccomment'>/// Get SAFEdrive directory key.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_safe_drive_dir_key</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>DirectoryKey</span><span class='op'>&gt;</span> {
-        <span class='op'>*</span><span class='self'>self</span>.<span class='ident'>session</span>.<span class='ident'>borrow</span>().<span class='ident'>get_safe_drive_dir_key</span>()
+        <span class='op'>*</span><span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>session</span>.<span class='ident'>lock</span>()).<span class='ident'>get_safe_drive_dir_key</span>()
     }
 
     <span class='doccomment'>/// Has this app access to the SAFEdrive?</span>
