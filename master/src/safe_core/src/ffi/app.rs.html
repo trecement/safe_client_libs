@@ -197,6 +197,20 @@
 <span id="153">153</span>
 <span id="154">154</span>
 <span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2016 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -342,6 +356,20 @@
 
         <span class='kw'>let</span> <span class='ident'>app</span> <span class='op'>=</span>
             <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>App</span>::<span class='ident'>registered</span>(<span class='ident'>session</span>, <span class='ident'>app_name</span>, <span class='ident'>unique_token</span>, <span class='ident'>vendor</span>, <span class='ident'>safe_drive_access</span>));
+
+        <span class='op'>*</span><span class='ident'>app_handle</span> <span class='op'>=</span> <span class='ident'>Box</span>::<span class='ident'>into_raw</span>(<span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>app</span>));
+        <span class='number'>0</span>
+    })
+}
+
+<span class='doccomment'>/// Register an annonymous app with the launcher. Can access only public data</span>
+<span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
+<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>create_unauthorised_app</span>(<span class='ident'>session_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>SessionHandle</span>,
+                                                 <span class='ident'>app_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>App</span>)
+                                                 <span class='op'>-&gt;</span> <span class='ident'>int32_t</span> {
+    <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
+        <span class='kw'>let</span> <span class='ident'>session</span> <span class='op'>=</span> (<span class='op'>*</span><span class='ident'>session_handle</span>).<span class='ident'>clone</span>();
+        <span class='kw'>let</span> <span class='ident'>app</span> <span class='op'>=</span> <span class='ident'>App</span>::<span class='ident'>unregistered</span>(<span class='ident'>session</span>);
 
         <span class='op'>*</span><span class='ident'>app_handle</span> <span class='op'>=</span> <span class='ident'>Box</span>::<span class='ident'>into_raw</span>(<span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>app</span>));
         <span class='number'>0</span>

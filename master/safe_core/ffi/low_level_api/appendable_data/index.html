@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-5799' class='srclink' href='../../../../src/safe_core/src/ffi/low_level_api/appendable_data.rs.html#18-725' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-5805' class='srclink' href='../../../../src/safe_core/src/ffi/low_level_api/appendable_data.rs.html#18-875' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Low level manipulation of {Pub|Priv}AppendableData</p>
 </div><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
@@ -148,14 +148,28 @@ already present in the filter, this is a no-op.</p>
                            <td><a class='fn' href='fn.appendable_data_nth_data_id.html'
                                   title='safe_core::ffi::low_level_api::appendable_data::appendable_data_nth_data_id'>appendable_data_nth_data_id</a></td>
                            <td class='docblock short'>
-                                <p>Get nth appended DataIdentifier.</p>
+                                <p>Get nth appended DataIdentifier from data.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.appendable_data_nth_sign_key.html'
-                                  title='safe_core::ffi::low_level_api::appendable_data::appendable_data_nth_sign_key'>appendable_data_nth_sign_key</a></td>
+                           <td><a class='fn' href='fn.appendable_data_nth_data_sign_key.html'
+                                  title='safe_core::ffi::low_level_api::appendable_data::appendable_data_nth_data_sign_key'>appendable_data_nth_data_sign_key</a></td>
                            <td class='docblock short'>
-                                <p>Get nth sign key.</p>
+                                <p>Get nth sign key from data</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.appendable_data_nth_deleted_data_id.html'
+                                  title='safe_core::ffi::low_level_api::appendable_data::appendable_data_nth_deleted_data_id'>appendable_data_nth_deleted_data_id</a></td>
+                           <td class='docblock short'>
+                                <p>Get nth appended DataIdentifier from deleted data.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.appendable_data_nth_deleted_data_sign_key.html'
+                                  title='safe_core::ffi::low_level_api::appendable_data::appendable_data_nth_deleted_data_sign_key'>appendable_data_nth_deleted_data_sign_key</a></td>
+                           <td class='docblock short'>
+                                <p>Get nth sign key from deleted data</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -163,6 +177,13 @@ already present in the filter, this is a no-op.</p>
                                   title='safe_core::ffi::low_level_api::appendable_data::appendable_data_num_of_data'>appendable_data_num_of_data</a></td>
                            <td class='docblock short'>
                                 <p>Get number of appended data items.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.appendable_data_num_of_deleted_data.html'
+                                  title='safe_core::ffi::low_level_api::appendable_data::appendable_data_num_of_deleted_data'>appendable_data_num_of_deleted_data</a></td>
+                           <td class='docblock short'>
+                                <p>Get number of appended deleted data items.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -191,8 +212,24 @@ isn&#39;t present in the filter, this is a no-op.</p>
                            <td><a class='fn' href='fn.appendable_data_remove_nth_data.html'
                                   title='safe_core::ffi::low_level_api::appendable_data::appendable_data_remove_nth_data'>appendable_data_remove_nth_data</a></td>
                            <td class='docblock short'>
-                                <p>Remove the n-th data item from the appendable data. The data has to be
-POST&#39;d afterwards for the change to be registered by the network.</p>
+                                <p>Remove the n-th data item from the appendable data. The data has to be POST&#39;d afterwards for the
+change to be registered by the network. The data is moved to deleted data.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.appendable_data_remove_nth_deleted_data.html'
+                                  title='safe_core::ffi::low_level_api::appendable_data::appendable_data_remove_nth_deleted_data'>appendable_data_remove_nth_deleted_data</a></td>
+                           <td class='docblock short'>
+                                <p>Remove the n-th data item from the deleted data. The data has to be POST&#39;d afterwards for the
+change to be registered by the network. The data is removed permanently.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.appendable_data_restore_nth_deleted_data.html'
+                                  title='safe_core::ffi::low_level_api::appendable_data::appendable_data_restore_nth_deleted_data'>appendable_data_restore_nth_deleted_data</a></td>
+                           <td class='docblock short'>
+                                <p>Restore the n-th delete data item to data field back. The data has to be POST&#39;d afterwards for
+the change to be registered by the network.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>

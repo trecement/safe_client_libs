@@ -366,32 +366,6 @@
 <span id="322">322</span>
 <span id="323">323</span>
 <span id="324">324</span>
-<span id="325">325</span>
-<span id="326">326</span>
-<span id="327">327</span>
-<span id="328">328</span>
-<span id="329">329</span>
-<span id="330">330</span>
-<span id="331">331</span>
-<span id="332">332</span>
-<span id="333">333</span>
-<span id="334">334</span>
-<span id="335">335</span>
-<span id="336">336</span>
-<span id="337">337</span>
-<span id="338">338</span>
-<span id="339">339</span>
-<span id="340">340</span>
-<span id="341">341</span>
-<span id="342">342</span>
-<span id="343">343</span>
-<span id="344">344</span>
-<span id="345">345</span>
-<span id="346">346</span>
-<span id="347">347</span>
-<span id="348">348</span>
-<span id="349">349</span>
-<span id="350">350</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2016 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -498,10 +472,7 @@
             <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>immut_data_operations</span>::<span class='ident'>create</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(), <span class='ident'>ser_data_map</span>, <span class='prelude-val'>None</span>));
         <span class='kw'>let</span> <span class='ident'>ser_final_immut_data</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>serialise</span>(<span class='kw-2'>&amp;</span><span class='ident'>final_immut_data</span>).<span class='ident'>map_err</span>(<span class='ident'>FfiError</span>::<span class='ident'>from</span>));
 
-        <span class='kw'>let</span> <span class='ident'>raw_data</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>())
-                .<span class='ident'>cipher_opt</span>
-                .<span class='ident'>get_mut</span>(<span class='kw-2'>&amp;</span><span class='ident'>cipher_opt_h</span>)
-                .<span class='ident'>ok_or</span>(<span class='ident'>FfiError</span>::<span class='ident'>InvalidCipherOptHandle</span>))
+        <span class='kw'>let</span> <span class='ident'>raw_data</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>()).<span class='ident'>get_cipher_opt</span>(<span class='ident'>cipher_opt_h</span>))
             .<span class='ident'>encrypt</span>(<span class='ident'>app</span>, <span class='kw-2'>&amp;</span><span class='ident'>ser_final_immut_data</span>));
 
         <span class='kw'>let</span> <span class='ident'>raw_immut_data</span> <span class='op'>=</span> <span class='ident'>ImmutableData</span>::<span class='ident'>new</span>(<span class='ident'>raw_data</span>);
@@ -529,11 +500,7 @@
         <span class='kw'>let</span> <span class='ident'>app</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>app</span>;
         <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='ident'>app</span>.<span class='ident'>get_client</span>();
 
-        <span class='kw'>let</span> <span class='ident'>data_id</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>())
-                .<span class='ident'>data_id</span>
-                .<span class='ident'>get_mut</span>(<span class='kw-2'>&amp;</span><span class='ident'>data_id_h</span>)
-                .<span class='ident'>ok_or</span>(<span class='ident'>FfiError</span>::<span class='ident'>InvalidDataIdHandle</span>))
-            .<span class='ident'>clone</span>();
+        <span class='kw'>let</span> <span class='ident'>data_id</span> <span class='op'>=</span> <span class='op'>*</span><span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>()).<span class='ident'>get_data_id</span>(<span class='ident'>data_id_h</span>));
 
         <span class='kw'>let</span> <span class='ident'>resp_getter</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>lock</span>()).<span class='ident'>get</span>(<span class='ident'>data_id</span>, <span class='prelude-val'>None</span>));
         <span class='kw'>let</span> <span class='ident'>raw_immut_data</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>resp_getter</span>.<span class='ident'>get</span>()) {
@@ -560,6 +527,7 @@
         };
 
         <span class='kw'>let</span> <span class='ident'>handle</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>()).<span class='ident'>insert_se_reader</span>(<span class='ident'>se_wrapper</span>);
+
         <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>o_handle</span>, <span class='ident'>handle</span>);
         <span class='number'>0</span>
     })
@@ -569,12 +537,7 @@
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
 <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>immut_data_size</span>(<span class='ident'>se_h</span>: <span class='ident'>SelfEncryptorReaderHandle</span>, <span class='ident'>o_size</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u64</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
     <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
-        <span class='kw'>let</span> <span class='ident'>size</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>())
-                .<span class='ident'>se_reader</span>
-                .<span class='ident'>get_mut</span>(<span class='kw-2'>&amp;</span><span class='ident'>se_h</span>)
-                .<span class='ident'>ok_or</span>(<span class='ident'>FfiError</span>::<span class='ident'>InvalidSelfEncryptorHandle</span>))
-            .<span class='ident'>se</span>
-            .<span class='ident'>len</span>();
+        <span class='kw'>let</span> <span class='ident'>size</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>()).<span class='ident'>get_se_reader</span>(<span class='ident'>se_h</span>)).<span class='ident'>se</span>.<span class='ident'>len</span>();
 
         <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>o_size</span>, <span class='ident'>size</span>);
         <span class='number'>0</span>
@@ -592,9 +555,7 @@
                                                              <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
     <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>obj_cache</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>());
-        <span class='kw'>let</span> <span class='ident'>se_wrapper</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>obj_cache</span>.<span class='ident'>se_reader</span>
-            .<span class='ident'>get_mut</span>(<span class='kw-2'>&amp;</span><span class='ident'>se_h</span>)
-            .<span class='ident'>ok_or</span>(<span class='ident'>FfiError</span>::<span class='ident'>InvalidSelfEncryptorHandle</span>));
+        <span class='kw'>let</span> <span class='ident'>se_wrapper</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>obj_cache</span>.<span class='ident'>get_se_reader</span>(<span class='ident'>se_h</span>));
         <span class='kw'>let</span> <span class='ident'>se</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>se_wrapper</span>.<span class='ident'>se</span>;
 
         <span class='kw'>if</span> <span class='ident'>from_pos</span> <span class='op'>+</span> <span class='ident'>len</span> <span class='op'>&gt;</span> <span class='ident'>se</span>.<span class='ident'>len</span>() {
@@ -616,11 +577,7 @@
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
 <span class='kw'>pub</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>immut_data_self_encryptor_writer_free</span>(<span class='ident'>handle</span>: <span class='ident'>SelfEncryptorWriterHandle</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
     <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
-        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>())
-            .<span class='ident'>se_writer</span>
-            .<span class='ident'>remove</span>(<span class='kw-2'>&amp;</span><span class='ident'>handle</span>)
-            .<span class='ident'>ok_or</span>(<span class='ident'>FfiError</span>::<span class='ident'>InvalidSelfEncryptorHandle</span>));
-
+        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>()).<span class='ident'>remove_se_writer</span>(<span class='ident'>handle</span>));
         <span class='number'>0</span>
     })
 }
@@ -629,11 +586,7 @@
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
 <span class='kw'>pub</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>immut_data_self_encryptor_reader_free</span>(<span class='ident'>handle</span>: <span class='ident'>SelfEncryptorReaderHandle</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
     <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
-        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>())
-            .<span class='ident'>se_reader</span>
-            .<span class='ident'>remove</span>(<span class='kw-2'>&amp;</span><span class='ident'>handle</span>)
-            .<span class='ident'>ok_or</span>(<span class='ident'>FfiError</span>::<span class='ident'>InvalidSelfEncryptorHandle</span>));
-
+        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>()).<span class='ident'>remove_se_reader</span>(<span class='ident'>handle</span>));
         <span class='number'>0</span>
     })
 }
@@ -662,12 +615,8 @@
         <span class='kw'>let</span> <span class='ident'>plain_text</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>generate_random_vector</span>::<span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>(<span class='number'>10</span>));
 
         <span class='kw'>let</span> <span class='ident'>app_1_encrypt_key_handle</span> <span class='op'>=</span> {
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>obj_cache</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>());
-            <span class='kw'>let</span> <span class='ident'>app_1_encrypt_key_handle</span> <span class='op'>=</span> <span class='ident'>obj_cache</span>.<span class='ident'>new_handle</span>();
             <span class='kw'>let</span> <span class='ident'>app_1_pub_encrypt_key</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>app_1</span>.<span class='ident'>asym_keys</span>()).<span class='number'>0</span>;
-            <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>obj_cache</span>.<span class='ident'>encrypt_key</span>
-                .<span class='ident'>insert</span>(<span class='ident'>app_1_encrypt_key_handle</span>, <span class='ident'>app_1_pub_encrypt_key</span>);
-            <span class='ident'>app_1_encrypt_key_handle</span>
+            <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>()).<span class='ident'>insert_encrypt_key</span>(<span class='ident'>app_1_pub_encrypt_key</span>)
         };
 
         <span class='kw'>unsafe</span> {
@@ -730,8 +679,7 @@
                                                            <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>data_size</span>,
                                                            <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>capacity</span>),
                        <span class='number'>0</span>);
-            <span class='kw'>let</span> <span class='ident'>plain_text_rx</span> <span class='op'>=</span>
-                <span class='ident'>Vec</span>::<span class='ident'>from_raw_parts</span>(<span class='ident'>data_ptr</span>, <span class='ident'>data_size</span>, <span class='ident'>capacity</span>);
+            <span class='kw'>let</span> <span class='ident'>plain_text_rx</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>from_raw_parts</span>(<span class='ident'>data_ptr</span>, <span class='ident'>data_size</span>, <span class='ident'>capacity</span>);
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>plain_text</span>, <span class='ident'>plain_text_rx</span>);
 
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>immut_data_self_encryptor_reader_free</span>(<span class='ident'>se_reader_h</span>), <span class='number'>0</span>);
