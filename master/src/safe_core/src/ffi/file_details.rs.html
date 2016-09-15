@@ -208,6 +208,8 @@
 <span id="164">164</span>
 <span id="165">165</span>
 <span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -297,7 +299,9 @@
         }
 
         <span class='kw'>if</span> <span class='op'>!</span><span class='self'>self</span>.<span class='ident'>metadata</span>.<span class='ident'>is_null</span>() {
-            <span class='kw'>let</span> _ <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>Box</span>::<span class='ident'>from_raw</span>(<span class='self'>self</span>.<span class='ident'>metadata</span>) };
+            <span class='kw'>unsafe</span> {
+                <span class='ident'>Box</span>::<span class='ident'>from_raw</span>(<span class='self'>self</span>.<span class='ident'>metadata</span>).<span class='ident'>deallocate</span>();
+            }
         }
     }
 }
