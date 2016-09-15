@@ -166,7 +166,7 @@
                                    <span class='ident'>option_unwrap_used</span>))]</span>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;clippy&quot;</span>, <span class='ident'>allow</span>(<span class='ident'>use_debug</span>, <span class='ident'>doc_markdown</span>))]</span> <span class='comment'>// TODO: Fix doc_markdown errors.</span>
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;use-mock-routing&quot;</span>)]</span>
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>all</span>(<span class='ident'>not</span>(<span class='ident'>test</span>), <span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;use-mock-routing&quot;</span>))]</span>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>bincode</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>config_file_handler</span>;
 <span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
