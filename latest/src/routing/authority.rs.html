@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/routing-0.23.4/src/authority.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/routing-0.26.0/src/authority.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>authority.rs.html -- source</title>
@@ -215,9 +215,9 @@
         <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
             <span class='ident'>Authority</span>::<span class='ident'>ClientManager</span>(_) <span class='op'>|</span>
             <span class='ident'>Authority</span>::<span class='ident'>NaeManager</span>(_) <span class='op'>|</span>
-            <span class='ident'>Authority</span>::<span class='ident'>NodeManager</span>(_) <span class='op'>=&gt;</span> <span class='boolvalue'>true</span>,
+            <span class='ident'>Authority</span>::<span class='ident'>NodeManager</span>(_) <span class='op'>=&gt;</span> <span class='bool-val'>true</span>,
             <span class='ident'>Authority</span>::<span class='ident'>ManagedNode</span>(_) <span class='op'>|</span>
-            <span class='ident'>Authority</span>::<span class='ident'>Client</span> { .. } <span class='op'>=&gt;</span> <span class='boolvalue'>false</span>,
+            <span class='ident'>Authority</span>::<span class='ident'>Client</span> { .. } <span class='op'>=&gt;</span> <span class='bool-val'>false</span>,
         }
     }
 

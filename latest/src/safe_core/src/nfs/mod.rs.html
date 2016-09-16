@@ -126,7 +126,7 @@
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>UNVERSIONED_DIRECTORY_LISTING_TAG</span>: <span class='ident'>u64</span> <span class='op'>=</span> <span class='ident'>VERSIONED_DIRECTORY_LISTING_TAG</span> <span class='op'>+</span> <span class='number'>1</span>;
 
 <span class='doccomment'>/// AccessLevel indicates whether the container is Private or Public shared</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>RustcEncodable</span>, <span class='ident'>RustcDecodable</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>, <span class='ident'>PartialOrd</span>, <span class='ident'>Ord</span>, <span class='ident'>Clone</span>, <span class='ident'>Debug</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>RustcEncodable</span>, <span class='ident'>RustcDecodable</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>, <span class='ident'>PartialOrd</span>, <span class='ident'>Ord</span>, <span class='ident'>Clone</span>, <span class='ident'>Copy</span>, <span class='ident'>Debug</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>AccessLevel</span> {
     <span class='doccomment'>/// Private Directory where the directory is encrypted with users private keys</span>
     <span class='ident'>Private</span>,

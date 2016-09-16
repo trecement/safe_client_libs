@@ -208,6 +208,82 @@
 <span id="164">164</span>
 <span id="165">165</span>
 <span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -226,13 +302,17 @@
 <span class='comment'>// Please review the Licences for the specific language governing permissions and limitations</span>
 <span class='comment'>// relating to use of the SAFE Network Software.</span>
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
+<span class='doccomment'>//! Errors thrown by the FFI operations</span>
+
+<span class='comment'>// TODO - Purge unneeded errors (like JsonParseError etc.)</span>
 
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>errors</span>::<span class='ident'>CoreError</span>;
 <span class='kw'>use</span> <span class='ident'>dns</span>::<span class='ident'>errors</span>::{<span class='ident'>DNS_ERROR_START_RANGE</span>, <span class='ident'>DnsError</span>};
 <span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::<span class='ident'>SerialisationError</span>;
 <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>errors</span>::<span class='ident'>NfsError</span>;
 <span class='kw'>use</span> <span class='ident'>rustc_serialize</span>::{<span class='ident'>base64</span>, <span class='ident'>json</span>};
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ffi</span>::<span class='ident'>NulError</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
 
 <span class='doccomment'>/// Intended for converting Launcher Errors into numeric codes for propagating some error</span>
 <span class='doccomment'>/// information across FFI boundaries and specially to C.</span>
@@ -269,6 +349,36 @@
     <span class='ident'>Unexpected</span>(<span class='ident'>String</span>),
     <span class='doccomment'>/// Could not serialise or deserialise data</span>
     <span class='ident'>UnsuccessfulEncodeDecode</span>(<span class='ident'>SerialisationError</span>),
+    <span class='doccomment'>/// Could not convert String to nul-terminated string because it contains</span>
+    <span class='doccomment'>/// internal nuls.</span>
+    <span class='ident'>NulError</span>(<span class='ident'>NulError</span>),
+    <span class='doccomment'>/// Invalid StructuredData handle</span>
+    <span class='ident'>InvalidStructDataHandle</span>,
+    <span class='doccomment'>/// Invalid DataIdentifier handle</span>
+    <span class='ident'>InvalidDataIdHandle</span>,
+    <span class='doccomment'>/// Invalid Pub/PrivAppendableData handle</span>
+    <span class='ident'>InvalidAppendableDataHandle</span>,
+    <span class='doccomment'>/// Invalid Self Encryptor handle</span>
+    <span class='ident'>InvalidSelfEncryptorHandle</span>,
+    <span class='doccomment'>/// Invalid CipherOpt handle</span>
+    <span class='ident'>InvalidCipherOptHandle</span>,
+    <span class='doccomment'>/// Invalid encrypt (box_) key handle</span>
+    <span class='ident'>InvalidEncryptKeyHandle</span>,
+    <span class='doccomment'>/// Invalid sign key handle</span>
+    <span class='ident'>InvalidSignKeyHandle</span>,
+    <span class='doccomment'>/// The requested operation is forbidded for the given app.</span>
+    <span class='ident'>OperationForbiddenForApp</span>,
+    <span class='doccomment'>/// Invalid type tag for StructuredData</span>
+    <span class='ident'>InvalidStructuredDataTypeTag</span>,
+    <span class='doccomment'>/// Invalid version number requested for a versioned StructuredData</span>
+    <span class='ident'>InvalidVersionNumber</span>,
+    <span class='doccomment'>/// Invalid offsets (from-position and lenght combination) provided for reading form Self</span>
+    <span class='doccomment'>/// Encryptor. Would have probably caused an overflow.</span>
+    <span class='ident'>InvalidSelfEncryptorReadOffsets</span>,
+    <span class='doccomment'>/// Invalid indexing</span>
+    <span class='ident'>InvalidIndex</span>,
+    <span class='doccomment'>/// Unsupported Operation (e.g. mixing Pub/PrivAppendableData operations</span>
+    <span class='ident'>UnsupportedOperation</span>,
 }
 
 <span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>SerialisationError</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>FfiError</span> {
@@ -324,6 +434,12 @@
     }
 }
 
+<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>NulError</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>FfiError</span> {
+    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>error</span>: <span class='ident'>NulError</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
+        <span class='ident'>FfiError</span>::<span class='ident'>NulError</span>(<span class='ident'>error</span>)
+    }
+}
+
 <span class='kw'>impl</span> <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>FfiError</span> {
     <span class='kw'>fn</span> <span class='ident'>into</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
         <span class='kw'>match</span> <span class='self'>self</span> {
@@ -340,6 +456,20 @@
             <span class='ident'>FfiError</span>::<span class='ident'>LocalConfigAccessFailed</span>(_) <span class='op'>=&gt;</span> <span class='ident'>FFI_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>8</span>,
             <span class='ident'>FfiError</span>::<span class='ident'>Unexpected</span>(_) <span class='op'>=&gt;</span> <span class='ident'>FFI_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>9</span>,
             <span class='ident'>FfiError</span>::<span class='ident'>UnsuccessfulEncodeDecode</span>(_) <span class='op'>=&gt;</span> <span class='ident'>FFI_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>10</span>,
+            <span class='ident'>FfiError</span>::<span class='ident'>NulError</span>(_) <span class='op'>=&gt;</span> <span class='ident'>FFI_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>11</span>,
+            <span class='ident'>FfiError</span>::<span class='ident'>InvalidStructDataHandle</span> <span class='op'>=&gt;</span> <span class='ident'>FFI_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>12</span>,
+            <span class='ident'>FfiError</span>::<span class='ident'>InvalidDataIdHandle</span> <span class='op'>=&gt;</span> <span class='ident'>FFI_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>13</span>,
+            <span class='ident'>FfiError</span>::<span class='ident'>InvalidAppendableDataHandle</span> <span class='op'>=&gt;</span> <span class='ident'>FFI_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>14</span>,
+            <span class='ident'>FfiError</span>::<span class='ident'>InvalidSelfEncryptorHandle</span> <span class='op'>=&gt;</span> <span class='ident'>FFI_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>15</span>,
+            <span class='ident'>FfiError</span>::<span class='ident'>InvalidCipherOptHandle</span> <span class='op'>=&gt;</span> <span class='ident'>FFI_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>16</span>,
+            <span class='ident'>FfiError</span>::<span class='ident'>InvalidEncryptKeyHandle</span> <span class='op'>=&gt;</span> <span class='ident'>FFI_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>17</span>,
+            <span class='ident'>FfiError</span>::<span class='ident'>InvalidSignKeyHandle</span> <span class='op'>=&gt;</span> <span class='ident'>FFI_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>18</span>,
+            <span class='ident'>FfiError</span>::<span class='ident'>OperationForbiddenForApp</span> <span class='op'>=&gt;</span> <span class='ident'>FFI_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>19</span>,
+            <span class='ident'>FfiError</span>::<span class='ident'>InvalidStructuredDataTypeTag</span> <span class='op'>=&gt;</span> <span class='ident'>FFI_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>20</span>,
+            <span class='ident'>FfiError</span>::<span class='ident'>InvalidVersionNumber</span> <span class='op'>=&gt;</span> <span class='ident'>FFI_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>21</span>,
+            <span class='ident'>FfiError</span>::<span class='ident'>InvalidSelfEncryptorReadOffsets</span> <span class='op'>=&gt;</span> <span class='ident'>FFI_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>22</span>,
+            <span class='ident'>FfiError</span>::<span class='ident'>InvalidIndex</span> <span class='op'>=&gt;</span> <span class='ident'>FFI_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>23</span>,
+            <span class='ident'>FfiError</span>::<span class='ident'>UnsupportedOperation</span> <span class='op'>=&gt;</span> <span class='ident'>FFI_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>24</span>,
         }
     }
 }
@@ -369,9 +499,31 @@
                 <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;FfiError::LocalConfigAccessFailed -&gt; {:?}&quot;</span>, <span class='ident'>error</span>)
             }
             <span class='ident'>FfiError</span>::<span class='ident'>Unexpected</span>(<span class='kw-2'>ref</span> <span class='ident'>error</span>) <span class='op'>=&gt;</span> <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;FfiError::Unexpected{{{:?}}}&quot;</span>, <span class='ident'>error</span>),
-            <span class='ident'>FfiError</span>::<span class='ident'>UnsuccessfulEncodeDecode</span>(<span class='kw-2'>ref</span> <span class='ident'>err</span>) <span class='op'>=&gt;</span> {
-                <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;FfiError::UnsuccessfulEncodeDecode -&gt; {:?}&quot;</span>, <span class='ident'>err</span>)
+            <span class='ident'>FfiError</span>::<span class='ident'>UnsuccessfulEncodeDecode</span>(<span class='kw-2'>ref</span> <span class='ident'>error</span>) <span class='op'>=&gt;</span> {
+                <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;FfiError::UnsuccessfulEncodeDecode -&gt; {:?}&quot;</span>, <span class='ident'>error</span>)
             }
+            <span class='ident'>FfiError</span>::<span class='ident'>NulError</span>(<span class='kw-2'>ref</span> <span class='ident'>error</span>) <span class='op'>=&gt;</span> <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;FfiError::NulError -&gt; {:?}&quot;</span>, <span class='ident'>error</span>),
+            <span class='ident'>FfiError</span>::<span class='ident'>InvalidStructDataHandle</span> <span class='op'>=&gt;</span> <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;FfiError::InvalidStructDataHandle&quot;</span>),
+            <span class='ident'>FfiError</span>::<span class='ident'>InvalidDataIdHandle</span> <span class='op'>=&gt;</span> <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;FfiError::InvalidDataIdHandle&quot;</span>),
+            <span class='ident'>FfiError</span>::<span class='ident'>InvalidAppendableDataHandle</span> <span class='op'>=&gt;</span> {
+                <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;FfiError::InvalidAppendableDataHandle&quot;</span>)
+            }
+            <span class='ident'>FfiError</span>::<span class='ident'>InvalidSelfEncryptorHandle</span> <span class='op'>=&gt;</span> {
+                <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;FfiError::InvalidSelfEncryptorHandle&quot;</span>)
+            }
+            <span class='ident'>FfiError</span>::<span class='ident'>InvalidCipherOptHandle</span> <span class='op'>=&gt;</span> <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;FfiError::InvalidCipherOptHandle&quot;</span>),
+            <span class='ident'>FfiError</span>::<span class='ident'>InvalidEncryptKeyHandle</span> <span class='op'>=&gt;</span> <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;FfiError::InvalidEncryptKeyHandle&quot;</span>),
+            <span class='ident'>FfiError</span>::<span class='ident'>InvalidSignKeyHandle</span> <span class='op'>=&gt;</span> <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;FfiError::InvalidSignKeyHandle&quot;</span>),
+            <span class='ident'>FfiError</span>::<span class='ident'>OperationForbiddenForApp</span> <span class='op'>=&gt;</span> <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;FfiError::OperationForbiddenForApp&quot;</span>),
+            <span class='ident'>FfiError</span>::<span class='ident'>InvalidStructuredDataTypeTag</span> <span class='op'>=&gt;</span> {
+                <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;FfiError::InvalidStructuredDataTypeTag&quot;</span>)
+            }
+            <span class='ident'>FfiError</span>::<span class='ident'>InvalidVersionNumber</span> <span class='op'>=&gt;</span> <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;FfiError::InvalidVersionNumber&quot;</span>),
+            <span class='ident'>FfiError</span>::<span class='ident'>InvalidSelfEncryptorReadOffsets</span> <span class='op'>=&gt;</span> {
+                <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;FfiError::InvalidSelfEncryptorReadOffsets&quot;</span>)
+            }
+            <span class='ident'>FfiError</span>::<span class='ident'>InvalidIndex</span> <span class='op'>=&gt;</span> <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;FfiError::InvalidIndex&quot;</span>),
+            <span class='ident'>FfiError</span>::<span class='ident'>UnsupportedOperation</span> <span class='op'>=&gt;</span> <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;FfiError::UnsupportedOperation&quot;</span>),
         }
     }
 }

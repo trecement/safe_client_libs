@@ -244,6 +244,15 @@
 <span id="200">200</span>
 <span id="201">201</span>
 <span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -262,15 +271,15 @@
 <span class='comment'>// Please review the Licences for the specific language governing permissions and limitations</span>
 <span class='comment'>// relating to use of the SAFE Network Software.</span>
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::{<span class='ident'>Arc</span>, <span class='ident'>Mutex</span>};
+<span class='kw'>use</span> <span class='ident'>core</span>::{<span class='ident'>SelfEncryptionStorage</span>, <span class='ident'>utility</span>};
 
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>client</span>::<span class='ident'>Client</span>;
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>errors</span>::<span class='ident'>CoreError</span>;
-<span class='kw'>use</span> <span class='ident'>core</span>::{<span class='ident'>SelfEncryptionStorage</span>, <span class='ident'>utility</span>};
 <span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::{<span class='ident'>deserialise</span>, <span class='ident'>serialise</span>};
 <span class='kw'>use</span> <span class='ident'>routing</span>::{<span class='ident'>Data</span>, <span class='ident'>DataIdentifier</span>, <span class='ident'>ImmutableData</span>, <span class='ident'>XorName</span>};
-<span class='kw'>use</span> <span class='ident'>self_encryption</span>::{<span class='ident'>DataMap</span>, <span class='ident'>SelfEncryptor</span>};
 <span class='kw'>use</span> <span class='ident'>rust_sodium</span>::<span class='ident'>crypto</span>::<span class='ident'>box_</span>::{<span class='ident'>Nonce</span>, <span class='ident'>PublicKey</span>, <span class='ident'>SecretKey</span>};
+<span class='kw'>use</span> <span class='ident'>self_encryption</span>::{<span class='ident'>DataMap</span>, <span class='ident'>SelfEncryptor</span>};
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::{<span class='ident'>Arc</span>, <span class='ident'>Mutex</span>};
 
 <span class='comment'>// TODO(Spandan) Ask Routing to define this constant and use it from there</span>
 <span class='kw'>const</span> <span class='ident'>MAX_IMMUT_DATA_SIZE_IN_BYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>1024</span> <span class='op'>*</span> <span class='number'>1024</span>;
@@ -332,32 +341,41 @@
     <span class='kw'>let</span> <span class='ident'>response_getter</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>lock</span>(), <span class='string'>&quot;Couldn&#39;t lock&quot;</span>).<span class='ident'>get</span>(<span class='ident'>data_identifier</span>, <span class='prelude-val'>None</span>));
 
     <span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>response_getter</span>.<span class='ident'>get</span>()) {
-        <span class='ident'>Data</span>::<span class='ident'>Immutable</span>(<span class='kw-2'>mut</span> <span class='ident'>immut_data</span>) <span class='op'>=&gt;</span> {
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>storage</span> <span class='op'>=</span> <span class='ident'>SelfEncryptionStorage</span>::<span class='ident'>new</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>());
-            <span class='kw'>while</span> <span class='kw'>let</span> <span class='prelude-val'>Ok</span>(<span class='ident'>DataTypeEncoding</span>::<span class='ident'>DataMap</span>(<span class='ident'>data_map</span>)) <span class='op'>=</span> <span class='ident'>deserialise</span>(<span class='ident'>immut_data</span>.<span class='ident'>value</span>()) {
-                <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>self_encryptor</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>SelfEncryptor</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>storage</span>, <span class='ident'>data_map</span>));
-                <span class='kw'>let</span> <span class='ident'>length</span> <span class='op'>=</span> <span class='ident'>self_encryptor</span>.<span class='ident'>len</span>();
-                <span class='ident'>immut_data</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>deserialise</span>(<span class='kw-2'>&amp;</span><span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>self_encryptor</span>.<span class='ident'>read</span>(<span class='number'>0</span>, <span class='ident'>length</span>))));
-            }
+        <span class='ident'>Data</span>::<span class='ident'>Immutable</span>(<span class='ident'>immut_data</span>) <span class='op'>=&gt;</span> {
+            <span class='ident'>get_data_from_immut_data</span>(<span class='ident'>client</span>, <span class='ident'>immut_data</span>, <span class='ident'>decryption_keys</span>)
+        }
+        _ <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='ident'>CoreError</span>::<span class='ident'>ReceivedUnexpectedData</span>),
+    }
+}
 
-            <span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>deserialise</span>(<span class='kw-2'>&amp;</span><span class='ident'>immut_data</span>.<span class='ident'>value</span>())) {
-                <span class='ident'>DataTypeEncoding</span>::<span class='ident'>Serialised</span>(<span class='ident'>serialised_data_map</span>) <span class='op'>=&gt;</span> {
-                    <span class='kw'>let</span> <span class='ident'>data_map</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>((<span class='ident'>public_key</span>, <span class='ident'>secret_key</span>, <span class='ident'>nonce</span>)) <span class='op'>=</span> <span class='ident'>decryption_keys</span> {
-                        <span class='kw'>let</span> <span class='ident'>plain_text</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>hybrid_decrypt</span>(<span class='kw-2'>&amp;</span><span class='ident'>serialised_data_map</span>,
-                                                                      <span class='ident'>nonce</span>,
-                                                                      <span class='ident'>public_key</span>,
-                                                                      <span class='ident'>secret_key</span>));
-                        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>deserialise</span>(<span class='kw-2'>&amp;</span><span class='ident'>plain_text</span>))
-                    } <span class='kw'>else</span> {
-                        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>deserialise</span>(<span class='kw-2'>&amp;</span><span class='ident'>serialised_data_map</span>))
-                    };
+<span class='doccomment'>/// Get actual data from ImmutableData created via create() function in this module.</span>
+<span class='doccomment'>/// Call this if you already have the ImmutableData with you.</span>
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_data_from_immut_data</span>(<span class='ident'>client</span>: <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>Mutex</span><span class='op'>&lt;</span><span class='ident'>Client</span><span class='op'>&gt;&gt;</span>,
+                                <span class='kw-2'>mut</span> <span class='ident'>immut_data</span>: <span class='ident'>ImmutableData</span>,
+                                <span class='ident'>decryption_keys</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span>(<span class='kw-2'>&amp;</span><span class='ident'>PublicKey</span>, <span class='kw-2'>&amp;</span><span class='ident'>SecretKey</span>, <span class='kw-2'>&amp;</span><span class='ident'>Nonce</span>)<span class='op'>&gt;</span>)
+                                <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>, <span class='ident'>CoreError</span><span class='op'>&gt;</span> {
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>storage</span> <span class='op'>=</span> <span class='ident'>SelfEncryptionStorage</span>::<span class='ident'>new</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>());
+    <span class='kw'>while</span> <span class='kw'>let</span> <span class='prelude-val'>Ok</span>(<span class='ident'>DataTypeEncoding</span>::<span class='ident'>DataMap</span>(<span class='ident'>data_map</span>)) <span class='op'>=</span> <span class='ident'>deserialise</span>(<span class='ident'>immut_data</span>.<span class='ident'>value</span>()) {
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>self_encryptor</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>SelfEncryptor</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>storage</span>, <span class='ident'>data_map</span>));
+        <span class='kw'>let</span> <span class='ident'>length</span> <span class='op'>=</span> <span class='ident'>self_encryptor</span>.<span class='ident'>len</span>();
+        <span class='ident'>immut_data</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>deserialise</span>(<span class='kw-2'>&amp;</span><span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>self_encryptor</span>.<span class='ident'>read</span>(<span class='number'>0</span>, <span class='ident'>length</span>))));
+    }
 
-                    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>self_encryptor</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>SelfEncryptor</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>storage</span>, <span class='ident'>data_map</span>));
-                    <span class='kw'>let</span> <span class='ident'>length</span> <span class='op'>=</span> <span class='ident'>self_encryptor</span>.<span class='ident'>len</span>();
-                    <span class='prelude-val'>Ok</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>self_encryptor</span>.<span class='ident'>read</span>(<span class='number'>0</span>, <span class='ident'>length</span>)))
-                }
-                _ <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='ident'>CoreError</span>::<span class='ident'>ReceivedUnexpectedData</span>),
-            }
+    <span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>deserialise</span>(<span class='kw-2'>&amp;</span><span class='ident'>immut_data</span>.<span class='ident'>value</span>())) {
+        <span class='ident'>DataTypeEncoding</span>::<span class='ident'>Serialised</span>(<span class='ident'>serialised_data_map</span>) <span class='op'>=&gt;</span> {
+            <span class='kw'>let</span> <span class='ident'>data_map</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>((<span class='ident'>public_key</span>, <span class='ident'>secret_key</span>, <span class='ident'>nonce</span>)) <span class='op'>=</span> <span class='ident'>decryption_keys</span> {
+                <span class='kw'>let</span> <span class='ident'>plain_text</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>hybrid_decrypt</span>(<span class='kw-2'>&amp;</span><span class='ident'>serialised_data_map</span>,
+                                                              <span class='ident'>nonce</span>,
+                                                              <span class='ident'>public_key</span>,
+                                                              <span class='ident'>secret_key</span>));
+                <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>deserialise</span>(<span class='kw-2'>&amp;</span><span class='ident'>plain_text</span>))
+            } <span class='kw'>else</span> {
+                <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>deserialise</span>(<span class='kw-2'>&amp;</span><span class='ident'>serialised_data_map</span>))
+            };
+
+            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>self_encryptor</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>SelfEncryptor</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>storage</span>, <span class='ident'>data_map</span>));
+            <span class='kw'>let</span> <span class='ident'>length</span> <span class='op'>=</span> <span class='ident'>self_encryptor</span>.<span class='ident'>len</span>();
+            <span class='prelude-val'>Ok</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>self_encryptor</span>.<span class='ident'>read</span>(<span class='number'>0</span>, <span class='ident'>length</span>)))
         }
         _ <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='ident'>CoreError</span>::<span class='ident'>ReceivedUnexpectedData</span>),
     }
@@ -365,14 +383,14 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>test</span> {
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
-
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::{<span class='ident'>Arc</span>, <span class='ident'>Mutex</span>};
-
-    <span class='kw'>use</span> <span class='ident'>routing</span>::<span class='ident'>Data</span>;
     <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>utility</span>;
     <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>utility</span>::<span class='ident'>test_utils</span>;
+
+    <span class='kw'>use</span> <span class='ident'>routing</span>::<span class='ident'>Data</span>;
     <span class='kw'>use</span> <span class='ident'>rust_sodium</span>::<span class='ident'>crypto</span>::<span class='ident'>box_</span>;
+
+    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::{<span class='ident'>Arc</span>, <span class='ident'>Mutex</span>};
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
 
     <span class='comment'>// TODO It takes a very long time in debug mode - it is due to S.E crate.</span>
     <span class='attribute'>#[<span class='ident'>test</span>]</span>

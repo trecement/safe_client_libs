@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["nfs_create_dir","Create a new directory."],["nfs_delete_dir","Delete a directory."],["nfs_get_dir","Get directory"],["nfs_modify_dir","Modify name and/or metadata of a directory."],["nfs_move_dir","Move or copy a directory."]]});

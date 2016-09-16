@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["create_file",""],["directory_response",""],["file_response",""],["get_file_writer",""]]});
+initSidebarItems({"mod":[["dir","Directory operations."],["file","File operations"],["file_writing","Operations on file writer"]]});

@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-4597' class='srclink' href='../../src/safe_core/src/ffi/mod.rs.html#18-788' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-4583' class='srclink' href='../../src/safe_core/src/ffi/mod.rs.html#18-56' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Ffi module;
 This module provides FFI-bindings to the Client Modules (<code>core</code>, <code>nfs</code>, <code>dns</code>)
 In the current implementation the allocations made by this crate are managed within the crate
@@ -69,213 +69,75 @@ done, to release the resources, <code>drop_client</code> may be called.</p>
 </div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
                        <tr class=' module-item'>
+                           <td><a class='mod' href='app/index.html'
+                                  title='safe_core::ffi::app'>app</a></td>
+                           <td class='docblock short'>
+                                <p>Structure representing application registered with the launcher + set of
+FFI operations on it.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='directory_details/index.html'
+                                  title='safe_core::ffi::directory_details'>directory_details</a></td>
+                           <td class='docblock short'>
+                                <p>Details about directory and its content.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='dns/index.html'
+                                  title='safe_core::ffi::dns'>dns</a></td>
+                           <td class='docblock short'>
+                                <p>DNS operations.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
                            <td><a class='mod' href='errors/index.html'
                                   title='safe_core::ffi::errors'>errors</a></td>
                            <td class='docblock short'>
                                 <p>Errors thrown by the FFI operations</p>
                            </td>
-                       </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
-<table>
+                       </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.FfiHandle.html'
-                                  title='safe_core::ffi::FfiHandle'>FfiHandle</a></td>
+                           <td><a class='mod' href='file_details/index.html'
+                                  title='safe_core::ffi::file_details'>file_details</a></td>
                            <td class='docblock short'>
-                                <p>A handle, passed through the FFI.</p>
+                                <p>FFI-enabled types containing details (content and metadata) about a file.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.ParameterPacket.html'
-                                  title='safe_core::ffi::ParameterPacket'>ParameterPacket</a></td>
+                           <td><a class='mod' href='logging/index.html'
+                                  title='safe_core::ffi::logging'>logging</a></td>
                            <td class='docblock short'>
-                                <p>ParameterPacket acts as a holder for the standard parameters that would be needed for performing
-operations across the modules like nfs and dns</p>
-                           </td>
-                       </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
-<table>
-                       <tr class=' module-item'>
-                           <td><a class='trait' href='trait.Action.html'
-                                  title='safe_core::ffi::Action'>Action</a></td>
-                           <td class='docblock short'>
-                                <p>ICommand trait</p>
-                           </td>
-                       </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
-<table>
-                       <tr class=' module-item'>
-                           <td><a class='fn' href='fn.client_issued_deletes.html'
-                                  title='safe_core::ffi::client_issued_deletes'>client_issued_deletes</a></td>
-                           <td class='docblock short'>
-                                <p>Return the amount of calls that were done to <code>delete</code></p>
+                                <p>Logging.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.client_issued_gets.html'
-                                  title='safe_core::ffi::client_issued_gets'>client_issued_gets</a></td>
+                           <td><a class='mod' href='low_level_api/index.html'
+                                  title='safe_core::ffi::low_level_api'>low_level_api</a></td>
                            <td class='docblock short'>
-                                <p>Return the amount of calls that were done to <code>get</code></p>
+                                <p>Low Level APIs</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.client_issued_posts.html'
-                                  title='safe_core::ffi::client_issued_posts'>client_issued_posts</a></td>
+                           <td><a class='mod' href='nfs/index.html'
+                                  title='safe_core::ffi::nfs'>nfs</a></td>
                            <td class='docblock short'>
-                                <p>Return the amount of calls that were done to <code>post</code></p>
+                                <p>Network filesystem operations</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.client_issued_puts.html'
-                                  title='safe_core::ffi::client_issued_puts'>client_issued_puts</a></td>
+                           <td><a class='mod' href='session/index.html'
+                                  title='safe_core::ffi::session'>session</a></td>
                            <td class='docblock short'>
-                                <p>Return the amount of calls that were done to <code>put</code></p>
+                                <p>Session management</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.create_account.html'
-                                  title='safe_core::ffi::create_account'>create_account</a></td>
+                           <td><a class='mod' href='string_list/index.html'
+                                  title='safe_core::ffi::string_list'>string_list</a></td>
                            <td class='docblock short'>
-                                <p>Create a registered client. This or any one of the other companion functions to get a
-client must be called before initiating any operation allowed by this crate. <code>client_handle</code> is
-a pointer to a pointer and must point to a valid pointer not junk, else the consequences are
-undefined.</p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='fn' href='fn.create_unregistered_client.html'
-                                  title='safe_core::ffi::create_unregistered_client'>create_unregistered_client</a></td>
-                           <td class='docblock short'>
-                                <p>Create an unregistered client. This or any one of the other companion functions to get a
-client must be called before initiating any operation allowed by this crate.</p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='fn' href='fn.drop_client.html'
-                                  title='safe_core::ffi::drop_client'>drop_client</a></td>
-                           <td class='docblock short'>
-                                <p>Discard and clean up the previously allocated client. Use this only if the client is obtained
-from one of the client obtainment functions in this crate (<code>create_account</code>, <code>log_in</code>,
-<code>create_unregistered_client</code>). Using <code>client_handle</code> after a call to this functions is
-undefined behaviour.</p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='fn' href='fn.drop_vector.html'
-                                  title='safe_core::ffi::drop_vector'>drop_vector</a></td>
-                           <td class='docblock short'>
-                                <p>Drop the vector returned as a result of the execute_for_content fn</p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='fn' href='fn.execute.html'
-                                  title='safe_core::ffi::execute'>execute</a></td>
-                           <td class='docblock short'>
-                                <p>General function that can be invoked for performing a API specific operation that will return
-only result to indicate whether the operation was successful or not.
-This function would only perform the operation and return 0 or error code
-c_payload refers to the JSON payload that can be passed as a JSON string.
-The JSON string should have keys module, action, app_root_dir_key, safe_drive_dir_key,
-safe_drive_access and data. <code>data</code> refers to API specific payload.</p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='fn' href='fn.execute_for_content.html'
-                                  title='safe_core::ffi::execute_for_content'>execute_for_content</a></td>
-                           <td class='docblock short'>
-                                <p>General function that can be invoked for getting data as a resut for an operation.
-The function return a pointer to a U8 vecotr. The size of the U8 vector and its capacity is
-written to the out params c_size &amp; c_capacity. The size and capcity would be required for
-droping the vector The result of the execution is returned in the c_result out param</p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='fn' href='fn.get_account_info.html'
-                                  title='safe_core::ffi::get_account_info'>get_account_info</a></td>
-                           <td class='docblock short'>
-                                <p>Get data from the network. This is non-blocking. <code>data_stored</code> means number
-of chunks Put. <code>space_available</code> means number of chunks which can still be
-Put.</p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='fn' href='fn.get_app_dir_key.html'
-                                  title='safe_core::ffi::get_app_dir_key'>get_app_dir_key</a></td>
-                           <td class='docblock short'>
-                                <p>Returns key size</p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='fn' href='fn.get_nfs_writer.html'
-                                  title='safe_core::ffi::get_nfs_writer'>get_nfs_writer</a></td>
-                           <td class='docblock short'>
-                                <p>Obtain NFS writer handle for writing data to a file in streaming mode</p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='fn' href='fn.get_safe_drive_key.html'
-                                  title='safe_core::ffi::get_safe_drive_key'>get_safe_drive_key</a></td>
-                           <td class='docblock short'>
-                                <p>Returns Key as base64 string</p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='fn' href='fn.init_logging.html'
-                                  title='safe_core::ffi::init_logging'>init_logging</a></td>
-                           <td class='docblock short'>
-                                <p>This function should be called to enable logging to a file</p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='fn' href='fn.log_in.html'
-                                  title='safe_core::ffi::log_in'>log_in</a></td>
-                           <td class='docblock short'>
-                                <p>Log into a registered client. This or any one of the other companion functions to get a
-client must be called before initiating any operation allowed by this crate. <code>client_handle</code> is
-a pointer to a pointer and must point to a valid pointer not junk, else the consequences are
-undefined.</p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='fn' href='fn.nfs_create_file.html'
-                                  title='safe_core::ffi::nfs_create_file'>nfs_create_file</a></td>
-                           <td class='docblock short'>
-                                <p>Create a file and return a writer for it.</p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='fn' href='fn.nfs_stream_close.html'
-                                  title='safe_core::ffi::nfs_stream_close'>nfs_stream_close</a></td>
-                           <td class='docblock short'>
-                                <p>Closes the NFS Writer handle</p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='fn' href='fn.nfs_stream_write.html'
-                                  title='safe_core::ffi::nfs_stream_write'>nfs_stream_write</a></td>
-                           <td class='docblock short'>
-                                <p>Write data to the Network using the NFS Writer handle</p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='fn' href='fn.output_log_path.html'
-                                  title='safe_core::ffi::output_log_path'>output_log_path</a></td>
-                           <td class='docblock short'>
-                                <p>This function should be called to find where log file will be created. It will additionally
-create an empty log file in the path in the deduced location and will return the file name
-along with complete path to it.</p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='fn' href='fn.register_network_event_observer.html'
-                                  title='safe_core::ffi::register_network_event_observer'>register_network_event_observer</a></td>
-                           <td class='docblock short'>
-                                <p>Register an observer to network events like Connected, Disconnected etc. as provided by the
-core module</p>
-                           </td>
-                       </tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
-<table>
-                       <tr class=' module-item'>
-                           <td><a class='type' href='type.ResponseType.html'
-                                  title='safe_core::ffi::ResponseType'>ResponseType</a></td>
-                           <td class='docblock short'>
-                                <p>ResponseType specifies the standard Response that is to be expected from the Action trait</p>
+                                <p>StringList is a FFI-enabled wrapper over vector of strings with a corresponding
+FFI-enabled API.</p>
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>

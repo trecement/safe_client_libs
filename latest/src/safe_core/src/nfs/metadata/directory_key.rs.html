@@ -154,7 +154,7 @@
 
 <span class='doccomment'>/// DirectoryKey represnts the meta information about a directory</span>
 <span class='doccomment'>/// A directory can be feteched with the DirectoryKey</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>RustcEncodable</span>, <span class='ident'>RustcDecodable</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>, <span class='ident'>PartialOrd</span>, <span class='ident'>Ord</span>, <span class='ident'>Clone</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>RustcEncodable</span>, <span class='ident'>RustcDecodable</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>, <span class='ident'>PartialOrd</span>, <span class='ident'>Ord</span>, <span class='ident'>Clone</span>, <span class='ident'>Copy</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>DirectoryKey</span> {
     <span class='ident'>id</span>: <span class='ident'>XorName</span>,
     <span class='ident'>type_tag</span>: <span class='ident'>u64</span>,
@@ -197,18 +197,18 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>test</span> {
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
-    <span class='kw'>use</span> <span class='ident'>rand</span>;
-    <span class='kw'>use</span> <span class='ident'>routing</span>::<span class='ident'>XorName</span>;
     <span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::{<span class='ident'>deserialise</span>, <span class='ident'>serialise</span>};
     <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>AccessLevel</span>;
+    <span class='kw'>use</span> <span class='ident'>rand</span>;
+    <span class='kw'>use</span> <span class='ident'>routing</span>::<span class='ident'>XorName</span>;
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
 
     <span class='doccomment'>/// Should be able to serialise &amp; deserialise the DirectoryKey</span>
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>serailise_and_deserialise_directory_key</span>() {
         <span class='kw'>let</span> <span class='ident'>id</span>: <span class='ident'>XorName</span> <span class='op'>=</span> <span class='ident'>rand</span>::<span class='ident'>random</span>();
         <span class='kw'>let</span> <span class='ident'>tag</span> <span class='op'>=</span> <span class='number'>10u64</span>;
-        <span class='kw'>let</span> <span class='ident'>versioned</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
+        <span class='kw'>let</span> <span class='ident'>versioned</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
         <span class='kw'>let</span> <span class='ident'>access_level</span> <span class='op'>=</span> <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>;
 
         <span class='kw'>let</span> <span class='ident'>directory_key</span> <span class='op'>=</span> <span class='ident'>DirectoryKey</span>::<span class='ident'>new</span>(<span class='ident'>id</span>, <span class='ident'>tag</span>, <span class='ident'>versioned</span>, <span class='ident'>access_level</span>.<span class='ident'>clone</span>());

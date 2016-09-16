@@ -288,6 +288,8 @@
 <span id="244">244</span>
 <span id="245">245</span>
 <span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -306,17 +308,19 @@
 <span class='comment'>// Please review the Licences for the specific language governing permissions and limitations</span>
 <span class='comment'>// relating to use of the SAFE Network Software.</span>
 
+<span class='comment'>// TODO Remove type_tag parameter from api&#39;s of unversioned and versioned SD&#39;s as they are now</span>
+<span class='comment'>// consolidated to 500 and 501</span>
+
 <span class='doccomment'>/// Unversioned-Structured Data</span>
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>unversioned</span>;
 <span class='doccomment'>/// Versioned-Structured Data</span>
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>versioned</span>;
 
-<span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>u64</span>, <span class='ident'>u8</span>};
-
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>errors</span>::<span class='ident'>CoreError</span>;
 <span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::<span class='ident'>serialise</span>;
 <span class='kw'>use</span> <span class='ident'>routing</span>::{<span class='ident'>StructuredData</span>, <span class='ident'>XOR_NAME_LEN</span>, <span class='ident'>XorName</span>};
 <span class='kw'>use</span> <span class='ident'>rust_sodium</span>::<span class='ident'>crypto</span>::<span class='ident'>sign</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>u64</span>, <span class='ident'>u8</span>};
 
 <span class='kw'>const</span> <span class='ident'>PADDING_SIZE_IN_BYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>1024</span>;
 <span class='kw'>const</span> <span class='ident'>MIN_RESIDUAL_SPACE_FOR_VALID_STRUCTURED_DATA_IN_BYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>70</span>;
@@ -385,8 +389,8 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>test</span> {
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
     <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>utility</span>::<span class='ident'>test_utils</span>;
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
 
     <span class='comment'>// Refers the fixed size of the get_approximate_space_for_data fn without signatures</span>
     <span class='kw'>const</span> <span class='ident'>DEFAULT_FIXED_SIZE</span>: <span class='ident'>usize</span> <span class='op'>=</span> ::<span class='ident'>routing</span>::<span class='ident'>MAX_STRUCTURED_DATA_SIZE_IN_BYTES</span> <span class='op'>-</span> <span class='number'>1112</span>;

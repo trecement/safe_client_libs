@@ -334,10 +334,9 @@
 <span class='comment'>// Please review the Licences for the specific language governing permissions and limitations</span>
 <span class='comment'>// relating to use of the SAFE Network Software.</span>
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::{<span class='ident'>Arc</span>, <span class='ident'>Mutex</span>};
+<span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>SelfEncryptionStorage</span>;
 
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>client</span>::<span class='ident'>Client</span>;
-<span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>SelfEncryptionStorage</span>;
 <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>directory_listing</span>::<span class='ident'>DirectoryListing</span>;
 <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>errors</span>::<span class='ident'>NfsError</span>;
 <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>file</span>::<span class='ident'>File</span>;
@@ -346,6 +345,7 @@
 <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>helper</span>::<span class='ident'>writer</span>::{<span class='ident'>Mode</span>, <span class='ident'>Writer</span>};
 <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>metadata</span>::<span class='ident'>file_metadata</span>::<span class='ident'>FileMetadata</span>;
 <span class='kw'>use</span> <span class='ident'>self_encryption</span>::<span class='ident'>DataMap</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::{<span class='ident'>Arc</span>, <span class='ident'>Mutex</span>};
 
 <span class='doccomment'>/// File provides helper functions to perform Operations on Files</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>FileHelper</span> {
@@ -491,13 +491,13 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>test</span> {
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::{<span class='ident'>Arc</span>, <span class='ident'>Mutex</span>};
-    <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>helper</span>::<span class='ident'>directory_helper</span>::<span class='ident'>DirectoryHelper</span>;
-    <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>helper</span>::<span class='ident'>file_helper</span>::<span class='ident'>FileHelper</span>;
-    <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>helper</span>::<span class='ident'>writer</span>::<span class='ident'>Mode</span>;
     <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>client</span>::<span class='ident'>Client</span>;
     <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>utility</span>::<span class='ident'>test_utils</span>;
     <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>AccessLevel</span>;
+    <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>helper</span>::<span class='ident'>directory_helper</span>::<span class='ident'>DirectoryHelper</span>;
+    <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>helper</span>::<span class='ident'>file_helper</span>::<span class='ident'>FileHelper</span>;
+    <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>helper</span>::<span class='ident'>writer</span>::<span class='ident'>Mode</span>;
+    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::{<span class='ident'>Arc</span>, <span class='ident'>Mutex</span>};
 
     <span class='kw'>fn</span> <span class='ident'>get_client</span>() <span class='op'>-&gt;</span> <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>Mutex</span><span class='op'>&lt;</span><span class='ident'>Client</span><span class='op'>&gt;&gt;</span> {
         <span class='kw'>let</span> <span class='ident'>test_client</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>test_utils</span>::<span class='ident'>get_client</span>());
@@ -511,7 +511,7 @@
         <span class='kw'>let</span> (<span class='kw-2'>mut</span> <span class='ident'>directory</span>, _) <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>dir_helper</span>.<span class='ident'>create</span>(<span class='string'>&quot;DirName&quot;</span>.<span class='ident'>to_string</span>(),
                     ::<span class='ident'>nfs</span>::<span class='ident'>VERSIONED_DIRECTORY_LISTING_TAG</span>,
                     <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
-                    <span class='boolvalue'>true</span>,
+                    <span class='bool-val'>true</span>,
                     <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>,
                     <span class='prelude-val'>None</span>));
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>file_helper</span> <span class='op'>=</span> <span class='ident'>FileHelper</span>::<span class='ident'>new</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>());
