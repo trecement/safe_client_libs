@@ -91,18 +91,6 @@ to manage memory much more naturally and conveniently (eg., RAII idioms etc)</p>
                            <td class='docblock short'>
                                 <p>Nfs module;</p>
                            </td>
-                       </tr></table><h2 id='macros' class='section-header'><a href="#macros">Macros</a></h2>
-<table>
-                       <tr class=' module-item'>
-                           <td><a class='macro' href='macro.parse_result!.html'
-                                  title='safe_core::parse_result!'>parse_result!</a></td>
-                           <td class='docblock short'>
-                                <p>This macro is intended to be used in all cases where we get an Err out of Result<T, U> and want
-to package it into <code>safe_core::ffi::errors::FfiError::SpecificParseError(String)</code>. This is
-useful because there may be miscellaneous erros while parsing through a valid JSON due to JSON
-not conforming to certain mandatory requirements. This can then be communicated back to the
-JSON sending client.</p>
-                           </td>
                        </tr></table><h2 id='constants' class='section-header'><a href="#constants">Constants</a></h2>
 <table>
                        <tr class=' module-item'>

@@ -247,8 +247,6 @@
 <span id="203">203</span>
 <span id="204">204</span>
 <span id="205">205</span>
-<span id="206">206</span>
-<span id="207">207</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2016 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -280,7 +278,6 @@
 <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>helper</span>::<span class='ident'>writer</span>::<span class='ident'>Mode</span>;
 <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>helper</span>::<span class='ident'>writer</span>::<span class='ident'>Writer</span> <span class='kw'>as</span> <span class='ident'>InnerWriter</span>;
 <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>metadata</span>::<span class='ident'>file_metadata</span>::<span class='ident'>FileMetadata</span>;
-<span class='kw'>use</span> <span class='ident'>rustc_serialize</span>::<span class='ident'>base64</span>::<span class='ident'>FromBase64</span>;
 <span class='kw'>use</span> <span class='ident'>self_encryption</span>::<span class='ident'>DataMap</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>slice</span>;
@@ -312,7 +309,7 @@
         <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;FFI get nfs writer for creating a new file.&quot;</span>);
 
         <span class='kw'>let</span> <span class='ident'>file_path</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_str</span>(<span class='ident'>file_path</span>, <span class='ident'>file_path_len</span>));
-        <span class='kw'>let</span> <span class='ident'>user_metadata</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>c_utf8_to_str</span>(<span class='ident'>user_metadata</span>, <span class='ident'>user_metadata_len</span>));
+        <span class='kw'>let</span> <span class='ident'>user_metadata</span> <span class='op'>=</span> <span class='ident'>helper</span>::<span class='ident'>u8_ptr_to_vec</span>(<span class='ident'>user_metadata</span>, <span class='ident'>user_metadata_len</span>);
 
         <span class='kw'>let</span> <span class='ident'>writer</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>create_file</span>(<span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>app_handle</span>, <span class='ident'>file_path</span>, <span class='ident'>user_metadata</span>, <span class='ident'>is_path_shared</span>));
 
@@ -367,14 +364,11 @@
 <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>unsafe_code</span>)]</span>
 <span class='kw'>fn</span> <span class='ident'>create_file</span>(<span class='ident'>app</span>: <span class='kw-2'>&amp;</span><span class='ident'>App</span>,
                <span class='ident'>file_path</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>,
-               <span class='ident'>user_metadata</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>,
+               <span class='ident'>user_metadata</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
                <span class='ident'>is_path_shared</span>: <span class='ident'>bool</span>)
                <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Writer</span>, <span class='ident'>FfiError</span><span class='op'>&gt;</span> {
     <span class='kw'>let</span> (<span class='ident'>directory</span>, <span class='ident'>file_name</span>) <span class='op'>=</span>
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>helper</span>::<span class='ident'>get_directory_and_file</span>(<span class='ident'>app</span>, <span class='ident'>file_path</span>, <span class='ident'>is_path_shared</span>));
-
-    <span class='kw'>let</span> <span class='ident'>user_metadata</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>parse_result</span><span class='macro'>!</span>(<span class='ident'>user_metadata</span>.<span class='ident'>from_base64</span>(),
-                                           <span class='string'>&quot;Failed Converting from Base64.&quot;</span>));
 
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>storage</span> <span class='op'>=</span> <span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>SelfEncryptionStorage</span>::<span class='ident'>new</span>(<span class='ident'>app</span>.<span class='ident'>get_client</span>()));
 
@@ -434,14 +428,16 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>create_file</span>() {
-        <span class='kw'>const</span> <span class='ident'>METADATA_BASE64</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;c2FtcGxlIHRleHQ=&quot;</span>;
+        <span class='kw'>const</span> <span class='ident'>METADATA</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;user metadata&quot;</span>;
 
         <span class='kw'>let</span> <span class='ident'>app</span> <span class='op'>=</span> <span class='ident'>test_utils</span>::<span class='ident'>create_app</span>(<span class='bool-val'>false</span>);
         <span class='kw'>let</span> <span class='ident'>dir_helper</span> <span class='op'>=</span> <span class='ident'>DirectoryHelper</span>::<span class='ident'>new</span>(<span class='ident'>app</span>.<span class='ident'>get_client</span>());
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>file_helper</span> <span class='op'>=</span> <span class='ident'>FileHelper</span>::<span class='ident'>new</span>(<span class='ident'>app</span>.<span class='ident'>get_client</span>());
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>writer</span> <span class='op'>=</span>
-            <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='kw'>super</span>::<span class='ident'>create_file</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='string'>&quot;/test_file.txt&quot;</span>, <span class='ident'>METADATA_BASE64</span>, <span class='bool-val'>false</span>));
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>writer</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='kw'>super</span>::<span class='ident'>create_file</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>,
+                                                    <span class='string'>&quot;/test_file.txt&quot;</span>,
+                                                    <span class='ident'>METADATA</span>.<span class='ident'>as_bytes</span>().<span class='ident'>to_vec</span>(),
+                                                    <span class='bool-val'>false</span>));
         <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>writer</span>.<span class='ident'>inner</span>.<span class='ident'>write</span>(<span class='string'>&quot;hello world&quot;</span>.<span class='ident'>as_bytes</span>()));
         <span class='kw'>let</span> _ <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>writer</span>.<span class='ident'>close</span>());
 

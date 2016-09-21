@@ -63,17 +63,6 @@
 <span id="19">19</span>
 <span id="20">20</span>
 <span id="21">21</span>
-<span id="22">22</span>
-<span id="23">23</span>
-<span id="24">24</span>
-<span id="25">25</span>
-<span id="26">26</span>
-<span id="27">27</span>
-<span id="28">28</span>
-<span id="29">29</span>
-<span id="30">30</span>
-<span id="31">31</span>
-<span id="32">32</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -96,17 +85,6 @@
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SAFE_DRIVE_DIR_NAME</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;SAFEDrive&quot;</span>;
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>LAUNCHER_GLOBAL_DIRECTORY_NAME</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;LauncherReservedDirectory&quot;</span>;
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>LAUNCHER_GLOBAL_CONFIG_FILE_NAME</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;LauncherSpecificConfigurationFile&quot;</span>;
-
-<span class='kw'>use</span> <span class='ident'>rustc_serialize</span>::<span class='ident'>base64</span>::{<span class='ident'>CharacterSet</span>, <span class='ident'>Config</span>, <span class='ident'>Newline</span>};
-
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_base64_config</span>() <span class='op'>-&gt;</span> <span class='ident'>Config</span> {
-    <span class='ident'>Config</span> {
-        <span class='ident'>char_set</span>: <span class='ident'>CharacterSet</span>::<span class='ident'>Standard</span>,
-        <span class='ident'>newline</span>: <span class='ident'>Newline</span>::<span class='ident'>LF</span>,
-        <span class='ident'>pad</span>: <span class='bool-val'>true</span>,
-        <span class='ident'>line_length</span>: <span class='prelude-val'>None</span>,
-    }
-}
 </pre>
 </section>
     <section id='search' class="content hidden"></section>
