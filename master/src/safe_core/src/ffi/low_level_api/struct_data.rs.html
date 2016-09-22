@@ -784,6 +784,39 @@
 <span id="740">740</span>
 <span id="741">741</span>
 <span id="742">742</span>
+<span id="743">743</span>
+<span id="744">744</span>
+<span id="745">745</span>
+<span id="746">746</span>
+<span id="747">747</span>
+<span id="748">748</span>
+<span id="749">749</span>
+<span id="750">750</span>
+<span id="751">751</span>
+<span id="752">752</span>
+<span id="753">753</span>
+<span id="754">754</span>
+<span id="755">755</span>
+<span id="756">756</span>
+<span id="757">757</span>
+<span id="758">758</span>
+<span id="759">759</span>
+<span id="760">760</span>
+<span id="761">761</span>
+<span id="762">762</span>
+<span id="763">763</span>
+<span id="764">764</span>
+<span id="765">765</span>
+<span id="766">766</span>
+<span id="767">767</span>
+<span id="768">768</span>
+<span id="769">769</span>
+<span id="770">770</span>
+<span id="771">771</span>
+<span id="772">772</span>
+<span id="773">773</span>
+<span id="774">774</span>
+<span id="775">775</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2016 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -843,8 +876,8 @@
         <span class='kw'>let</span> <span class='ident'>sd</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>type_tag</span> {
             ::<span class='ident'>UNVERSIONED_STRUCT_DATA_TYPE_TAG</span> <span class='op'>=&gt;</span> {
                 <span class='kw'>let</span> <span class='ident'>raw_data</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>())
-                        .<span class='ident'>get_cipher_opt</span>(<span class='ident'>cipher_opt_h</span>))
-                    .<span class='ident'>encrypt</span>(<span class='ident'>app</span>, <span class='kw-2'>&amp;</span><span class='ident'>plain_text</span>));
+                                                     .<span class='ident'>get_cipher_opt</span>(<span class='ident'>cipher_opt_h</span>))
+                                            .<span class='ident'>encrypt</span>(<span class='ident'>app</span>, <span class='kw-2'>&amp;</span><span class='ident'>plain_text</span>));
 
                 <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>unversioned</span>::<span class='ident'>create</span>(<span class='ident'>client</span>,
                                              <span class='ident'>type_tag</span>,
@@ -857,15 +890,16 @@
                                              <span class='prelude-val'>None</span>))
             }
             ::<span class='ident'>VERSIONED_STRUCT_DATA_TYPE_TAG</span> <span class='op'>=&gt;</span> {
-                <span class='kw'>let</span> <span class='ident'>immut_data</span> <span class='op'>=</span>
-                    <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>immut_data_operations</span>::<span class='ident'>create</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(), <span class='ident'>plain_text</span>, <span class='prelude-val'>None</span>));
+                <span class='kw'>let</span> <span class='ident'>immut_data</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>immut_data_operations</span>::<span class='ident'>create</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(),
+                                                                        <span class='ident'>plain_text</span>,
+                                                                        <span class='prelude-val'>None</span>));
                 <span class='comment'>// TODO The above data could be exactly 1 MiB and ideally should not be touched any</span>
                 <span class='comment'>// more. For this however we will require CipherOpt to be in core module. Until</span>
                 <span class='comment'>// that we need to live with this.</span>
                 <span class='kw'>let</span> <span class='ident'>ser_immut_data</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>serialise</span>(<span class='kw-2'>&amp;</span><span class='ident'>immut_data</span>).<span class='ident'>map_err</span>(<span class='ident'>FfiError</span>::<span class='ident'>from</span>));
                 <span class='kw'>let</span> <span class='ident'>raw_data</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>())
-                        .<span class='ident'>get_cipher_opt</span>(<span class='ident'>cipher_opt_h</span>))
-                    .<span class='ident'>encrypt</span>(<span class='ident'>app</span>, <span class='kw-2'>&amp;</span><span class='ident'>ser_immut_data</span>));
+                                                     .<span class='ident'>get_cipher_opt</span>(<span class='ident'>cipher_opt_h</span>))
+                                            .<span class='ident'>encrypt</span>(<span class='ident'>app</span>, <span class='kw-2'>&amp;</span><span class='ident'>ser_immut_data</span>));
 
                 <span class='kw'>let</span> <span class='ident'>immut_data_final</span> <span class='op'>=</span> <span class='ident'>Data</span>::<span class='ident'>Immutable</span>(<span class='ident'>ImmutableData</span>::<span class='ident'>new</span>(<span class='ident'>raw_data</span>));
                 <span class='kw'>let</span> <span class='ident'>immut_data_final_name</span> <span class='op'>=</span> <span class='op'>*</span><span class='ident'>immut_data_final</span>.<span class='ident'>name</span>();
@@ -884,8 +918,8 @@
             }
             <span class='ident'>x</span> <span class='kw'>if</span> <span class='ident'>x</span> <span class='op'>&gt;=</span> <span class='ident'>CLIENT_STRUCTURED_DATA_TAG</span> <span class='op'>=&gt;</span> {
                 <span class='kw'>let</span> <span class='ident'>raw_data</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>())
-                        .<span class='ident'>get_cipher_opt</span>(<span class='ident'>cipher_opt_h</span>))
-                    .<span class='ident'>encrypt</span>(<span class='ident'>app</span>, <span class='kw-2'>&amp;</span><span class='ident'>plain_text</span>));
+                                                     .<span class='ident'>get_cipher_opt</span>(<span class='ident'>cipher_opt_h</span>))
+                                            .<span class='ident'>encrypt</span>(<span class='ident'>app</span>, <span class='kw-2'>&amp;</span><span class='ident'>plain_text</span>));
 
                 <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>StructuredData</span>::<span class='ident'>new</span>(<span class='ident'>type_tag</span>,
                                              <span class='ident'>xor_id</span>,
@@ -894,7 +928,7 @@
                                              <span class='ident'>owner_keys</span>,
                                              <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
                                              <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='ident'>sign_key</span>))
-                    .<span class='ident'>map_err</span>(<span class='ident'>CoreError</span>::<span class='ident'>from</span>))
+                             .<span class='ident'>map_err</span>(<span class='ident'>CoreError</span>::<span class='ident'>from</span>))
             }
             _ <span class='op'>=&gt;</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='prelude-val'>Err</span>(<span class='ident'>FfiError</span>::<span class='ident'>InvalidStructuredDataTypeTag</span>)),
         };
@@ -966,7 +1000,7 @@
         <span class='kw'>let</span> <span class='ident'>new_sd</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>.<span class='ident'>get_sd</span>(<span class='ident'>sd_h</span>)).<span class='ident'>get_type_tag</span>() {
             ::<span class='ident'>UNVERSIONED_STRUCT_DATA_TYPE_TAG</span> <span class='op'>=&gt;</span> {
                 <span class='kw'>let</span> <span class='ident'>raw_data</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>.<span class='ident'>get_cipher_opt</span>(<span class='ident'>cipher_opt_h</span>))
-                    .<span class='ident'>encrypt</span>(<span class='ident'>app</span>, <span class='kw-2'>&amp;</span><span class='ident'>plain_text</span>));
+                                            .<span class='ident'>encrypt</span>(<span class='ident'>app</span>, <span class='kw-2'>&amp;</span><span class='ident'>plain_text</span>));
 
                 <span class='kw'>let</span> <span class='ident'>sd</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>.<span class='ident'>get_sd</span>(<span class='ident'>sd_h</span>));
                 <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>unversioned</span>::<span class='ident'>create</span>(<span class='ident'>client</span>,
@@ -981,11 +1015,12 @@
                                              <span class='prelude-val'>None</span>))
             }
             ::<span class='ident'>VERSIONED_STRUCT_DATA_TYPE_TAG</span> <span class='op'>=&gt;</span> {
-                <span class='kw'>let</span> <span class='ident'>immut_data</span> <span class='op'>=</span>
-                    <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>immut_data_operations</span>::<span class='ident'>create</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(), <span class='ident'>plain_text</span>, <span class='prelude-val'>None</span>));
+                <span class='kw'>let</span> <span class='ident'>immut_data</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>immut_data_operations</span>::<span class='ident'>create</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(),
+                                                                        <span class='ident'>plain_text</span>,
+                                                                        <span class='prelude-val'>None</span>));
                 <span class='kw'>let</span> <span class='ident'>ser_immut_data</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>serialise</span>(<span class='kw-2'>&amp;</span><span class='ident'>immut_data</span>).<span class='ident'>map_err</span>(<span class='ident'>FfiError</span>::<span class='ident'>from</span>));
                 <span class='kw'>let</span> <span class='ident'>raw_data</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>.<span class='ident'>get_cipher_opt</span>(<span class='ident'>cipher_opt_h</span>))
-                    .<span class='ident'>encrypt</span>(<span class='ident'>app</span>, <span class='kw-2'>&amp;</span><span class='ident'>ser_immut_data</span>));
+                                            .<span class='ident'>encrypt</span>(<span class='ident'>app</span>, <span class='kw-2'>&amp;</span><span class='ident'>ser_immut_data</span>));
 
                 <span class='kw'>let</span> <span class='ident'>immut_data_final</span> <span class='op'>=</span> <span class='ident'>Data</span>::<span class='ident'>Immutable</span>(<span class='ident'>ImmutableData</span>::<span class='ident'>new</span>(<span class='ident'>raw_data</span>));
                 <span class='kw'>let</span> <span class='ident'>immut_data_final_name</span> <span class='op'>=</span> <span class='op'>*</span><span class='ident'>immut_data_final</span>.<span class='ident'>name</span>();
@@ -1001,7 +1036,7 @@
             }
             <span class='ident'>x</span> <span class='kw'>if</span> <span class='ident'>x</span> <span class='op'>&gt;=</span> <span class='ident'>CLIENT_STRUCTURED_DATA_TAG</span> <span class='op'>=&gt;</span> {
                 <span class='kw'>let</span> <span class='ident'>raw_data</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>.<span class='ident'>get_cipher_opt</span>(<span class='ident'>cipher_opt_h</span>))
-                    .<span class='ident'>encrypt</span>(<span class='ident'>app</span>, <span class='kw-2'>&amp;</span><span class='ident'>plain_text</span>));
+                                            .<span class='ident'>encrypt</span>(<span class='ident'>app</span>, <span class='kw-2'>&amp;</span><span class='ident'>plain_text</span>));
 
                 <span class='kw'>let</span> <span class='ident'>sd</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>.<span class='ident'>get_sd</span>(<span class='ident'>sd_h</span>));
                 <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>StructuredData</span>::<span class='ident'>new</span>(<span class='ident'>sd</span>.<span class='ident'>get_type_tag</span>(),
@@ -1011,7 +1046,7 @@
                                              <span class='ident'>sd</span>.<span class='ident'>get_owner_keys</span>().<span class='ident'>clone</span>(),
                                              <span class='ident'>sd</span>.<span class='ident'>get_previous_owner_keys</span>().<span class='ident'>clone</span>(),
                                              <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='ident'>sign_key</span>))
-                    .<span class='ident'>map_err</span>(<span class='ident'>CoreError</span>::<span class='ident'>from</span>))
+                             .<span class='ident'>map_err</span>(<span class='ident'>CoreError</span>::<span class='ident'>from</span>))
             }
             _ <span class='op'>=&gt;</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='prelude-val'>Err</span>(<span class='ident'>FfiError</span>::<span class='ident'>InvalidStructuredDataTypeTag</span>)),
         };
@@ -1039,31 +1074,27 @@
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>plain_text</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>obj_cache</span>.<span class='ident'>get_sd</span>(<span class='ident'>sd_h</span>)).<span class='ident'>get_type_tag</span>() {
             ::<span class='ident'>UNVERSIONED_STRUCT_DATA_TYPE_TAG</span> <span class='op'>=&gt;</span> {
-                <span class='kw'>let</span> <span class='ident'>raw_data</span> <span class='op'>=</span>
-                    <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>unversioned</span>::<span class='ident'>get_data</span>(<span class='ident'>client</span>, <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>obj_cache</span>.<span class='ident'>get_sd</span>(<span class='ident'>sd_h</span>)), <span class='prelude-val'>None</span>));
+                <span class='kw'>let</span> <span class='ident'>raw_data</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>unversioned</span>::<span class='ident'>get_data</span>(<span class='ident'>client</span>,
+                                                              <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>obj_cache</span>.<span class='ident'>get_sd</span>(<span class='ident'>sd_h</span>)),
+                                                              <span class='prelude-val'>None</span>));
                 <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>CipherOpt</span>::<span class='ident'>decrypt</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='kw-2'>&amp;</span><span class='ident'>raw_data</span>))
             }
             ::<span class='ident'>VERSIONED_STRUCT_DATA_TYPE_TAG</span> <span class='op'>=&gt;</span> {
-                <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>versions</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>versioned</span>::<span class='ident'>get_all_versions</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(),
-                                                         <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>obj_cache</span>.<span class='ident'>get_sd</span>(<span class='ident'>sd_h</span>))));
-                <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>immut_data_final_name</span>) <span class='op'>=</span> <span class='ident'>versions</span>.<span class='ident'>pop</span>() {
-                    <span class='kw'>let</span> <span class='ident'>resp_getter</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>lock</span>())
-                        .<span class='ident'>get</span>(<span class='ident'>DataIdentifier</span>::<span class='ident'>Immutable</span>(<span class='ident'>immut_data_final_name</span>), <span class='prelude-val'>None</span>));
-                    <span class='kw'>let</span> <span class='ident'>immut_data_final</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>resp_getter</span>.<span class='ident'>get</span>()) {
-                        <span class='ident'>Data</span>::<span class='ident'>Immutable</span>(<span class='ident'>immut_data</span>) <span class='op'>=&gt;</span> <span class='ident'>immut_data</span>,
-                        _ <span class='op'>=&gt;</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='prelude-val'>Err</span>(<span class='ident'>CoreError</span>::<span class='ident'>ReceivedUnexpectedData</span>)),
-                    };
+                <span class='kw'>let</span> <span class='ident'>immut_data_final_name</span> <span class='op'>=</span>
+                    <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>versioned</span>::<span class='ident'>current_version</span>(<span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>obj_cache</span>.<span class='ident'>get_sd</span>(<span class='ident'>sd_h</span>))));
 
-                    <span class='kw'>let</span> <span class='ident'>ser_immut_data</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>CipherOpt</span>::<span class='ident'>decrypt</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>,
-                                                                     <span class='ident'>immut_data_final</span>.<span class='ident'>value</span>()));
-                    <span class='kw'>let</span> <span class='ident'>immut_data</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>deserialise</span>::<span class='op'>&lt;</span><span class='ident'>ImmutableData</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='ident'>ser_immut_data</span>)
-                        .<span class='ident'>map_err</span>(<span class='ident'>FfiError</span>::<span class='ident'>from</span>));
-                    <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>immut_data_operations</span>::<span class='ident'>get_data_from_immut_data</span>(<span class='ident'>client</span>,
-                                                                             <span class='ident'>immut_data</span>,
-                                                                             <span class='prelude-val'>None</span>))
-                } <span class='kw'>else</span> {
-                    <span class='ident'>Vec</span>::<span class='ident'>new</span>()
-                }
+                <span class='kw'>let</span> <span class='ident'>resp_getter</span> <span class='op'>=</span>
+                    <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>lock</span>())
+                                 .<span class='ident'>get</span>(<span class='ident'>DataIdentifier</span>::<span class='ident'>Immutable</span>(<span class='ident'>immut_data_final_name</span>), <span class='prelude-val'>None</span>));
+                <span class='kw'>let</span> <span class='ident'>immut_data_final</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>resp_getter</span>.<span class='ident'>get</span>()) {
+                    <span class='ident'>Data</span>::<span class='ident'>Immutable</span>(<span class='ident'>immut_data</span>) <span class='op'>=&gt;</span> <span class='ident'>immut_data</span>,
+                    _ <span class='op'>=&gt;</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='prelude-val'>Err</span>(<span class='ident'>CoreError</span>::<span class='ident'>ReceivedUnexpectedData</span>)),
+                };
+
+                <span class='kw'>let</span> <span class='ident'>ser_immut_data</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>CipherOpt</span>::<span class='ident'>decrypt</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='ident'>immut_data_final</span>.<span class='ident'>value</span>()));
+                <span class='kw'>let</span> <span class='ident'>immut_data</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>deserialise</span>::<span class='op'>&lt;</span><span class='ident'>ImmutableData</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='ident'>ser_immut_data</span>)
+                                              .<span class='ident'>map_err</span>(<span class='ident'>FfiError</span>::<span class='ident'>from</span>));
+                <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>immut_data_operations</span>::<span class='ident'>get_data_from_immut_data</span>(<span class='ident'>client</span>, <span class='ident'>immut_data</span>, <span class='prelude-val'>None</span>))
             }
             <span class='ident'>x</span> <span class='kw'>if</span> <span class='ident'>x</span> <span class='op'>&gt;=</span> <span class='ident'>CLIENT_STRUCTURED_DATA_TAG</span> <span class='op'>=&gt;</span> {
                 <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>CipherOpt</span>::<span class='ident'>decrypt</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>obj_cache</span>.<span class='ident'>get_sd</span>(<span class='ident'>sd_h</span>)).<span class='ident'>get_data</span>()))
@@ -1082,23 +1113,14 @@
 
 <span class='doccomment'>/// Get number of versions from a versioned StructuredData</span>
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
-<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>struct_data_num_of_versions</span>(<span class='ident'>app</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>App</span>,
-                                                     <span class='ident'>sd_h</span>: <span class='ident'>StructDataHandle</span>,
+<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>struct_data_num_of_versions</span>(<span class='ident'>sd_h</span>: <span class='ident'>StructDataHandle</span>,
                                                      <span class='ident'>o_num</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>usize</span>)
                                                      <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
     <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>obj_cache</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>());
         <span class='kw'>let</span> <span class='ident'>sd</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>obj_cache</span>.<span class='ident'>get_sd</span>(<span class='ident'>sd_h</span>));
-
-        <span class='comment'>// TODO Move this check to core module itself (from all functions here using this pattern.</span>
-        <span class='kw'>if</span> <span class='ident'>sd</span>.<span class='ident'>get_type_tag</span>() <span class='op'>!=</span> ::<span class='ident'>VERSIONED_STRUCT_DATA_TYPE_TAG</span> {
-            <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='prelude-val'>Err</span>(<span class='ident'>FfiError</span>::<span class='ident'>InvalidStructuredDataTypeTag</span>));
-        }
-
-        <span class='kw'>let</span> <span class='ident'>num</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>versioned</span>::<span class='ident'>get_all_versions</span>((<span class='op'>*</span><span class='ident'>app</span>).<span class='ident'>get_client</span>(), <span class='ident'>sd</span>)).<span class='ident'>len</span>();
-
-        <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>o_num</span>, <span class='ident'>num</span>);
-
+        <span class='kw'>let</span> <span class='ident'>num</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>versioned</span>::<span class='ident'>version_count</span>(<span class='kw-2'>&amp;</span><span class='ident'>sd</span>).<span class='ident'>map_err</span>(<span class='ident'>FfiError</span>::<span class='ident'>from</span>));
+        <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>o_num</span>, <span class='ident'>num</span> <span class='kw'>as</span> <span class='ident'>usize</span>);
         <span class='number'>0</span>
     })
 }
@@ -1134,7 +1156,8 @@
         <span class='comment'>// TODO Try to combine this code with above (extract_data) if it makes it smaller</span>
         <span class='kw'>let</span> <span class='ident'>immut_data_final_name</span> <span class='op'>=</span> <span class='ident'>versions</span>.<span class='ident'>remove</span>(<span class='ident'>n</span>);
         <span class='kw'>let</span> <span class='ident'>resp_getter</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>lock</span>())
-            .<span class='ident'>get</span>(<span class='ident'>DataIdentifier</span>::<span class='ident'>Immutable</span>(<span class='ident'>immut_data_final_name</span>), <span class='prelude-val'>None</span>));
+                                       .<span class='ident'>get</span>(<span class='ident'>DataIdentifier</span>::<span class='ident'>Immutable</span>(<span class='ident'>immut_data_final_name</span>),
+                                            <span class='prelude-val'>None</span>));
         <span class='kw'>let</span> <span class='ident'>immut_data_final</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>resp_getter</span>.<span class='ident'>get</span>()) {
             <span class='ident'>Data</span>::<span class='ident'>Immutable</span>(<span class='ident'>immut_data</span>) <span class='op'>=&gt;</span> <span class='ident'>immut_data</span>,
             _ <span class='op'>=&gt;</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='prelude-val'>Err</span>(<span class='ident'>CoreError</span>::<span class='ident'>ReceivedUnexpectedData</span>)),
@@ -1142,9 +1165,10 @@
 
         <span class='kw'>let</span> <span class='ident'>ser_immut_data</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>CipherOpt</span>::<span class='ident'>decrypt</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='ident'>immut_data_final</span>.<span class='ident'>value</span>()));
         <span class='kw'>let</span> <span class='ident'>immut_data</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>deserialise</span>::<span class='op'>&lt;</span><span class='ident'>ImmutableData</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='ident'>ser_immut_data</span>)
-            .<span class='ident'>map_err</span>(<span class='ident'>FfiError</span>::<span class='ident'>from</span>));
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>plain_text</span> <span class='op'>=</span>
-            <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>immut_data_operations</span>::<span class='ident'>get_data_from_immut_data</span>(<span class='ident'>client</span>, <span class='ident'>immut_data</span>, <span class='prelude-val'>None</span>));
+                                      .<span class='ident'>map_err</span>(<span class='ident'>FfiError</span>::<span class='ident'>from</span>));
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>plain_text</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>immut_data_operations</span>::<span class='ident'>get_data_from_immut_data</span>(<span class='ident'>client</span>,
+                                                                                      <span class='ident'>immut_data</span>,
+                                                                                      <span class='prelude-val'>None</span>));
 
         <span class='op'>*</span><span class='ident'>o_data</span> <span class='op'>=</span> <span class='ident'>plain_text</span>.<span class='ident'>as_mut_ptr</span>();
         <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>o_size</span>, <span class='ident'>plain_text</span>.<span class='ident'>len</span>());
@@ -1197,7 +1221,7 @@
                                           <span class='ident'>sd</span>.<span class='ident'>get_owner_keys</span>().<span class='ident'>clone</span>(),
                                           <span class='ident'>sd</span>.<span class='ident'>get_previous_owner_keys</span>().<span class='ident'>clone</span>(),
                                           <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='ident'>sign_key</span>))
-        .<span class='ident'>map_err</span>(<span class='ident'>CoreError</span>::<span class='ident'>from</span>));
+                          .<span class='ident'>map_err</span>(<span class='ident'>CoreError</span>::<span class='ident'>from</span>));
 
     <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='ident'>Data</span>::<span class='ident'>Structured</span>(<span class='ident'>new_sd</span>.<span class='ident'>clone</span>());
     <span class='kw'>let</span> <span class='ident'>resp_getter</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>lock</span>()).<span class='ident'>post</span>(<span class='ident'>data</span>, <span class='prelude-val'>None</span>));
@@ -1234,13 +1258,40 @@
                                           <span class='ident'>sd</span>.<span class='ident'>get_owner_keys</span>().<span class='ident'>clone</span>(),
                                           <span class='ident'>sd</span>.<span class='ident'>get_previous_owner_keys</span>().<span class='ident'>clone</span>(),
                                           <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='ident'>sign_key</span>))
-        .<span class='ident'>map_err</span>(<span class='ident'>CoreError</span>::<span class='ident'>from</span>));
+                          .<span class='ident'>map_err</span>(<span class='ident'>CoreError</span>::<span class='ident'>from</span>));
 
     <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='ident'>Data</span>::<span class='ident'>Structured</span>(<span class='ident'>new_sd</span>.<span class='ident'>clone</span>());
     <span class='kw'>let</span> <span class='ident'>resp_getter</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>lock</span>()).<span class='ident'>delete</span>(<span class='ident'>data</span>, <span class='prelude-val'>None</span>));
     <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>resp_getter</span>.<span class='ident'>get</span>());
 
     <span class='prelude-val'>Ok</span>(<span class='ident'>new_sd</span>)
+}
+
+<span class='doccomment'>/// Get the current version of StructuredData by its handle</span>
+<span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
+<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>struct_data_version</span>(<span class='ident'>handle</span>: <span class='ident'>StructDataHandle</span>,
+                                             <span class='ident'>o_version</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u64</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
+    <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
+        <span class='op'>*</span><span class='ident'>o_version</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>()).<span class='ident'>get_sd</span>(<span class='ident'>handle</span>)).<span class='ident'>get_version</span>();
+        <span class='number'>0</span>
+    })
+}
+
+<span class='doccomment'>/// Returns true if the app is one of the owners of the provided StructuredData.</span>
+<span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
+<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>struct_data_is_owned</span>(<span class='ident'>app</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>App</span>,
+                                       <span class='ident'>handle</span>: <span class='ident'>StructDataHandle</span>,
+                                       <span class='ident'>o_is_owned</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
+    <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
+        <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> (<span class='op'>*</span><span class='ident'>app</span>).<span class='ident'>get_client</span>();
+        <span class='kw'>let</span> <span class='ident'>my_key</span> <span class='op'>=</span> <span class='op'>*</span><span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>lock</span>()).<span class='ident'>get_public_signing_key</span>());
+
+        <span class='op'>*</span><span class='ident'>o_is_owned</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>()).<span class='ident'>get_sd</span>(<span class='ident'>handle</span>))
+            .<span class='ident'>get_owner_keys</span>()
+            .<span class='ident'>contains</span>(<span class='kw-2'>&amp;</span><span class='ident'>my_key</span>);
+
+        <span class='number'>0</span>
+    })
 }
 
 <span class='doccomment'>/// Free StructuredData handle</span>
@@ -1329,7 +1380,7 @@
 
             <span class='comment'>// Perform Invalid Operations - should error out</span>
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>versions</span> <span class='op'>=</span> <span class='number'>0</span>;
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_num_of_versions</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='ident'>sd_h</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>versions</span>),
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_num_of_versions</span>(<span class='ident'>sd_h</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>versions</span>),
                        <span class='ident'>FfiError</span>::<span class='ident'>InvalidStructuredDataTypeTag</span>.<span class='ident'>into</span>());
             {
                 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>data_ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span> <span class='op'>=</span> <span class='ident'>ptr</span>::<span class='ident'>null_mut</span>();
@@ -1343,6 +1394,15 @@
                                                    <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>capacity</span>),
                            <span class='ident'>FfiError</span>::<span class='ident'>InvalidStructuredDataTypeTag</span>.<span class='ident'>into</span>());
             }
+
+            <span class='comment'>// Check StructData owners</span>
+            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>is_owned</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_is_owned</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='ident'>sd_h</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>is_owned</span>), <span class='number'>0</span>);
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>is_owned</span>, <span class='bool-val'>true</span>);
+
+            <span class='kw'>let</span> <span class='ident'>app_fake</span> <span class='op'>=</span> <span class='ident'>test_utils</span>::<span class='ident'>create_app</span>(<span class='bool-val'>false</span>);
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_is_owned</span>(<span class='kw-2'>&amp;</span><span class='ident'>app_fake</span>, <span class='ident'>sd_h</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>is_owned</span>), <span class='number'>0</span>);
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>is_owned</span>, <span class='bool-val'>false</span>);
 
             <span class='comment'>// Delete</span>
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_delete</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='ident'>sd_h</span>), <span class='number'>0</span>);
@@ -1390,10 +1450,13 @@
 
             <span class='comment'>// Check content</span>
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>num_versions</span> <span class='op'>=</span> <span class='number'>0usize</span>;
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_num_of_versions</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='ident'>sd_h</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>num_versions</span>),
-                       <span class='number'>0</span>);
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_num_of_versions</span>(<span class='ident'>sd_h</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>num_versions</span>), <span class='number'>0</span>);
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>num_versions</span>, <span class='number'>1</span>);
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>nth_version</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='ident'>sd_h</span>, <span class='number'>0</span>), <span class='ident'>data0</span>);
+
+            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>version</span> <span class='op'>=</span> <span class='number'>0</span>;
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_version</span>(<span class='ident'>sd_h</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>version</span>), <span class='number'>0</span>);
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>version</span>, <span class='number'>0</span>);
 
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>extract_data</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='ident'>sd_h</span>), <span class='ident'>data0</span>);
 
@@ -1407,13 +1470,16 @@
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_fetch</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='ident'>data_id_h</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>sd_h</span>), <span class='number'>0</span>);
 
             <span class='comment'>// Check content</span>
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_num_of_versions</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='ident'>sd_h</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>num_versions</span>),
-                       <span class='number'>0</span>);
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_num_of_versions</span>(<span class='ident'>sd_h</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>num_versions</span>), <span class='number'>0</span>);
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>num_versions</span>, <span class='number'>2</span>);
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>nth_version</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='ident'>sd_h</span>, <span class='number'>0</span>), <span class='ident'>data0</span>);
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>nth_version</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='ident'>sd_h</span>, <span class='number'>1</span>), <span class='ident'>data1</span>);
 
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>extract_data</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='ident'>sd_h</span>), <span class='ident'>data1</span>);
+
+            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>version</span> <span class='op'>=</span> <span class='number'>0</span>;
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_version</span>(<span class='ident'>sd_h</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>version</span>), <span class='number'>0</span>);
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>version</span>, <span class='number'>1</span>);
 
             <span class='comment'>// Delete</span>
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_delete</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='ident'>sd_h</span>), <span class='number'>0</span>);
@@ -1480,7 +1546,7 @@
 
             <span class='comment'>// Invalid operations</span>
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>num_versions</span> <span class='op'>=</span> <span class='number'>0</span>;
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_num_of_versions</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='ident'>sd_h</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>num_versions</span>),
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_num_of_versions</span>(<span class='ident'>sd_h</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>num_versions</span>),
                        <span class='ident'>FfiError</span>::<span class='ident'>InvalidStructuredDataTypeTag</span>.<span class='ident'>into</span>());
 
             <span class='comment'>// Delete</span>

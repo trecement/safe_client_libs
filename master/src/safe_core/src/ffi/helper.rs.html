@@ -241,8 +241,6 @@
 <span id="197">197</span>
 <span id="198">198</span>
 <span id="199">199</span>
-<span id="200">200</span>
-<span id="201">201</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -268,7 +266,6 @@
 <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>errors</span>::<span class='ident'>FfiError</span>;
 <span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>int32_t</span>, <span class='ident'>int64_t</span>};
 <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>AccessLevel</span>;
-<span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>UNVERSIONED_DIRECTORY_LISTING_TAG</span>;
 <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>directory_listing</span>::<span class='ident'>DirectoryListing</span>;
 <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>helper</span>::<span class='ident'>directory_helper</span>::<span class='ident'>DirectoryHelper</span>;
 <span class='kw'>use</span> <span class='ident'>nfs</span>::<span class='ident'>metadata</span>::<span class='ident'>directory_key</span>::<span class='ident'>DirectoryKey</span>;
@@ -362,7 +359,6 @@
         <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> {
             <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;SAFEDrive does not exist - creating one.&quot;</span>);
             <span class='kw'>let</span> (<span class='ident'>created_dir</span>, _) <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dir_helper</span>.<span class='ident'>create</span>(<span class='ident'>safe_drive_dir_name</span>,
-                                                          <span class='ident'>UNVERSIONED_DIRECTORY_LISTING_TAG</span>,
                                                           <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
                                                           <span class='bool-val'>false</span>,
                                                           <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>,

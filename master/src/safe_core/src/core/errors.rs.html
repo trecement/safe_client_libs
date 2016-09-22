@@ -476,6 +476,16 @@
 <span id="432">432</span>
 <span id="433">433</span>
 <span id="434">434</span>
+<span id="435">435</span>
+<span id="436">436</span>
+<span id="437">437</span>
+<span id="438">438</span>
+<span id="439">439</span>
+<span id="440">440</span>
+<span id="441">441</span>
+<span id="442">442</span>
+<span id="443">443</span>
+<span id="444">444</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -567,6 +577,8 @@
     <span class='ident'>SelfEncryption</span>(<span class='ident'>SelfEncryptionError</span><span class='op'>&lt;</span><span class='ident'>SelfEncryptionStorageError</span><span class='op'>&gt;</span>),
     <span class='doccomment'>/// The request has timed out</span>
     <span class='ident'>RequestTimeout</span>,
+    <span class='doccomment'>/// Invalid type tag for StructuredData</span>
+    <span class='ident'>InvalidStructuredDataTypeTag</span>,
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>CoreError</span> {
@@ -686,6 +698,7 @@
                                       ::<span class='ident'>Storage</span>
                                       ::<span class='op'>&lt;</span><span class='ident'>SelfEncryptionStorageError</span><span class='op'>&gt;</span>(
                                           <span class='ident'>SelfEncryptionStorageError</span>(<span class='ident'>err</span>))) <span class='op'>=&gt;</span> (<span class='op'>*</span><span class='ident'>err</span>).<span class='ident'>into</span>(),
+            <span class='ident'>CoreError</span>::<span class='ident'>InvalidStructuredDataTypeTag</span> <span class='op'>=&gt;</span> <span class='ident'>CLIENT_ERROR_START_RANGE</span> <span class='op'>-</span> <span class='number'>34</span>,
         }
     }
 }
@@ -759,6 +772,9 @@
                 <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>formatter</span>, <span class='string'>&quot;CoreError::SelfEncryption -&gt; {:?}&quot;</span>, <span class='ident'>error</span>)
             }
             <span class='ident'>CoreError</span>::<span class='ident'>RequestTimeout</span> <span class='op'>=&gt;</span> <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>formatter</span>, <span class='string'>&quot;CoreError::RequestTimeout&quot;</span>),
+            <span class='ident'>CoreError</span>::<span class='ident'>InvalidStructuredDataTypeTag</span> <span class='op'>=&gt;</span> {
+                <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>formatter</span>, <span class='string'>&quot;CoreError::InvalidStructuredDataTypeTag&quot;</span>)
+            }
         }
     }
 }
@@ -834,6 +850,9 @@
                 <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>formatter</span>, <span class='string'>&quot;Self-encryption error: {}&quot;</span>, <span class='ident'>error</span>)
             }
             <span class='ident'>CoreError</span>::<span class='ident'>RequestTimeout</span> <span class='op'>=&gt;</span> <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>formatter</span>, <span class='string'>&quot;CoreError::RequestTimeout&quot;</span>),
+            <span class='ident'>CoreError</span>::<span class='ident'>InvalidStructuredDataTypeTag</span> <span class='op'>=&gt;</span> {
+                <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>formatter</span>, <span class='string'>&quot;CoreError::InvalidStructuredDataTypeTag&quot;</span>)
+            }
         }
     }
 }
@@ -864,6 +883,7 @@
             <span class='ident'>CoreError</span>::<span class='ident'>MutationFailure</span> { <span class='kw-2'>ref</span> <span class='ident'>reason</span>, .. } <span class='op'>=&gt;</span> <span class='ident'>reason</span>.<span class='ident'>description</span>(),
             <span class='ident'>CoreError</span>::<span class='ident'>SelfEncryption</span>(<span class='kw-2'>ref</span> <span class='ident'>error</span>) <span class='op'>=&gt;</span> <span class='ident'>error</span>.<span class='ident'>description</span>(),
             <span class='ident'>CoreError</span>::<span class='ident'>RequestTimeout</span> <span class='op'>=&gt;</span> <span class='string'>&quot;Request has timed out&quot;</span>,
+            <span class='ident'>CoreError</span>::<span class='ident'>InvalidStructuredDataTypeTag</span> <span class='op'>=&gt;</span> <span class='string'>&quot;Invalid Structured Data type tag&quot;</span>,
         }
     }
 

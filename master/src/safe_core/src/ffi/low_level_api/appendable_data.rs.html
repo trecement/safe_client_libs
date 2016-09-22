@@ -1179,6 +1179,58 @@
 <span id="1135">1135</span>
 <span id="1136">1136</span>
 <span id="1137">1137</span>
+<span id="1138">1138</span>
+<span id="1139">1139</span>
+<span id="1140">1140</span>
+<span id="1141">1141</span>
+<span id="1142">1142</span>
+<span id="1143">1143</span>
+<span id="1144">1144</span>
+<span id="1145">1145</span>
+<span id="1146">1146</span>
+<span id="1147">1147</span>
+<span id="1148">1148</span>
+<span id="1149">1149</span>
+<span id="1150">1150</span>
+<span id="1151">1151</span>
+<span id="1152">1152</span>
+<span id="1153">1153</span>
+<span id="1154">1154</span>
+<span id="1155">1155</span>
+<span id="1156">1156</span>
+<span id="1157">1157</span>
+<span id="1158">1158</span>
+<span id="1159">1159</span>
+<span id="1160">1160</span>
+<span id="1161">1161</span>
+<span id="1162">1162</span>
+<span id="1163">1163</span>
+<span id="1164">1164</span>
+<span id="1165">1165</span>
+<span id="1166">1166</span>
+<span id="1167">1167</span>
+<span id="1168">1168</span>
+<span id="1169">1169</span>
+<span id="1170">1170</span>
+<span id="1171">1171</span>
+<span id="1172">1172</span>
+<span id="1173">1173</span>
+<span id="1174">1174</span>
+<span id="1175">1175</span>
+<span id="1176">1176</span>
+<span id="1177">1177</span>
+<span id="1178">1178</span>
+<span id="1179">1179</span>
+<span id="1180">1180</span>
+<span id="1181">1181</span>
+<span id="1182">1182</span>
+<span id="1183">1183</span>
+<span id="1184">1184</span>
+<span id="1185">1185</span>
+<span id="1186">1186</span>
+<span id="1187">1187</span>
+<span id="1188">1188</span>
+<span id="1189">1189</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2016 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -1848,6 +1900,39 @@
     })
 }
 
+<span class='doccomment'>/// Get the current version of AppendableData by its handle</span>
+<span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
+<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>appendable_data_version</span>(<span class='ident'>handle</span>: <span class='ident'>AppendableDataHandle</span>,
+                                                 <span class='ident'>o_version</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u64</span>)
+                                                 <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
+    <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
+        <span class='op'>*</span><span class='ident'>o_version</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='op'>*</span><span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>()).<span class='ident'>get_ad</span>(<span class='ident'>handle</span>)) {
+            <span class='ident'>AppendableData</span>::<span class='ident'>Pub</span>(<span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>elt</span>) <span class='op'>=&gt;</span> <span class='ident'>elt</span>.<span class='ident'>get_version</span>(),
+            <span class='ident'>AppendableData</span>::<span class='ident'>Priv</span>(<span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>elt</span>) <span class='op'>=&gt;</span> <span class='ident'>elt</span>.<span class='ident'>get_version</span>(),
+        };
+
+        <span class='number'>0</span>
+    })
+}
+
+<span class='doccomment'>/// Returns true if the app is one of the owners of the provided AppendableData.</span>
+<span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
+<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>appendable_data_is_owned</span>(<span class='ident'>app</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>App</span>,
+                                                  <span class='ident'>handle</span>: <span class='ident'>AppendableDataHandle</span>,
+                                                  <span class='ident'>o_is_owned</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
+    <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
+        <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> (<span class='op'>*</span><span class='ident'>app</span>).<span class='ident'>get_client</span>();
+        <span class='kw'>let</span> <span class='ident'>my_key</span> <span class='op'>=</span> <span class='op'>*</span><span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>lock</span>()).<span class='ident'>get_public_signing_key</span>());
+
+        <span class='op'>*</span><span class='ident'>o_is_owned</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='op'>*</span><span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>()).<span class='ident'>get_ad</span>(<span class='ident'>handle</span>)) {
+            <span class='ident'>AppendableData</span>::<span class='ident'>Pub</span>(<span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>elt</span>) <span class='op'>=&gt;</span> <span class='ident'>elt</span>.<span class='ident'>get_owner_keys</span>().<span class='ident'>contains</span>(<span class='kw-2'>&amp;</span><span class='ident'>my_key</span>),
+            <span class='ident'>AppendableData</span>::<span class='ident'>Priv</span>(<span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>elt</span>) <span class='op'>=&gt;</span> <span class='ident'>elt</span>.<span class='ident'>get_owner_keys</span>().<span class='ident'>contains</span>(<span class='kw-2'>&amp;</span><span class='ident'>my_key</span>),
+        };
+
+        <span class='number'>0</span>
+    })
+}
+
 <span class='doccomment'>/// Free AppendableData handle</span>
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
 <span class='kw'>pub</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>appendable_data_free</span>(<span class='ident'>handle</span>: <span class='ident'>AppendableDataHandle</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
@@ -1929,6 +2014,16 @@
                        <span class='number'>0</span>);
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>appendable_data_nth_data_id</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='ident'>ad_h</span>, <span class='number'>1</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>got_immut_id_1_h</span>),
                        <span class='number'>0</span>);
+
+            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>is_owner</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
+
+            <span class='comment'>// Check owners</span>
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>appendable_data_is_owned</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='ident'>ad_h</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>is_owner</span>), <span class='number'>0</span>);
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>is_owner</span>, <span class='bool-val'>true</span>);
+
+            <span class='kw'>let</span> <span class='ident'>app_fake</span> <span class='op'>=</span> <span class='ident'>test_utils</span>::<span class='ident'>create_app</span>(<span class='bool-val'>false</span>);
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>appendable_data_is_owned</span>(<span class='kw-2'>&amp;</span><span class='ident'>app_fake</span>, <span class='ident'>ad_h</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>is_owner</span>), <span class='number'>0</span>);
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>is_owner</span>, <span class='bool-val'>false</span>);
 
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>appendable_data_free</span>(<span class='ident'>ad_h</span>), <span class='number'>0</span>);
         }
@@ -2066,6 +2161,15 @@
                        <span class='number'>0</span>);
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>appendable_data_nth_data_id</span>(<span class='kw-2'>&amp;</span><span class='ident'>app0</span>, <span class='ident'>ad_priv_h</span>, <span class='number'>1</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>got_immut_id_1_h</span>),
                        <span class='number'>0</span>);
+
+            <span class='comment'>// Check owners of appendable data</span>
+            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>is_owner</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
+
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>appendable_data_is_owned</span>(<span class='kw-2'>&amp;</span><span class='ident'>app0</span>, <span class='ident'>ad_priv_h</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>is_owner</span>), <span class='number'>0</span>);
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>is_owner</span>, <span class='bool-val'>true</span>);
+
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>appendable_data_is_owned</span>(<span class='kw-2'>&amp;</span><span class='ident'>app1</span>, <span class='ident'>ad_priv_h</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>is_owner</span>), <span class='number'>0</span>);
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>is_owner</span>, <span class='bool-val'>false</span>);
 
             <span class='comment'>// Delete and restore private appendable data</span>
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>appendable_data_remove_nth_data</span>(<span class='ident'>ad_priv_h</span>, <span class='number'>0</span>), <span class='number'>0</span>);

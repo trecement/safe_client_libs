@@ -231,6 +231,9 @@
 <span id="187">187</span>
 <span id="188">188</span>
 <span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -328,7 +331,10 @@
 
 <span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>CoreError</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>FfiError</span> {
     <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>error</span>: <span class='ident'>CoreError</span>) <span class='op'>-&gt;</span> <span class='ident'>FfiError</span> {
-        <span class='ident'>FfiError</span>::<span class='ident'>CoreError</span>(<span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>error</span>))
+        <span class='kw'>match</span> <span class='ident'>error</span> {
+            <span class='ident'>CoreError</span>::<span class='ident'>InvalidStructuredDataTypeTag</span> <span class='op'>=&gt;</span> <span class='ident'>FfiError</span>::<span class='ident'>InvalidStructuredDataTypeTag</span>,
+            _ <span class='op'>=&gt;</span> <span class='ident'>FfiError</span>::<span class='ident'>CoreError</span>(<span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>error</span>)),
+        }
     }
 }
 
