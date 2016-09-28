@@ -230,6 +230,49 @@
 <span id="186">186</span>
 <span id="187">187</span>
 <span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -256,6 +299,17 @@
 <span class='kw'>use</span> <span class='ident'>routing</span>::{<span class='ident'>Data</span>, <span class='ident'>DataIdentifier</span>, <span class='ident'>ImmutableData</span>, <span class='ident'>StructuredData</span>, <span class='ident'>XorName</span>};
 <span class='kw'>use</span> <span class='ident'>rust_sodium</span>::<span class='ident'>crypto</span>::<span class='ident'>sign</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::{<span class='ident'>Arc</span>, <span class='ident'>Mutex</span>};
+
+<span class='doccomment'>/// All fields updated whenever a version is appended/removed</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>RustcEncodable</span>, <span class='ident'>RustcDecodable</span>, <span class='ident'>Debug</span>)]</span>
+<span class='kw'>struct</span> <span class='ident'>VersionsInfo</span> {
+    <span class='doccomment'>/// Contains an ID for Vec&lt;XorName&gt; of versions</span>
+    <span class='ident'>ptr_to_versions</span>: <span class='ident'>XorName</span>,
+    <span class='doccomment'>/// Total number of available versions</span>
+    <span class='ident'>total_versions</span>: <span class='ident'>u64</span>,
+    <span class='doccomment'>/// Contains an ID for the current version</span>
+    <span class='ident'>ptr_to_current_version</span>: <span class='ident'>XorName</span>,
+}
 
 <span class='doccomment'>/// Create the StructuredData to manage versioned data.</span>
 <span class='attribute'>#[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;clippy&quot;</span>, <span class='ident'>allow</span>(<span class='ident'>too_many_arguments</span>))]</span>
@@ -305,7 +359,11 @@
     <span class='ident'>versions</span>.<span class='ident'>push</span>(<span class='ident'>version_to_append</span>);
 
     <span class='kw'>let</span> <span class='ident'>new_version_number</span> <span class='op'>=</span> <span class='ident'>struct_data</span>.<span class='ident'>get_version</span>() <span class='op'>+</span>
-                             <span class='kw'>if</span> <span class='ident'>increment_version_number</span> { <span class='number'>1</span> } <span class='kw'>else</span> { <span class='number'>0</span> };
+                             <span class='kw'>if</span> <span class='ident'>increment_version_number</span> {
+        <span class='number'>1</span>
+    } <span class='kw'>else</span> {
+        <span class='number'>0</span>
+    };
 
     <span class='ident'>create_impl</span>(<span class='ident'>client</span>,
                 <span class='kw-2'>&amp;</span><span class='ident'>versions</span>,
@@ -330,9 +388,16 @@
     <span class='kw'>let</span> <span class='ident'>immutable_data</span> <span class='op'>=</span> <span class='ident'>ImmutableData</span>::<span class='ident'>new</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>serialise</span>(<span class='kw-2'>&amp;</span><span class='ident'>version_names_to_store</span>)));
     <span class='kw'>let</span> <span class='ident'>name_of_immutable_data</span> <span class='op'>=</span> <span class='op'>*</span><span class='ident'>immutable_data</span>.<span class='ident'>name</span>();
 
-    <span class='kw'>let</span> <span class='ident'>encoded_name</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>serialise</span>(<span class='kw-2'>&amp;</span><span class='ident'>name_of_immutable_data</span>));
+    <span class='kw'>let</span> <span class='ident'>total_versions</span> <span class='op'>=</span> <span class='ident'>version_names_to_store</span>.<span class='ident'>len</span>();
+    <span class='kw'>let</span> <span class='ident'>versions_info</span> <span class='op'>=</span> <span class='ident'>VersionsInfo</span> {
+        <span class='ident'>ptr_to_versions</span>: <span class='ident'>name_of_immutable_data</span>,
+        <span class='ident'>total_versions</span>: <span class='ident'>total_versions</span> <span class='kw'>as</span> <span class='ident'>u64</span>,
+        <span class='ident'>ptr_to_current_version</span>: <span class='ident'>version_names_to_store</span>[<span class='ident'>total_versions</span> <span class='op'>-</span> <span class='number'>1</span>],
+    };
 
-    <span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>check_if_data_can_fit_in_structured_data</span>(<span class='kw-2'>&amp;</span><span class='ident'>encoded_name</span>,
+    <span class='kw'>let</span> <span class='ident'>encoded</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>serialise</span>(<span class='kw-2'>&amp;</span><span class='ident'>versions_info</span>));
+
+    <span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>check_if_data_can_fit_in_structured_data</span>(<span class='kw-2'>&amp;</span><span class='ident'>encoded</span>,
                                                         <span class='ident'>owner_keys</span>.<span class='ident'>clone</span>(),
                                                         <span class='ident'>prev_owner_keys</span>.<span class='ident'>clone</span>())) {
         <span class='ident'>DataFitResult</span>::<span class='ident'>DataFits</span> <span class='op'>=&gt;</span> {
@@ -344,7 +409,7 @@
             <span class='prelude-val'>Ok</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>StructuredData</span>::<span class='ident'>new</span>(<span class='ident'>tag_type</span>,
                                         <span class='ident'>name</span>,
                                         <span class='ident'>version</span>,
-                                        <span class='ident'>encoded_name</span>,
+                                        <span class='ident'>encoded</span>,
                                         <span class='ident'>owner_keys</span>,
                                         <span class='ident'>prev_owner_keys</span>,
                                         <span class='prelude-val'>Some</span>(<span class='ident'>private_signing_key</span>))))
@@ -356,10 +421,26 @@
     }
 }
 
+<span class='doccomment'>/// Get a total number of versions in versioned StructuredData</span>
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>version_count</span>(<span class='ident'>sd</span>: <span class='kw-2'>&amp;</span><span class='ident'>StructuredData</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>u64</span>, <span class='ident'>CoreError</span><span class='op'>&gt;</span> {
+    <span class='kw'>if</span> <span class='ident'>sd</span>.<span class='ident'>get_type_tag</span>() <span class='op'>!=</span> ::<span class='ident'>VERSIONED_STRUCT_DATA_TYPE_TAG</span> {
+        <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>CoreError</span>::<span class='ident'>InvalidStructuredDataTypeTag</span>);
+    }
+    <span class='prelude-val'>Ok</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>deserialise</span>::<span class='op'>&lt;</span><span class='ident'>VersionsInfo</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='ident'>sd</span>.<span class='ident'>get_data</span>())).<span class='ident'>total_versions</span>)
+}
+
+<span class='doccomment'>/// Get the current version of versioned StructuredData</span>
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>current_version</span>(<span class='ident'>sd</span>: <span class='kw-2'>&amp;</span><span class='ident'>StructuredData</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>XorName</span>, <span class='ident'>CoreError</span><span class='op'>&gt;</span> {
+    <span class='kw'>if</span> <span class='ident'>sd</span>.<span class='ident'>get_type_tag</span>() <span class='op'>!=</span> ::<span class='ident'>VERSIONED_STRUCT_DATA_TYPE_TAG</span> {
+        <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>CoreError</span>::<span class='ident'>InvalidStructuredDataTypeTag</span>);
+    }
+    <span class='prelude-val'>Ok</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>deserialise</span>::<span class='op'>&lt;</span><span class='ident'>VersionsInfo</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='ident'>sd</span>.<span class='ident'>get_data</span>())).<span class='ident'>ptr_to_current_version</span>)
+}
+
 <span class='kw'>fn</span> <span class='ident'>get_immutable_data</span>(<span class='ident'>client</span>: <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>Mutex</span><span class='op'>&lt;</span><span class='ident'>Client</span><span class='op'>&gt;&gt;</span>,
                       <span class='ident'>struct_data</span>: <span class='kw-2'>&amp;</span><span class='ident'>StructuredData</span>)
                       <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>ImmutableData</span>, <span class='ident'>CoreError</span><span class='op'>&gt;</span> {
-    <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>deserialise</span>(<span class='kw-2'>&amp;</span><span class='ident'>struct_data</span>.<span class='ident'>get_data</span>()));
+    <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>deserialise</span>::<span class='op'>&lt;</span><span class='ident'>VersionsInfo</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='ident'>struct_data</span>.<span class='ident'>get_data</span>())).<span class='ident'>ptr_to_versions</span>;
     <span class='kw'>let</span> <span class='ident'>resp_getter</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>lock</span>()).<span class='ident'>get</span>(<span class='ident'>DataIdentifier</span>::<span class='ident'>Immutable</span>(<span class='ident'>name</span>), <span class='prelude-val'>None</span>));
     <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>resp_getter</span>.<span class='ident'>get</span>());
     <span class='kw'>match</span> <span class='ident'>data</span> {
@@ -378,8 +459,6 @@
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::{<span class='ident'>Arc</span>, <span class='ident'>Mutex</span>};
     <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
 
-    <span class='kw'>const</span> <span class='ident'>TAG_ID</span>: <span class='ident'>u64</span> <span class='op'>=</span> ::<span class='ident'>core</span>::<span class='ident'>MAIDSAFE_TAG</span> <span class='op'>+</span> <span class='number'>1001</span>;
-
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>save_and_retrieve_immutable_data</span>() {
         <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>utility</span>::<span class='ident'>test_utils</span>::<span class='ident'>get_client</span>());
@@ -394,7 +473,7 @@
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>structured_data_result</span> <span class='op'>=</span> <span class='ident'>create</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(),
                                                 <span class='ident'>version_0</span>,
-                                                <span class='ident'>TAG_ID</span>,
+                                                ::<span class='ident'>VERSIONED_STRUCT_DATA_TYPE_TAG</span>,
                                                 <span class='ident'>id</span>,
                                                 <span class='number'>0</span>,
                                                 <span class='ident'>owners</span>,
@@ -405,18 +484,25 @@
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>versions_res</span> <span class='op'>=</span> <span class='ident'>get_all_versions</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(), <span class='kw-2'>&amp;</span><span class='ident'>structured_data</span>);
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>versions</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>versions_res</span>);
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>versions</span>.<span class='ident'>len</span>(), <span class='number'>1</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>version_count</span>(<span class='kw-2'>&amp;</span><span class='ident'>structured_data</span>)), <span class='number'>1</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>current_version</span>(<span class='kw-2'>&amp;</span><span class='ident'>structured_data</span>)), <span class='ident'>version_0</span>);
 
         <span class='kw'>let</span> <span class='ident'>version_1</span>: <span class='ident'>XorName</span> <span class='op'>=</span> <span class='ident'>rand</span>::<span class='ident'>random</span>();
 
-        <span class='ident'>structured_data_result</span> <span class='op'>=</span>
-            <span class='ident'>append_version</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(), <span class='ident'>structured_data</span>, <span class='ident'>version_1</span>, <span class='ident'>secret_key</span>, <span class='bool-val'>true</span>);
+        <span class='ident'>structured_data_result</span> <span class='op'>=</span> <span class='ident'>append_version</span>(<span class='ident'>client</span>.<span class='ident'>clone</span>(),
+                                                <span class='ident'>structured_data</span>,
+                                                <span class='ident'>version_1</span>,
+                                                <span class='ident'>secret_key</span>,
+                                                <span class='bool-val'>true</span>);
         <span class='ident'>structured_data</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>structured_data_result</span>);
         <span class='ident'>versions_res</span> <span class='op'>=</span> <span class='ident'>get_all_versions</span>(<span class='ident'>client</span>, <span class='kw-2'>&amp;</span><span class='ident'>structured_data</span>);
         <span class='ident'>versions</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>versions_res</span>);
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>versions</span>.<span class='ident'>len</span>(), <span class='number'>2</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>version_count</span>(<span class='kw-2'>&amp;</span><span class='ident'>structured_data</span>)), <span class='number'>2</span>);
 
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>versions</span>[<span class='number'>0</span>], <span class='ident'>version_0</span>);
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>versions</span>[<span class='number'>1</span>], <span class='ident'>version_1</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>current_version</span>(<span class='kw-2'>&amp;</span><span class='ident'>structured_data</span>)), <span class='ident'>version_1</span>);
     }
 }
 </pre>

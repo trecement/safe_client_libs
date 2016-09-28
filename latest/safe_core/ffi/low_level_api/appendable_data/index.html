@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-5804' class='srclink' href='../../../../src/safe_core/src/ffi/low_level_api/appendable_data.rs.html#18-875' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-5790' class='srclink' href='../../../../src/safe_core/src/ffi/low_level_api/appendable_data.rs.html#18-1189' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Low level manipulation of {Pub|Priv}AppendableData</p>
 </div><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
@@ -128,6 +128,13 @@
                            <td class='docblock short'>
                                 <p>Insert a new entry to the (whitelist or blacklist) filter. If the key was
 already present in the filter, this is a no-op.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.appendable_data_is_owned.html'
+                                  title='safe_core::ffi::low_level_api::appendable_data::appendable_data_is_owned'>appendable_data_is_owned</a></td>
+                           <td class='docblock short'>
+                                <p>Returns true if the app is one of the owners of the provided AppendableData.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -237,6 +244,13 @@ the change to be registered by the network.</p>
                                   title='safe_core::ffi::low_level_api::appendable_data::appendable_data_toggle_filter'>appendable_data_toggle_filter</a></td>
                            <td class='docblock short'>
                                 <p>Switch the filter of the appendable data.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.appendable_data_version.html'
+                                  title='safe_core::ffi::low_level_api::appendable_data::appendable_data_version'>appendable_data_version</a></td>
+                           <td class='docblock short'>
+                                <p>Get the current version of AppendableData by its handle</p>
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>
