@@ -276,6 +276,11 @@
 <span id="232">232</span>
 <span id="233">233</span>
 <span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -315,6 +320,7 @@
 <span class='kw'>impl</span> <span class='ident'>DirectoryMetadata</span> {
     <span class='doccomment'>/// Create a new instance of Metadata</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>name</span>: <span class='ident'>String</span>,
+               <span class='ident'>type_tag</span>: <span class='ident'>u64</span>,
                <span class='ident'>versioned</span>: <span class='ident'>bool</span>,
                <span class='ident'>access_level</span>: <span class='ident'>AccessLevel</span>,
                <span class='ident'>user_metadata</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
@@ -322,7 +328,7 @@
                <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>DirectoryMetadata</span>, <span class='ident'>NfsError</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='ident'>id</span> <span class='op'>=</span> <span class='ident'>Rand</span>::<span class='ident'>rand</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>OsRng</span>::<span class='ident'>new</span>(), <span class='string'>&quot;Failed to create OsRng.&quot;</span>));
         <span class='prelude-val'>Ok</span>(<span class='ident'>DirectoryMetadata</span> {
-            <span class='ident'>key</span>: <span class='ident'>DirectoryKey</span>::<span class='ident'>new</span>(<span class='ident'>id</span>, <span class='ident'>versioned</span>, <span class='ident'>access_level</span>),
+            <span class='ident'>key</span>: <span class='ident'>DirectoryKey</span>::<span class='ident'>new</span>(<span class='ident'>id</span>, <span class='ident'>type_tag</span>, <span class='ident'>versioned</span>, <span class='ident'>access_level</span>),
             <span class='ident'>name</span>: <span class='ident'>name</span>,
             <span class='ident'>created_time</span>: ::<span class='ident'>time</span>::<span class='ident'>now_utc</span>(),
             <span class='ident'>modified_time</span>: ::<span class='ident'>time</span>::<span class='ident'>now_utc</span>(),
@@ -462,6 +468,7 @@
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>serialise_directory_metadata_without_parent_directory</span>() {
         <span class='kw'>let</span> <span class='ident'>obj_before</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>DirectoryMetadata</span>::<span class='ident'>new</span>(<span class='string'>&quot;hello.txt&quot;</span>.<span class='ident'>to_string</span>(),
+                                                        <span class='number'>99u64</span>,
                                                         <span class='bool-val'>true</span>,
                                                         <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>,
                                                         <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
@@ -474,8 +481,9 @@
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>serialise_directory_metadata_with_parent_directory</span>() {
         <span class='kw'>let</span> <span class='ident'>id</span>: <span class='ident'>XorName</span> <span class='op'>=</span> <span class='ident'>rand</span>::<span class='ident'>random</span>();
-        <span class='kw'>let</span> <span class='ident'>parent_directory</span> <span class='op'>=</span> <span class='ident'>DirectoryKey</span>::<span class='ident'>new</span>(<span class='ident'>id</span>, <span class='bool-val'>false</span>, <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>);
+        <span class='kw'>let</span> <span class='ident'>parent_directory</span> <span class='op'>=</span> <span class='ident'>DirectoryKey</span>::<span class='ident'>new</span>(<span class='ident'>id</span>, <span class='number'>100u64</span>, <span class='bool-val'>false</span>, <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>);
         <span class='kw'>let</span> <span class='ident'>obj_before</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>DirectoryMetadata</span>::<span class='ident'>new</span>(<span class='string'>&quot;hello.txt&quot;</span>.<span class='ident'>to_string</span>(),
+                                                        <span class='number'>99u64</span>,
                                                         <span class='bool-val'>true</span>,
                                                         <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>,
                                                         <span class='string'>&quot;Some user metadata&quot;</span>
@@ -494,10 +502,12 @@
         <span class='kw'>let</span> <span class='ident'>id</span>: <span class='ident'>XorName</span> <span class='op'>=</span> <span class='ident'>rand</span>::<span class='ident'>random</span>();
         <span class='kw'>let</span> <span class='ident'>modified_time</span> <span class='op'>=</span> ::<span class='ident'>time</span>::<span class='ident'>now_utc</span>();
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>obj_before</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>DirectoryMetadata</span>::<span class='ident'>new</span>(<span class='string'>&quot;hello.txt&quot;</span>.<span class='ident'>to_string</span>(),
+                                                  <span class='number'>99u64</span>,
                                                   <span class='bool-val'>true</span>,
                                                   <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>,
                                                   <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
                                                   <span class='prelude-val'>Some</span>(<span class='ident'>DirectoryKey</span>::<span class='ident'>new</span>(<span class='ident'>id</span>,
+                                                                         <span class='number'>100u64</span>,
                                                                          <span class='bool-val'>false</span>,
                                                                          <span class='ident'>AccessLevel</span>::<span class='ident'>Private</span>))));
         <span class='kw'>let</span> <span class='ident'>user_metadata</span> <span class='op'>=</span> <span class='string'>&quot;{mime: \&quot;application/json\&quot;}&quot;</span>.<span class='ident'>to_string</span>().<span class='ident'>into_bytes</span>();
