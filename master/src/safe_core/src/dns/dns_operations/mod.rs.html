@@ -747,6 +747,10 @@
 <span id="703">703</span>
 <span id="704">704</span>
 <span id="705">705</span>
+<span id="706">706</span>
+<span id="707">707</span>
+<span id="708">708</span>
+<span id="709">709</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -1253,14 +1257,17 @@
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>services</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[(<span class='string'>&quot;www&quot;</span>.<span class='ident'>to_string</span>(),
                                  <span class='ident'>DirectoryKey</span>::<span class='ident'>new</span>(<span class='ident'>XorName</span>([<span class='number'>123</span>; <span class='ident'>XOR_NAME_LEN</span>]),
+                                                   <span class='number'>15000</span>,
                                                    <span class='bool-val'>false</span>,
                                                    <span class='ident'>AccessLevel</span>::<span class='ident'>Public</span>)),
                                 (<span class='string'>&quot;blog&quot;</span>.<span class='ident'>to_string</span>(),
                                  <span class='ident'>DirectoryKey</span>::<span class='ident'>new</span>(<span class='ident'>XorName</span>([<span class='number'>123</span>; <span class='ident'>XOR_NAME_LEN</span>]),
+                                                   <span class='number'>15000</span>,
                                                    <span class='bool-val'>false</span>,
                                                    <span class='ident'>AccessLevel</span>::<span class='ident'>Public</span>)),
                                 (<span class='string'>&quot;bad-ass&quot;</span>.<span class='ident'>to_string</span>(),
                                  <span class='ident'>DirectoryKey</span>::<span class='ident'>new</span>(<span class='ident'>XorName</span>([<span class='number'>123</span>; <span class='ident'>XOR_NAME_LEN</span>]),
+                                                   <span class='number'>15000</span>,
                                                    <span class='bool-val'>false</span>,
                                                    <span class='ident'>AccessLevel</span>::<span class='ident'>Public</span>))];
 
@@ -1331,6 +1338,7 @@
         <span class='comment'>// Add a service</span>
         <span class='ident'>services</span>.<span class='ident'>push</span>((<span class='string'>&quot;added-service&quot;</span>.<span class='ident'>to_string</span>(),
                        <span class='ident'>DirectoryKey</span>::<span class='ident'>new</span>(<span class='ident'>XorName</span>([<span class='number'>126</span>; <span class='ident'>XOR_NAME_LEN</span>]),
+                                         <span class='number'>15000</span>,
                                          <span class='bool-val'>false</span>,
                                          <span class='ident'>AccessLevel</span>::<span class='ident'>Public</span>)));
         <span class='kw'>let</span> <span class='ident'>services_size</span> <span class='op'>=</span> <span class='ident'>services</span>.<span class='ident'>len</span>();
