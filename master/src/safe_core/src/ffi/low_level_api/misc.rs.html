@@ -553,6 +553,10 @@
 <span id="509">509</span>
 <span id="510">510</span>
 <span id="511">511</span>
+<span id="512">512</span>
+<span id="513">513</span>
+<span id="514">514</span>
+<span id="515">515</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2016 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -620,6 +624,7 @@
 }
 
 <span class='doccomment'>/// Deserialise sign::PubKey</span>
+<span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
 <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>misc_deserialise_sign_key</span>(<span class='ident'>data</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
                                                    <span class='ident'>size</span>: <span class='ident'>usize</span>,
                                                    <span class='ident'>o_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>SignKeyHandle</span>)
@@ -776,8 +781,8 @@
     <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>low_level_api</span>::<span class='ident'>appendable_data</span>::<span class='op'>*</span>;
     <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>low_level_api</span>::<span class='ident'>cipher_opt</span>::<span class='op'>*</span>;
     <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>low_level_api</span>::<span class='ident'>data_id</span>::<span class='op'>*</span>;
-    <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>low_level_api</span>::<span class='ident'>struct_data</span>::<span class='op'>*</span>;
     <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>low_level_api</span>::<span class='ident'>object_cache</span>::<span class='ident'>object_cache</span>;
+    <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>low_level_api</span>::<span class='ident'>struct_data</span>::<span class='op'>*</span>;
     <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>test_utils</span>;
     <span class='kw'>use</span> <span class='ident'>rand</span>;
     <span class='kw'>use</span> <span class='ident'>routing</span>::<span class='ident'>DataIdentifier</span>;
@@ -805,9 +810,7 @@
                        <span class='number'>0</span>);
 
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>got_sign_key_h</span> <span class='op'>=</span> <span class='number'>0</span>;
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>misc_deserialise_sign_key</span>(<span class='ident'>data_ptr</span>,
-                                                 <span class='ident'>data_size</span>,
-                                                 <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>got_sign_key_h</span>),
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>misc_deserialise_sign_key</span>(<span class='ident'>data_ptr</span>, <span class='ident'>data_size</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>got_sign_key_h</span>),
                        <span class='number'>0</span>);
 
             {
@@ -852,7 +855,9 @@
                        <span class='number'>0</span>);
 
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>appendable_data_h</span> <span class='op'>=</span> <span class='number'>0</span>;
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>misc_deserialise_appendable_data</span>(<span class='ident'>data_ptr</span>, <span class='ident'>data_size</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>appendable_data_h</span>),
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>misc_deserialise_appendable_data</span>(<span class='ident'>data_ptr</span>,
+                                                        <span class='ident'>data_size</span>,
+                                                        <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>appendable_data_h</span>),
                        <span class='number'>0</span>);
             <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>appendable_data_h</span> <span class='op'>!=</span> <span class='ident'>ad_pub_h</span>);
 
@@ -880,7 +885,9 @@
                        <span class='number'>0</span>);
 
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>appendable_data_h</span> <span class='op'>=</span> <span class='number'>0</span>;
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>misc_deserialise_appendable_data</span>(<span class='ident'>data_ptr</span>, <span class='ident'>data_size</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>appendable_data_h</span>),
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>misc_deserialise_appendable_data</span>(<span class='ident'>data_ptr</span>,
+                                                        <span class='ident'>data_size</span>,
+                                                        <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>appendable_data_h</span>),
                        <span class='number'>0</span>);
             <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>appendable_data_h</span> <span class='op'>!=</span> <span class='ident'>ad_priv_h</span>);
 
@@ -920,7 +927,8 @@
                                        <span class='ident'>cipher_opt_h</span>,
                                        <span class='ident'>plain_text</span>.<span class='ident'>as_ptr</span>(),
                                        <span class='ident'>plain_text</span>.<span class='ident'>len</span>(),
-                                       <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>sd_h</span>), <span class='number'>0</span>);
+                                       <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>sd_h</span>),
+                       <span class='number'>0</span>);
         }
 
         <span class='kw'>unsafe</span> {
