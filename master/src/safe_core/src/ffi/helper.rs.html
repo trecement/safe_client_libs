@@ -243,6 +243,10 @@
 <span id="199">199</span>
 <span id="200">200</span>
 <span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -436,13 +440,17 @@
     <span class='kw'>fn</span> <span class='ident'>string_conversion</span>() {
         <span class='kw'>let</span> (<span class='ident'>ptr</span>, <span class='ident'>size</span>, <span class='ident'>cap</span>) <span class='op'>=</span> <span class='ident'>string_to_c_utf8</span>(<span class='ident'>String</span>::<span class='ident'>new</span>());
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>size</span>, <span class='number'>0</span>);
-        <span class='kw'>unsafe</span> { <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>from_raw_parts</span>(<span class='ident'>ptr</span>, <span class='ident'>size</span>, <span class='ident'>cap</span>); }
+        <span class='kw'>unsafe</span> {
+            <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>from_raw_parts</span>(<span class='ident'>ptr</span>, <span class='ident'>size</span>, <span class='ident'>cap</span>);
+        }
 
         <span class='kw'>let</span> (<span class='ident'>ptr</span>, <span class='ident'>size</span>, <span class='ident'>cap</span>) <span class='op'>=</span> <span class='ident'>string_to_c_utf8</span>(<span class='string'>&quot;hello world&quot;</span>.<span class='ident'>to_owned</span>());
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>ptr</span> <span class='op'>!=</span> <span class='number'>0</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>);
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>size</span>, <span class='number'>11</span>);
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>cap</span> <span class='op'>&gt;=</span> <span class='number'>11</span>);
-        <span class='kw'>unsafe</span> { <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>from_raw_parts</span>(<span class='ident'>ptr</span>, <span class='ident'>size</span>, <span class='ident'>cap</span>); }
+        <span class='kw'>unsafe</span> {
+            <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>from_raw_parts</span>(<span class='ident'>ptr</span>, <span class='ident'>size</span>, <span class='ident'>cap</span>);
+        }
     }
 }
 </pre>
