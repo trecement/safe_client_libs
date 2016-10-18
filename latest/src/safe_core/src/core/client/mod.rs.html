@@ -1142,6 +1142,7 @@
 <span id="1098">1098</span>
 <span id="1099">1099</span>
 <span id="1100">1100</span>
+<span id="1101">1101</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2015 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -1175,7 +1176,7 @@
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>utility</span>;
 
 <span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::<span class='ident'>serialise</span>;
-<span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>thread</span>::<span class='ident'>RaiiThreadJoiner</span>;
+<span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>thread</span>::<span class='ident'>Joiner</span>;
 <span class='kw'>use</span> <span class='ident'>routing</span>::{<span class='ident'>AppendWrapper</span>, <span class='ident'>Authority</span>, <span class='ident'>Data</span>, <span class='ident'>DataIdentifier</span>, <span class='ident'>FullId</span>, <span class='ident'>MessageId</span>, <span class='ident'>PlainData</span>,
               <span class='ident'>StructuredData</span>, <span class='ident'>XorName</span>};
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;use-mock-routing&quot;</span>))]</span>
@@ -1204,7 +1205,7 @@
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Client</span> {
     <span class='ident'>account</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Account</span><span class='op'>&gt;</span>,
     <span class='ident'>routing</span>: <span class='ident'>Routing</span>,
-    <span class='ident'>_raii_joiner</span>: <span class='ident'>RaiiThreadJoiner</span>,
+    <span class='ident'>_raii_joiner</span>: <span class='ident'>Joiner</span>,
     <span class='ident'>message_queue</span>: <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>Mutex</span><span class='op'>&lt;</span><span class='ident'>MessageQueue</span><span class='op'>&gt;&gt;</span>,
     <span class='ident'>session_packet_id</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>XorName</span><span class='op'>&gt;</span>,
     <span class='ident'>session_packet_keys</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>SessionPacketEncryptionKeys</span><span class='op'>&gt;</span>,
@@ -1674,7 +1675,8 @@
         <span class='kw'>let</span> <span class='ident'>resp_getter</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>lock</span>()).<span class='ident'>delete</span>(<span class='ident'>data</span>, <span class='ident'>opt_dst</span>));
         <span class='kw'>match</span> <span class='ident'>resp_getter</span>.<span class='ident'>get</span>() {
             <span class='prelude-val'>Ok</span>(()) <span class='op'>|</span>
-            <span class='prelude-val'>Err</span>(<span class='ident'>CoreError</span>::<span class='ident'>MutationFailure</span> { <span class='ident'>reason</span>: <span class='ident'>MutationError</span>::<span class='ident'>NoSuchData</span>, .. }) <span class='op'>=&gt;</span> {
+            <span class='prelude-val'>Err</span>(<span class='ident'>CoreError</span>::<span class='ident'>MutationFailure</span> { <span class='ident'>reason</span>: <span class='ident'>MutationError</span>::<span class='ident'>NoSuchData</span>, .. }) <span class='op'>|</span>
+            <span class='prelude-val'>Err</span>(<span class='ident'>CoreError</span>::<span class='ident'>MutationFailure</span> { <span class='ident'>reason</span>: <span class='ident'>MutationError</span>::<span class='ident'>InvalidOperation</span>, .. })  <span class='op'>=&gt;</span> {
                 <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;DELETE recovery successful !&quot;</span>);
                 <span class='prelude-val'>Ok</span>(())
             }

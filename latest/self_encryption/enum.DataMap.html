@@ -56,7 +56,7 @@
 on the file size, this is held as a vector of <code>ChunkDetails</code>, or as raw data.</p>
 </div><h2 class='variants'>Variants</h2>
 <span id='variant.Chunks' class='variant'><code>Chunks(<a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../self_encryption/struct.ChunkDetails.html' title='self_encryption::ChunkDetails'>ChunkDetails</a>&gt;)</code></span><div class='docblock'><p>If the file is large enough (larger than 3072 bytes, 3 * MIN_CHUNK_SIZE), this algorithm
-holds the list of the files chunks and corresponding hashes.</p>
+holds the list of the file&#39;s chunks and corresponding hashes.</p>
 </div><span id='variant.Content' class='variant'><code>Content(<a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;)</code></span><div class='docblock'><p>Very small files (less than 3072 bytes, 3 * MIN_CHUNK_SIZE) are not split into chunks and
 are put in here in their entirety.</p>
 </div><span id='variant.None' class='variant'><code>None</code></span><div class='docblock'><p>empty datamap</p>
@@ -70,6 +70,8 @@ are put in here in their entirety.</p>
 correct pre-encryption hashes for decryption/encryption.</p>
 </div><h4 id='method.has_chunks' class='method'><code>fn <a href='#method.has_chunks' class='fnname'>has_chunks</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
 <div class='docblock'><p>Whether the content is stored as chunks or as raw data.</p>
+</div><h4 id='method.chunks_sort' class='method'><code>fn <a href='#method.chunks_sort' class='fnname'>chunks_sort</a>(chunks: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;mut [</a><a class='struct' href='../self_encryption/struct.ChunkDetails.html' title='self_encryption::ChunkDetails'>ChunkDetails</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>)</code></h4>
+<div class='docblock'><p>Sorts list of chunks using quicksort</p>
 </div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='enum' href='../self_encryption/enum.DataMap.html' title='self_encryption::DataMap'>DataMap</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-198' class='srclink' href='../src/self_encryption/data_map.rs.html#83' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='enum' href='../self_encryption/enum.DataMap.html' title='self_encryption::DataMap'>DataMap</a></code></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
