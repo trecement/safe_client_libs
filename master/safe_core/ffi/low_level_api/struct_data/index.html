@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-8095' class='srclink' href='../../../../src/safe_core/src/ffi/low_level_api/struct_data.rs.html#18-769' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-8126' class='srclink' href='../../../../src/safe_core/src/ffi/low_level_api/struct_data.rs.html#18-847' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Low level manipulation of StructuredData</p>
 </div><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
@@ -94,6 +94,14 @@
                            </td>
                        </tr>
                        <tr class=' module-item'>
+                           <td><a class='fn' href='fn.struct_data_make_unclaimable.html'
+                                  title='safe_core::ffi::low_level_api::struct_data::struct_data_make_unclaimable'>struct_data_make_unclaimable</a></td>
+                           <td class='docblock short'>
+                                <p>Make StructuredData unclaimable - after this operation, the StructuredData will remain in the
+network with no data but will not be claimable by anyone anymore including the original owner.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
                            <td><a class='fn' href='fn.struct_data_new.html'
                                   title='safe_core::ffi::low_level_api::struct_data::struct_data_new'>struct_data_new</a></td>
                            <td class='docblock short'>
@@ -133,6 +141,13 @@
                                   title='safe_core::ffi::low_level_api::struct_data::struct_data_put'>struct_data_put</a></td>
                            <td class='docblock short'>
                                 <p>PUT StructuredData</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.struct_data_validate_size.html'
+                                  title='safe_core::ffi::low_level_api::struct_data::struct_data_validate_size'>struct_data_validate_size</a></td>
+                           <td class='docblock short'>
+                                <p>See if StructuredData size is valid.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>

@@ -811,6 +811,84 @@
 <span id="767">767</span>
 <span id="768">768</span>
 <span id="769">769</span>
+<span id="770">770</span>
+<span id="771">771</span>
+<span id="772">772</span>
+<span id="773">773</span>
+<span id="774">774</span>
+<span id="775">775</span>
+<span id="776">776</span>
+<span id="777">777</span>
+<span id="778">778</span>
+<span id="779">779</span>
+<span id="780">780</span>
+<span id="781">781</span>
+<span id="782">782</span>
+<span id="783">783</span>
+<span id="784">784</span>
+<span id="785">785</span>
+<span id="786">786</span>
+<span id="787">787</span>
+<span id="788">788</span>
+<span id="789">789</span>
+<span id="790">790</span>
+<span id="791">791</span>
+<span id="792">792</span>
+<span id="793">793</span>
+<span id="794">794</span>
+<span id="795">795</span>
+<span id="796">796</span>
+<span id="797">797</span>
+<span id="798">798</span>
+<span id="799">799</span>
+<span id="800">800</span>
+<span id="801">801</span>
+<span id="802">802</span>
+<span id="803">803</span>
+<span id="804">804</span>
+<span id="805">805</span>
+<span id="806">806</span>
+<span id="807">807</span>
+<span id="808">808</span>
+<span id="809">809</span>
+<span id="810">810</span>
+<span id="811">811</span>
+<span id="812">812</span>
+<span id="813">813</span>
+<span id="814">814</span>
+<span id="815">815</span>
+<span id="816">816</span>
+<span id="817">817</span>
+<span id="818">818</span>
+<span id="819">819</span>
+<span id="820">820</span>
+<span id="821">821</span>
+<span id="822">822</span>
+<span id="823">823</span>
+<span id="824">824</span>
+<span id="825">825</span>
+<span id="826">826</span>
+<span id="827">827</span>
+<span id="828">828</span>
+<span id="829">829</span>
+<span id="830">830</span>
+<span id="831">831</span>
+<span id="832">832</span>
+<span id="833">833</span>
+<span id="834">834</span>
+<span id="835">835</span>
+<span id="836">836</span>
+<span id="837">837</span>
+<span id="838">838</span>
+<span id="839">839</span>
+<span id="840">840</span>
+<span id="841">841</span>
+<span id="842">842</span>
+<span id="843">843</span>
+<span id="844">844</span>
+<span id="845">845</span>
+<span id="846">846</span>
+<span id="847">847</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2016 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -840,7 +918,8 @@
 <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>low_level_api</span>::<span class='ident'>cipher_opt</span>::<span class='ident'>CipherOpt</span>;
 <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>low_level_api</span>::<span class='ident'>object_cache</span>::<span class='ident'>object_cache</span>;
 <span class='kw'>use</span> <span class='ident'>maidsafe_utilities</span>::<span class='ident'>serialisation</span>::{<span class='ident'>deserialise</span>, <span class='ident'>serialise</span>};
-<span class='kw'>use</span> <span class='ident'>routing</span>::{<span class='ident'>Data</span>, <span class='ident'>DataIdentifier</span>, <span class='ident'>ImmutableData</span>, <span class='ident'>StructuredData</span>, <span class='ident'>XOR_NAME_LEN</span>, <span class='ident'>XorName</span>};
+<span class='kw'>use</span> <span class='ident'>routing</span>::{<span class='ident'>Data</span>, <span class='ident'>DataIdentifier</span>, <span class='ident'>ImmutableData</span>, <span class='ident'>NO_OWNER_PUB_KEY</span>, <span class='ident'>StructuredData</span>, <span class='ident'>XOR_NAME_LEN</span>,
+              <span class='ident'>XorName</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>mem</span>, <span class='ident'>ptr</span>, <span class='ident'>slice</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::{<span class='ident'>Arc</span>, <span class='ident'>Mutex</span>};
 
@@ -849,6 +928,7 @@
 <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>struct_data_new</span>(<span class='ident'>app</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>App</span>,
                                          <span class='ident'>type_tag</span>: <span class='ident'>u64</span>,
                                          <span class='ident'>id</span>: <span class='op'>*</span><span class='kw'>const</span> [<span class='ident'>u8</span>; <span class='ident'>XOR_NAME_LEN</span>],
+                                         <span class='ident'>version</span>: <span class='ident'>u64</span>,
                                          <span class='ident'>cipher_opt_h</span>: <span class='ident'>CipherOptHandle</span>,
                                          <span class='ident'>data</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
                                          <span class='ident'>size</span>: <span class='ident'>usize</span>,
@@ -876,7 +956,7 @@
                 <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>unversioned</span>::<span class='ident'>create</span>(<span class='ident'>client</span>,
                                              <span class='ident'>type_tag</span>,
                                              <span class='ident'>xor_id</span>,
-                                             <span class='number'>0</span>,
+                                             <span class='ident'>version</span>,
                                              <span class='ident'>raw_data</span>,
                                              <span class='ident'>owner_keys</span>,
                                              <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
@@ -904,7 +984,7 @@
                                            <span class='ident'>immut_data_final_name</span>,
                                            <span class='ident'>type_tag</span>,
                                            <span class='ident'>xor_id</span>,
-                                           <span class='number'>0</span>,
+                                           <span class='ident'>version</span>,
                                            <span class='ident'>owner_keys</span>,
                                            <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
                                            <span class='kw-2'>&amp;</span><span class='ident'>sign_key</span>))
@@ -916,7 +996,7 @@
 
                 <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>StructuredData</span>::<span class='ident'>new</span>(<span class='ident'>type_tag</span>,
                                              <span class='ident'>xor_id</span>,
-                                             <span class='number'>0</span>,
+                                             <span class='ident'>version</span>,
                                              <span class='ident'>raw_data</span>,
                                              <span class='ident'>owner_keys</span>,
                                              <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
@@ -1181,13 +1261,33 @@
     })
 }
 
+<span class='comment'>// TODO add test case for this</span>
+<span class='doccomment'>/// Make StructuredData unclaimable - after this operation, the StructuredData will remain in the</span>
+<span class='doccomment'>/// network with no data but will not be claimable by anyone anymore including the original owner.</span>
+<span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
+<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>struct_data_make_unclaimable</span>(<span class='ident'>app</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>App</span>,
+                                                      <span class='ident'>sd_h</span>: <span class='ident'>StructDataHandle</span>)
+                                                      <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
+    <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>object_cache</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>());
+        <span class='kw'>let</span> <span class='ident'>sd</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>.<span class='ident'>get_sd</span>(<span class='ident'>sd_h</span>));
+        <span class='kw'>match</span> <span class='ident'>struct_data_post_impl</span>((<span class='op'>*</span><span class='ident'>app</span>).<span class='ident'>get_client</span>(), <span class='ident'>sd</span>, <span class='bool-val'>true</span>) {
+            <span class='prelude-val'>Ok</span>(<span class='ident'>new_sd</span>) <span class='op'>=&gt;</span> {
+                <span class='op'>*</span><span class='ident'>sd</span> <span class='op'>=</span> <span class='ident'>new_sd</span>;
+                <span class='number'>0</span>
+            }
+            <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='prelude-val'>Err</span>(<span class='ident'>e</span>)),
+        }
+    })
+}
+
 <span class='doccomment'>/// POST StructuredData. This will bump version.</span>
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
 <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>struct_data_post</span>(<span class='ident'>app</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>App</span>, <span class='ident'>sd_h</span>: <span class='ident'>StructDataHandle</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
     <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>object_cache</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>());
         <span class='kw'>let</span> <span class='ident'>sd</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>.<span class='ident'>get_sd</span>(<span class='ident'>sd_h</span>));
-        <span class='kw'>match</span> <span class='ident'>struct_data_post_impl</span>((<span class='op'>*</span><span class='ident'>app</span>).<span class='ident'>get_client</span>(), <span class='ident'>sd</span>) {
+        <span class='kw'>match</span> <span class='ident'>struct_data_post_impl</span>((<span class='op'>*</span><span class='ident'>app</span>).<span class='ident'>get_client</span>(), <span class='ident'>sd</span>, <span class='bool-val'>false</span>) {
             <span class='prelude-val'>Ok</span>(<span class='ident'>new_sd</span>) <span class='op'>=&gt;</span> {
                 <span class='op'>*</span><span class='ident'>sd</span> <span class='op'>=</span> <span class='ident'>new_sd</span>;
                 <span class='number'>0</span>
@@ -1198,18 +1298,34 @@
 }
 
 <span class='kw'>fn</span> <span class='ident'>struct_data_post_impl</span>(<span class='ident'>client</span>: <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>Mutex</span><span class='op'>&lt;</span><span class='ident'>Client</span><span class='op'>&gt;&gt;</span>,
-                         <span class='ident'>sd</span>: <span class='kw-2'>&amp;</span><span class='ident'>StructuredData</span>)
+                         <span class='ident'>sd</span>: <span class='kw-2'>&amp;</span><span class='ident'>StructuredData</span>,
+                         <span class='ident'>make_unclaimable</span>: <span class='ident'>bool</span>)
                          <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>StructuredData</span>, <span class='ident'>FfiError</span><span class='op'>&gt;</span> {
-    <span class='kw'>let</span> <span class='ident'>sign_key</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>lock</span>()).<span class='ident'>get_secret_signing_key</span>()).<span class='ident'>clone</span>();
-    <span class='comment'>// TODO Ask routing to remove this inefficiency of requiring to clone data and all</span>
-    <span class='kw'>let</span> <span class='ident'>new_sd</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>StructuredData</span>::<span class='ident'>new</span>(<span class='ident'>sd</span>.<span class='ident'>get_type_tag</span>(),
-                                          <span class='op'>*</span><span class='ident'>sd</span>.<span class='ident'>name</span>(),
-                                          <span class='ident'>sd</span>.<span class='ident'>get_version</span>() <span class='op'>+</span> <span class='number'>1</span>,
-                                          <span class='ident'>sd</span>.<span class='ident'>get_data</span>().<span class='ident'>clone</span>(),
-                                          <span class='ident'>sd</span>.<span class='ident'>get_owner_keys</span>().<span class='ident'>clone</span>(),
-                                          <span class='ident'>sd</span>.<span class='ident'>get_previous_owner_keys</span>().<span class='ident'>clone</span>(),
-                                          <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='ident'>sign_key</span>))
-        .<span class='ident'>map_err</span>(<span class='ident'>CoreError</span>::<span class='ident'>from</span>));
+    <span class='kw'>let</span> <span class='ident'>new_sd</span> <span class='op'>=</span> {
+        <span class='kw'>let</span> <span class='ident'>client_guard</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>lock</span>());
+        <span class='kw'>let</span> <span class='ident'>sign_key</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>client_guard</span>.<span class='ident'>get_secret_signing_key</span>());
+
+        <span class='kw'>if</span> <span class='ident'>make_unclaimable</span> {
+            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>StructuredData</span>::<span class='ident'>new</span>(<span class='ident'>sd</span>.<span class='ident'>get_type_tag</span>(),
+                                     <span class='op'>*</span><span class='ident'>sd</span>.<span class='ident'>name</span>(),
+                                     <span class='ident'>sd</span>.<span class='ident'>get_version</span>() <span class='op'>+</span> <span class='number'>1</span>,
+                                     <span class='macro'>vec</span><span class='macro'>!</span>[],
+                                     <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>NO_OWNER_PUB_KEY</span>],
+                                     <span class='ident'>sd</span>.<span class='ident'>get_owner_keys</span>().<span class='ident'>clone</span>(),
+                                     <span class='prelude-val'>Some</span>(<span class='ident'>sign_key</span>))
+                .<span class='ident'>map_err</span>(<span class='ident'>CoreError</span>::<span class='ident'>from</span>))
+        } <span class='kw'>else</span> {
+            <span class='comment'>// TODO Ask routing to remove this inefficiency of requiring to clone data and all</span>
+            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>StructuredData</span>::<span class='ident'>new</span>(<span class='ident'>sd</span>.<span class='ident'>get_type_tag</span>(),
+                                     <span class='op'>*</span><span class='ident'>sd</span>.<span class='ident'>name</span>(),
+                                     <span class='ident'>sd</span>.<span class='ident'>get_version</span>() <span class='op'>+</span> <span class='number'>1</span>,
+                                     <span class='ident'>sd</span>.<span class='ident'>get_data</span>().<span class='ident'>clone</span>(),
+                                     <span class='ident'>sd</span>.<span class='ident'>get_owner_keys</span>().<span class='ident'>clone</span>(),
+                                     <span class='ident'>sd</span>.<span class='ident'>get_previous_owner_keys</span>().<span class='ident'>clone</span>(),
+                                     <span class='prelude-val'>Some</span>(<span class='ident'>sign_key</span>))
+                .<span class='ident'>map_err</span>(<span class='ident'>CoreError</span>::<span class='ident'>from</span>))
+        }
+    };
 
     <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='ident'>Data</span>::<span class='ident'>Structured</span>(<span class='ident'>new_sd</span>.<span class='ident'>clone</span>());
     <span class='kw'>let</span> <span class='ident'>resp_getter</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>lock</span>()).<span class='ident'>post</span>(<span class='ident'>data</span>, <span class='prelude-val'>None</span>));
@@ -1242,9 +1358,9 @@
     <span class='kw'>let</span> <span class='ident'>new_sd</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>StructuredData</span>::<span class='ident'>new</span>(<span class='ident'>sd</span>.<span class='ident'>get_type_tag</span>(),
                                           <span class='op'>*</span><span class='ident'>sd</span>.<span class='ident'>name</span>(),
                                           <span class='ident'>sd</span>.<span class='ident'>get_version</span>() <span class='op'>+</span> <span class='number'>1</span>,
-                                          <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
+                                          <span class='macro'>vec</span><span class='macro'>!</span>[],
+                                          <span class='macro'>vec</span><span class='macro'>!</span>[],
                                           <span class='ident'>sd</span>.<span class='ident'>get_owner_keys</span>().<span class='ident'>clone</span>(),
-                                          <span class='ident'>sd</span>.<span class='ident'>get_previous_owner_keys</span>().<span class='ident'>clone</span>(),
                                           <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='ident'>sign_key</span>))
         .<span class='ident'>map_err</span>(<span class='ident'>CoreError</span>::<span class='ident'>from</span>));
 
@@ -1253,6 +1369,17 @@
     <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>resp_getter</span>.<span class='ident'>get</span>());
 
     <span class='prelude-val'>Ok</span>(<span class='ident'>new_sd</span>)
+}
+
+<span class='doccomment'>/// See if StructuredData size is valid.</span>
+<span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
+<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>struct_data_validate_size</span>(<span class='ident'>handle</span>: <span class='ident'>StructDataHandle</span>,
+                                                   <span class='ident'>o_valid</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>bool</span>)
+                                                   <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
+    <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
+        <span class='op'>*</span><span class='ident'>o_valid</span> <span class='op'>=</span> <span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>()).<span class='ident'>get_sd</span>(<span class='ident'>handle</span>)).<span class='ident'>validate_size</span>();
+        <span class='number'>0</span>
+    })
 }
 
 <span class='doccomment'>/// Get the current version of StructuredData by its handle</span>
@@ -1320,6 +1447,7 @@
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_new</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>,
                                        ::<span class='ident'>UNVERSIONED_STRUCT_DATA_TYPE_TAG</span>,
                                        <span class='kw-2'>&amp;</span><span class='ident'>id</span>,
+                                       <span class='number'>0</span>,
                                        <span class='ident'>cipher_opt_h</span>,
                                        <span class='ident'>plain_text</span>.<span class='ident'>as_ptr</span>(),
                                        <span class='ident'>plain_text</span>.<span class='ident'>len</span>(),
@@ -1395,13 +1523,36 @@
             <span class='comment'>// Delete</span>
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_delete</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='ident'>sd_h</span>), <span class='number'>0</span>);
             <span class='kw'>let</span> _ <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>()).<span class='ident'>get_sd</span>(<span class='ident'>sd_h</span>);
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_free</span>(<span class='ident'>sd_h</span>), <span class='number'>0</span>);
-            <span class='macro'>assert</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>()).<span class='ident'>get_sd</span>(<span class='ident'>sd_h</span>).<span class='ident'>is_err</span>());
 
-            <span class='comment'>// Fetch - should error out</span>
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_fetch</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='ident'>data_id_h</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>sd_h</span>), <span class='op'>-</span><span class='number'>18</span>);
+            <span class='comment'>// Re-delete shold fail - MutationError::InvalidOperation; Fetch should be successful</span>
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_delete</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='ident'>sd_h</span>), <span class='op'>-</span><span class='number'>26</span>);
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_free</span>(<span class='ident'>sd_h</span>), <span class='number'>0</span>);
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_free</span>(<span class='ident'>sd_h</span>),
                        <span class='ident'>FfiError</span>::<span class='ident'>InvalidStructDataHandle</span>.<span class='ident'>into</span>());
+            <span class='macro'>assert</span><span class='macro'>!</span>(<span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>()).<span class='ident'>get_sd</span>(<span class='ident'>sd_h</span>).<span class='ident'>is_err</span>());
+
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_fetch</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='ident'>data_id_h</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>sd_h</span>), <span class='number'>0</span>);
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_free</span>(<span class='ident'>sd_h</span>), <span class='number'>0</span>);
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_free</span>(<span class='ident'>sd_h</span>),
+                       <span class='ident'>FfiError</span>::<span class='ident'>InvalidStructDataHandle</span>.<span class='ident'>into</span>());
+
+            <span class='comment'>// Re-claim via PUT</span>
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_fetch</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='ident'>data_id_h</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>sd_h</span>), <span class='number'>0</span>);
+            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>version</span> <span class='op'>=</span> <span class='number'>0</span>;
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_version</span>(<span class='ident'>sd_h</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>version</span>), <span class='number'>0</span>);
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_free</span>(<span class='ident'>sd_h</span>), <span class='number'>0</span>);
+            <span class='comment'>// Create</span>
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_new</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>,
+                                       ::<span class='ident'>UNVERSIONED_STRUCT_DATA_TYPE_TAG</span>,
+                                       <span class='kw-2'>&amp;</span><span class='ident'>id</span>,
+                                       <span class='ident'>version</span> <span class='op'>+</span> <span class='number'>1</span>,
+                                       <span class='ident'>cipher_opt_h</span>,
+                                       <span class='ident'>plain_text</span>.<span class='ident'>as_ptr</span>(),
+                                       <span class='ident'>plain_text</span>.<span class='ident'>len</span>(),
+                                       <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>sd_h</span>),
+                       <span class='number'>0</span>);
+            <span class='comment'>// Put - Reclaim</span>
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_put</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='ident'>sd_h</span>), <span class='number'>0</span>);
         }
     }
 
@@ -1424,6 +1575,7 @@
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_new</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>,
                                        ::<span class='ident'>VERSIONED_STRUCT_DATA_TYPE_TAG</span>,
                                        <span class='kw-2'>&amp;</span><span class='ident'>name</span>,
+                                       <span class='number'>0</span>,
                                        <span class='ident'>cipher_opt_h</span>,
                                        <span class='ident'>data0</span>.<span class='ident'>as_ptr</span>(),
                                        <span class='ident'>data0</span>.<span class='ident'>len</span>(),
@@ -1471,8 +1623,9 @@
 
             <span class='comment'>// Delete</span>
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_delete</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='ident'>sd_h</span>), <span class='number'>0</span>);
-            <span class='comment'>// -18 is CoreError::GetFailure { reason: GetError::NoSuchData }</span>
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_fetch</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='ident'>data_id_h</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>sd_h</span>), <span class='op'>-</span><span class='number'>18</span>);
+            <span class='comment'>// -26 is CoreError::MutationFailure { reason: MutationError::InvalidOperation }</span>
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_delete</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='ident'>sd_h</span>), <span class='op'>-</span><span class='number'>26</span>);
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_fetch</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='ident'>data_id_h</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>sd_h</span>), <span class='number'>0</span>);
         }
     }
 
@@ -1495,6 +1648,7 @@
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_new</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>,
                                        <span class='ident'>CLIENT_STRUCTURED_DATA_TAG</span> <span class='op'>-</span> <span class='number'>1</span>,
                                        <span class='kw-2'>&amp;</span><span class='ident'>name</span>,
+                                       <span class='number'>0</span>,
                                        <span class='ident'>cipher_opt_h</span>,
                                        <span class='ident'>data0</span>.<span class='ident'>as_ptr</span>(),
                                        <span class='ident'>data0</span>.<span class='ident'>len</span>(),
@@ -1505,6 +1659,7 @@
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_new</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>,
                                        <span class='ident'>CLIENT_STRUCTURED_DATA_TAG</span> <span class='op'>+</span> <span class='number'>1</span>,
                                        <span class='kw-2'>&amp;</span><span class='ident'>name</span>,
+                                       <span class='number'>0</span>,
                                        <span class='ident'>cipher_opt_h</span>,
                                        <span class='ident'>data0</span>.<span class='ident'>as_ptr</span>(),
                                        <span class='ident'>data0</span>.<span class='ident'>len</span>(),
@@ -1539,8 +1694,9 @@
 
             <span class='comment'>// Delete</span>
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_delete</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='ident'>sd_h</span>), <span class='number'>0</span>);
-            <span class='comment'>// -18 is CoreError::GetFailure { reason: GetError::NoSuchData }</span>
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_fetch</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='ident'>data_id_h</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>sd_h</span>), <span class='op'>-</span><span class='number'>18</span>);
+            <span class='comment'>// -26 is CoreError::MutationFailure { reason: MutationError::InvalidOperation }</span>
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_delete</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='ident'>sd_h</span>), <span class='op'>-</span><span class='number'>26</span>);
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>struct_data_fetch</span>(<span class='kw-2'>&amp;</span><span class='ident'>app</span>, <span class='ident'>data_id_h</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>sd_h</span>), <span class='number'>0</span>);
         }
     }
 
