@@ -558,6 +558,22 @@
 <span id="514">514</span>
 <span id="515">515</span>
 <span id="516">516</span>
+<span id="517">517</span>
+<span id="518">518</span>
+<span id="519">519</span>
+<span id="520">520</span>
+<span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2016 MaidSafe.net limited.</span>
 <span class='comment'>//</span>
@@ -576,6 +592,7 @@
 <span class='comment'>// Please review the Licences for the specific language governing permissions and limitations</span>
 <span class='comment'>// relating to use of the SAFE Network Software.</span>
 
+<span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>app</span>::<span class='ident'>App</span>;
 <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>errors</span>::<span class='ident'>FfiError</span>;
 <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>helper</span>;
 <span class='kw'>use</span> <span class='ident'>ffi</span>::<span class='ident'>low_level_api</span>::{<span class='ident'>AppendableDataHandle</span>, <span class='ident'>DataIdHandle</span>, <span class='ident'>EncryptKeyHandle</span>, <span class='ident'>SignKeyHandle</span>,
@@ -636,6 +653,21 @@
 
         <span class='kw'>let</span> <span class='ident'>handle</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>()).<span class='ident'>insert_sign_key</span>(<span class='ident'>sign_key</span>);
         <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>o_handle</span>, <span class='ident'>handle</span>);
+
+        <span class='number'>0</span>
+    })
+}
+
+<span class='doccomment'>/// Get MAID-sign::PubKey</span>
+<span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>
+<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> <span class='kw'>fn</span> <span class='ident'>misc_maid_sign_key</span>(<span class='ident'>app</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>App</span>, <span class='ident'>o_handle</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>SignKeyHandle</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
+    <span class='ident'>helper</span>::<span class='ident'>catch_unwind_i32</span>(<span class='op'>||</span> {
+        <span class='kw'>let</span> <span class='ident'>sign_key</span> <span class='op'>=</span> {
+            <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> (<span class='op'>*</span><span class='ident'>app</span>).<span class='ident'>get_client</span>();
+            <span class='kw'>let</span> <span class='ident'>guard</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>client</span>.<span class='ident'>lock</span>());
+            <span class='op'>*</span><span class='macro'>ffi_try</span><span class='macro'>!</span>(<span class='ident'>guard</span>.<span class='ident'>get_public_signing_key</span>())
+        };
+        <span class='op'>*</span><span class='ident'>o_handle</span> <span class='op'>=</span> <span class='macro'>unwrap</span><span class='macro'>!</span>(<span class='ident'>object_cache</span>()).<span class='ident'>insert_sign_key</span>(<span class='ident'>sign_key</span>);
 
         <span class='number'>0</span>
     })
