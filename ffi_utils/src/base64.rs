@@ -15,7 +15,7 @@
 // Please review the Licences for the specific language governing permissions and limitations
 // relating to use of the SAFE Network Software.
 
-use b64::{self, Base64Error, URL_SAFE};
+use b64::{self, DecodeError, URL_SAFE};
 
 /// Encode the data using base64 encoding.
 pub fn base64_encode(input: &[u8]) -> String {
@@ -23,6 +23,6 @@ pub fn base64_encode(input: &[u8]) -> String {
 }
 
 /// Decode base64 encoded data.
-pub fn base64_decode(input: &str) -> Result<Vec<u8>, Base64Error> {
+pub fn base64_decode(input: &str) -> Result<Vec<u8>, DecodeError> {
     b64::decode_config(input, URL_SAFE)
 }
