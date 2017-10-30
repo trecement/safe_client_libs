@@ -23,6 +23,7 @@ use access_container;
 use app_container;
 use config::{self, AppInfo, Apps};
 use futures::Future;
+use futures::future::{self, Either};
 use ipc::update_container_perms;
 use routing::ClientError;
 use safe_core::{Client, CoreError, FutureExt, MDataInfo, recovery};
@@ -72,6 +73,24 @@ pub fn app_state(client: &Client<()>, apps: &Apps, app_id: &str) -> Box<AuthFutu
     }
 }
 
+/// Check whether `permissions` has an app container entry for `app_id` and that all permissions are
+/// set.
+fn app_container_exists(permissions: &AccessContainerEntry, app_id: &str) -> bool {
+    match permissions.get(&app_container::name(app_id)) {
+        Some(&(_, ref access)) => {
+            *access ==
+                btree_set![
+                    Permission::Read,
+                    Permission::Insert,
+                    Permission::Update,
+                    Permission::Delete,
+                    Permission::ManagePermissions,
+                ]
+        }
+        None => false,
+    }
+}
+
 /// Insert info about the app's dedicated container into the access container entry
 fn insert_app_container(
     mut permissions: AccessContainerEntry,
@@ -86,7 +105,7 @@ fn insert_app_container(
                     Permission::Delete,
                     Permission::ManagePermissions,
                 ];
-    let _ = permissions.insert(format!("apps/{}", app_id), (app_container_info, access));
+    let _ = permissions.insert(app_container::name(app_id), (app_container_info, access));
     permissions
 }
 
@@ -210,33 +229,29 @@ fn authenticated_app(
     let access_container = fry!(AccessContInfo::from_mdata_info(access_container));
 
     // Check whether we need to create/update dedicated container
-    if app_container {
-        access_container::fetch_entry(client, &app_id, app_keys.clone())
-            .and_then(move |(_version, perms)| {
-                let perms = perms.unwrap_or_else(AccessContainerEntry::default);
-                app_container::fetch_or_create(&c2, &app_id, sign_pk).map(
-                    move |mdata_info| (mdata_info, perms, app_id),
-                )
-            })
-            .and_then(move |(mdata_info, perms, app_id)| {
-                let perms = insert_app_container(perms, &app_id, mdata_info);
-                update_access_container(&c3, &app, perms)
-            })
-            .and_then(move |()| {
-                Ok(AuthGranted {
-                    app_keys,
-                    bootstrap_config,
-                    access_container,
-                })
-            })
-            .into_box()
-    } else {
-        ok!(AuthGranted {
-            app_keys,
-            bootstrap_config,
-            access_container,
+    access_container::fetch_entry(client, &app_id, app_keys.clone())
+        .and_then(move |(_version, perms)| {
+            let perms = perms.unwrap_or_else(AccessContainerEntry::default);
+            if app_container && !app_container_exists(&perms, &app_id) {
+                let future = app_container::fetch_or_create(&c2, &app_id, sign_pk)
+                    .map(move |mdata_info| (mdata_info, perms, app_id))
+                    .and_then(move |(mdata_info, perms, app_id)| {
+                        let perms = insert_app_container(perms, &app_id, mdata_info);
+                        update_access_container(&c3, &app, perms)
+                    });
+                Either::A(future)
+            } else {
+                Either::B(future::ok(()))
+            }
         })
-    }
+        .and_then(move |_| {
+            ok!(AuthGranted {
+                app_keys,
+                bootstrap_config,
+                access_container,
+            })
+        })
+        .into_box()
 }
 
 /// Register a new or revoked app in Maid Managers and in the access container.
