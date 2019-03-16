@@ -297,7 +297,7 @@ mod mock_routing {
         unsafe {
             unwrap!(call_0(|ud, cb| auth_flush_app_revocation_queue(
                 &auth, ud, cb
-            ),))
+            )))
         }
 
         run(&auth, |client| {
@@ -782,8 +782,8 @@ fn app_revocation() {
     let perms = run(&authenticator, move |client| {
         client.list_mdata_permissions(name, tag).map_err(From::from)
     });
-    assert!(!perms.contains_key(&User::Key(auth_granted1.app_keys.sign_pk),));
-    assert!(perms.contains_key(&User::Key(auth_granted2.app_keys.sign_pk),));
+    assert!(!perms.contains_key(&User::Key(auth_granted1.app_keys.sign_pk)));
+    assert!(perms.contains_key(&User::Key(auth_granted2.app_keys.sign_pk)));
 
     // The first app can no longer access the files.
     match fetch_file(&authenticator, videos_md1.clone(), "1.mp4") {

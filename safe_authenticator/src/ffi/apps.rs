@@ -452,7 +452,7 @@ mod tests {
                 app_info_ffi.id,
                 ud,
                 cb
-            ),))
+            )))
         };
         // Verify that the app A is not listed anywhere in the authenticator config.
         let res = get_app_or_err(&auth, &app_id);

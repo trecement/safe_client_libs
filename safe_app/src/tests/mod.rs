@@ -40,7 +40,7 @@ fn refresh_access_info() {
 
     let app = unwrap!(create_app_by_req(&create_auth_req_with_access(
         container_permissions.clone()
-    ),));
+    )));
 
     run(&app, move |client, context| {
         let reg = Rc::clone(unwrap!(context.as_registered()));
@@ -75,7 +75,7 @@ fn get_access_info() {
             &auth_req_ffi,
             ud,
             cb
-        ),))
+        )))
     };
 
     run(unsafe { &*app }, move |client, context| {

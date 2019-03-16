@@ -104,8 +104,8 @@ pub unsafe extern "C" fn mdata_permissions_get(
 
             let permission_set = *try_cb!(
                 permissions
-                    .get(&user,)
-                    .ok_or(AppError::InvalidSignPubKeyHandle,),
+                    .get(&user)
+                    .ok_or(AppError::InvalidSignPubKeyHandle),
                 user_data,
                 o_cb
             );

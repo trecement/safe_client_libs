@@ -549,7 +549,7 @@ fn authorisation_and_revocation() {
     assert!(
         revoked_apps
             .iter()
-            .any(|revoked_app| revoked_app.id == app_id,)
+            .any(|revoked_app| revoked_app.id == app_id)
     );
 
     // The app is no longer in the access container.

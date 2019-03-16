@@ -959,7 +959,7 @@ fn lists_of_registered_and_revoked_apps() {
             &authenticator,
             ud,
             cb
-        ),))
+        )))
     };
 
     let revoked: Vec<RevokedAppId> =
@@ -990,7 +990,7 @@ fn lists_of_registered_and_revoked_apps() {
             &authenticator,
             ud,
             cb
-        ),))
+        )))
     };
 
     let revoked: Vec<RevokedAppId> =
@@ -1016,7 +1016,7 @@ fn lists_of_registered_and_revoked_apps() {
             &authenticator,
             ud,
             cb
-        ),))
+        )))
     };
 
     let revoked: Vec<RevokedAppId> =
@@ -1033,7 +1033,7 @@ fn lists_of_registered_and_revoked_apps() {
             &authenticator,
             ud,
             cb
-        ),))
+        )))
     };
     let revoked: Vec<RevokedAppId> =
         unsafe { unwrap!(call_vec(|ud, cb| auth_revoked_apps(&authenticator, ud, cb))) };

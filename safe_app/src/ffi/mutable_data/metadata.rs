@@ -61,7 +61,7 @@ mod tests {
                 &metadata_resp,
                 ud,
                 cb
-            ),))
+            )))
         };
 
         let metadata2 = unwrap!(deserialise::<UserMetadata>(&serialised));

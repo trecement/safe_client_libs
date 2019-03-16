@@ -147,7 +147,7 @@ fn main() {
 
     if let Some(invite) = matches.value_of("check-invite") {
         let invite = invite.to_string();
-        let app = unwrap!(App::unregistered(|| (), None,));
+        let app = unwrap!(App::unregistered(|| (), None));
         let (tx, rx) = mpsc::channel();
 
         unwrap!(app.send(move |client, _| {

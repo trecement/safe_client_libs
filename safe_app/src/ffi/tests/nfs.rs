@@ -37,7 +37,7 @@ fn setup() -> (App, MDataInfo) {
 
     let app = unwrap!(create_app_by_req(&create_auth_req_with_access(
         container_permissions
-    ),));
+    )));
 
     let container_info = run(&app, move |client, context| {
         context.get_access_info(client).then(move |res| {
@@ -961,7 +961,7 @@ fn file_read_chunks() {
         let mut retrieved_content = unsafe {
             unwrap!(call_vec_u8(|ud, cb| file_read(
                 &app, read_h, size_read, to_read, ud, cb
-            ),))
+            )))
         };
 
         size_read += retrieved_content.len() as u64;
@@ -976,7 +976,7 @@ fn file_read_chunks() {
     let retrieved_content = unsafe {
         unwrap!(call_vec_u8(|ud, cb| file_read(
             &app, read_h, size, 0, ud, cb
-        ),))
+        )))
     };
     assert_eq!(retrieved_content, Vec::<u8>::new());
 

@@ -48,7 +48,7 @@ pub fn create(
             } else {
                 fry!(serialise(&DataTypeEncoding::Serialised(
                     serialised_data_map
-                ),))
+                )))
             };
 
             pack(client, value)

@@ -287,7 +287,7 @@ mod tests {
         let encoded = unsafe {
             unwrap!(call_vec_u8(|ud, cb| mdata_info_serialise(
                 &info1_ffi, ud, cb
-            ),))
+            )))
         };
 
         let info2 = unsafe {

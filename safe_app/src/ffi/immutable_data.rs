@@ -398,7 +398,7 @@ mod tests {
             let se_reader_h = {
                 unwrap!(call_1(|ud, cb| idata_fetch_self_encryptor(
                     &app, &name, ud, cb
-                ),))
+                )))
             };
 
             let size = unwrap!(call_1(|ud, cb| idata_size(&app, se_reader_h, ud, cb)));

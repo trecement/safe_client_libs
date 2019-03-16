@@ -878,7 +878,7 @@ mod tests {
                 app_sign_key1_h,
                 ud,
                 cb
-            ),))
+            )))
         };
 
         let app_sign_key2_h = unsafe {
@@ -887,7 +887,7 @@ mod tests {
                 &app_sign_key1_raw,
                 ud,
                 cb
-            ),))
+            )))
         };
 
         let app_sign_key2 = run_now(&app, move |_, context| {
@@ -902,7 +902,7 @@ mod tests {
                 app_sign_key2_h,
                 ud,
                 cb
-            ),))
+            )))
         }
 
         // Test that calling `sign_pub_key_get` on `USER_ANYONE` returns an error.
@@ -932,7 +932,7 @@ mod tests {
                 &app_sign_key1.0,
                 ud,
                 cb
-            ),))
+            )))
         };
 
         let app_sign_key1_raw: SignSecretKey = unsafe {
@@ -941,7 +941,7 @@ mod tests {
                 app_sign_key1_h,
                 ud,
                 cb
-            ),))
+            )))
         };
 
         let app_sign_key2_h = unsafe {
@@ -950,7 +950,7 @@ mod tests {
                 &app_sign_key1_raw,
                 ud,
                 cb
-            ),))
+            )))
         };
 
         run_now(&app, move |_, context| {
@@ -964,7 +964,7 @@ mod tests {
                 app_sign_key2_h,
                 ud,
                 cb
-            ),))
+            )))
         }
     }
 
@@ -988,7 +988,7 @@ mod tests {
                 app_enc_key1_h,
                 ud,
                 cb
-            ),))
+            )))
         };
 
         let app_enc_key2_h = unsafe {
@@ -997,7 +997,7 @@ mod tests {
                 &app_enc_key1_raw,
                 ud,
                 cb
-            ),))
+            )))
         };
 
         let app_enc_key2 = run_now(&app, move |_, context| {
@@ -1012,7 +1012,7 @@ mod tests {
                 app_enc_key2_h,
                 ud,
                 cb
-            ),))
+            )))
         }
     }
 
@@ -1029,7 +1029,7 @@ mod tests {
                 app_public_key_h,
                 ud,
                 cb
-            ),))
+            )))
         };
         let app_secret_key1: AsymSecretKey = unsafe {
             unwrap!(call_1(|ud, cb| enc_secret_key_get(
@@ -1037,7 +1037,7 @@ mod tests {
                 app_secret_key1_h,
                 ud,
                 cb
-            ),))
+            )))
         };
 
         let app_secret_key1 = run_now(&app, move |_client, context| {
@@ -1056,7 +1056,7 @@ mod tests {
                 app_secret_key1_h,
                 ud,
                 cb
-            ),))
+            )))
         };
 
         let app_secret_key2_h = unsafe {
@@ -1100,7 +1100,7 @@ mod tests {
                 data.len(),
                 ud,
                 cb
-            ),))
+            )))
         };
 
         assert_eq!(sha3.len(), 256 / 8);
@@ -1112,7 +1112,7 @@ mod tests {
                 data.len(),
                 ud,
                 cb
-            ),))
+            )))
         };
 
         assert_eq!(sha3.len(), 256 / 8);

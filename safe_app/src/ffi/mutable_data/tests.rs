@@ -57,7 +57,7 @@ fn permissions_crud_ffi() {
             )));
             unwrap!(call_1(|ud, cb| mdata_permissions_len(
                 &app, perms_h, ud, cb
-            ),))
+            )))
         };
         assert_eq!(len, 1);
 
@@ -79,7 +79,7 @@ fn permissions_crud_ffi() {
         let result: Vec<UserPermissionSet> = unsafe {
             unwrap!(call_vec(|ud, cb| mdata_list_permission_sets(
                 &app, perms_h, ud, cb
-            ),))
+            )))
         };
 
         assert_eq!(result.len(), 1);
@@ -322,7 +322,7 @@ fn entries_crud_ffi() {
             &md_info_pub,
             ud,
             cb
-        ),))
+        )))
     };
     assert_eq!(ver, 0);
 
@@ -364,7 +364,7 @@ fn entries_crud_ffi() {
             &md_info_priv,
             ud,
             cb
-        ),))
+        )))
     };
     assert_eq!(ver, 0);
 
@@ -422,7 +422,7 @@ fn entries_crud_ffi() {
                 &md_info_priv,
                 ud,
                 cb
-            ),))
+            )))
         };
         assert!(size > 0);
 
@@ -432,7 +432,7 @@ fn entries_crud_ffi() {
                 &md_info_pub,
                 ud,
                 cb
-            ),))
+            )))
         };
         assert!(size > 0);
     }
@@ -537,7 +537,7 @@ fn entries_crud_ffi() {
                 &md_info_priv,
                 ud,
                 cb
-            ),))
+            )))
         };
         assert_eq!(keys_list.len(), 1);
 
@@ -561,7 +561,7 @@ fn entries_crud_ffi() {
                 &md_info_priv,
                 ud,
                 cb
-            ),))
+            )))
         };
         assert_eq!(vals_list.len(), 1);
 
@@ -581,7 +581,7 @@ fn entries_crud_ffi() {
     unsafe {
         unwrap!(call_0(|ud, cb| mdata_permissions_free(
             &app, perms_h, ud, cb
-        ),));
+        )));
     }
 
     extern "C" fn get_value_cb(

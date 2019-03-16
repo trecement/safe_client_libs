@@ -141,7 +141,7 @@ mod tests {
         unsafe {
             unwrap!(call_0(|ud, cb| test_simulate_network_disconnect(
                 &mut app, ud, cb
-            ),));
+            )));
         }
 
         unwrap!(rx.recv_timeout(Duration::from_secs(10)));

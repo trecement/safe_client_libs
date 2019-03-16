@@ -237,7 +237,7 @@ mod tests {
         unsafe {
             unwrap!(call_0(|ud, cb| mdata_entry_actions_free(
                 &app, handle, ud, cb
-            ),))
+            )))
         };
 
         run_now(&app, move |_, context| {

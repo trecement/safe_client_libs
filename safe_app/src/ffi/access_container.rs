@@ -140,7 +140,7 @@ mod tests {
 
         let app = unwrap!(create_app_by_req(&create_auth_req_with_access(
             container_permissions.clone()
-        ),));
+        )));
 
         run(&app, move |_client, context| {
             let reg = Rc::clone(unwrap!(context.as_registered()));
@@ -151,7 +151,7 @@ mod tests {
         unsafe {
             unwrap!(call_0(|ud, cb| access_container_refresh_access_info(
                 &app, ud, cb
-            ),))
+            )))
         }
 
         run(&app, move |_client, context| {
@@ -175,7 +175,7 @@ mod tests {
         let _ = container_permissions.insert("_videos".to_string(), btree_set![Permission::Read]);
         let app = unwrap!(create_app_by_req(&create_auth_req_with_access(
             container_permissions
-        ),));
+        )));
 
         // Get access container info
         let perms: Vec<PermSet> =

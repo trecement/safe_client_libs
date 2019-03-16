@@ -230,7 +230,7 @@ fn mutable_data_basics() {
         ];
 
     let msg_id = MessageId::new();
-    unwrap!(routing.mutate_mdata_entries(client_mgr, name, tag, actions, msg_id, owner_key,));
+    unwrap!(routing.mutate_mdata_entries(client_mgr, name, tag, actions, msg_id, owner_key));
     expect_success!(routing_rx, msg_id, Response::MutateMDataEntries);
 
     // ListMDataEntries
@@ -269,7 +269,7 @@ fn mutable_data_basics() {
 
     // GetMDataValue with existing key
     let msg_id = MessageId::new();
-    unwrap!(routing.get_mdata_value(nae_mgr, name, tag, key0.to_vec(), msg_id,));
+    unwrap!(routing.get_mdata_value(nae_mgr, name, tag, key0.to_vec(), msg_id));
     let value = expect_success!(routing_rx, msg_id, Response::GetMDataValue);
     assert_eq!(value.content, value0_v0);
     assert_eq!(value.entry_version, 0);
@@ -277,7 +277,7 @@ fn mutable_data_basics() {
     // GetMDataValue with non-existing key
     let key2 = b"key2";
     let msg_id = MessageId::new();
-    unwrap!(routing.get_mdata_value(nae_mgr, name, tag, key2.to_vec(), msg_id,));
+    unwrap!(routing.get_mdata_value(nae_mgr, name, tag, key2.to_vec(), msg_id));
     expect_failure!(
         routing_rx,
         msg_id,
@@ -301,7 +301,7 @@ fn mutable_data_basics() {
         ];
 
     let msg_id = MessageId::new();
-    unwrap!(routing.mutate_mdata_entries(client_mgr, name, tag, actions, msg_id, owner_key,));
+    unwrap!(routing.mutate_mdata_entries(client_mgr, name, tag, actions, msg_id, owner_key));
     expect_success!(routing_rx, msg_id, Response::MutateMDataEntries);
 
     // ListMDataEntries should respond with modified entries
@@ -364,7 +364,7 @@ fn mutable_data_reclaim() {
         ];
 
     let msg_id = MessageId::new();
-    unwrap!(routing.mutate_mdata_entries(client_mgr, name, tag, actions, msg_id, owner_key,));
+    unwrap!(routing.mutate_mdata_entries(client_mgr, name, tag, actions, msg_id, owner_key));
     expect_success!(routing_rx, msg_id, Response::MutateMDataEntries);
 
     let actions = btree_map![
@@ -372,7 +372,7 @@ fn mutable_data_reclaim() {
         ];
 
     let msg_id = MessageId::new();
-    unwrap!(routing.mutate_mdata_entries(client_mgr, name, tag, actions, msg_id, owner_key,));
+    unwrap!(routing.mutate_mdata_entries(client_mgr, name, tag, actions, msg_id, owner_key));
     expect_success!(routing_rx, msg_id, Response::MutateMDataEntries);
 
     let actions = btree_map![
@@ -383,7 +383,7 @@ fn mutable_data_reclaim() {
         ];
 
     let msg_id = MessageId::new();
-    unwrap!(routing.mutate_mdata_entries(client_mgr, name, tag, actions, msg_id, owner_key,));
+    unwrap!(routing.mutate_mdata_entries(client_mgr, name, tag, actions, msg_id, owner_key));
     expect_success!(routing_rx, msg_id, Response::MutateMDataEntries);
 
     // GetMDataVersion should respond with 0 as the mdata itself hasn't changed.
@@ -398,7 +398,7 @@ fn mutable_data_reclaim() {
         ];
 
     let msg_id = MessageId::new();
-    unwrap!(routing.mutate_mdata_entries(client_mgr, name, tag, actions, msg_id, owner_key,));
+    unwrap!(routing.mutate_mdata_entries(client_mgr, name, tag, actions, msg_id, owner_key));
     expect_failure!(
         routing_rx,
         msg_id,
@@ -412,7 +412,7 @@ fn mutable_data_reclaim() {
     ];
 
     let msg_id = MessageId::new();
-    unwrap!(routing.mutate_mdata_entries(client_mgr, name, tag, actions, msg_id, owner_key,));
+    unwrap!(routing.mutate_mdata_entries(client_mgr, name, tag, actions, msg_id, owner_key));
     expect_success!(routing_rx, msg_id, Response::MutateMDataEntries);
 }
 
@@ -452,7 +452,7 @@ fn mutable_data_entry_versioning() {
     ];
 
     let msg_id = MessageId::new();
-    unwrap!(routing.mutate_mdata_entries(client_mgr, name, tag, actions, msg_id, owner_key,));
+    unwrap!(routing.mutate_mdata_entries(client_mgr, name, tag, actions, msg_id, owner_key));
     expect_success!(routing_rx, msg_id, Response::MutateMDataEntries);
 
     // Attempt to update it without version bump fails.
@@ -465,7 +465,7 @@ fn mutable_data_entry_versioning() {
     ];
 
     let msg_id = MessageId::new();
-    unwrap!(routing.mutate_mdata_entries(client_mgr, name, tag, actions, msg_id, owner_key,));
+    unwrap!(routing.mutate_mdata_entries(client_mgr, name, tag, actions, msg_id, owner_key));
     expect_failure!(
         routing_rx,
         msg_id,

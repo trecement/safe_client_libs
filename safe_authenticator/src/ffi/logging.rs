@@ -84,7 +84,7 @@ mod tests {
                 path_str.as_ptr(),
                 ud,
                 cb
-            ),))
+            )))
         };
 
         assert!(path.contains(name));
@@ -106,7 +106,7 @@ mod tests {
                 log_file_path.as_ptr(),
                 ud,
                 cb
-            ),));
+            )));
         }
 
         let debug_msg = "This is a sample debug message".to_owned();
