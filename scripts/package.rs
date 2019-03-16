@@ -4,20 +4,26 @@
 //! cc = "=1.0.22"
 //! clap = "=2.27.1"
 //! colored = "1.6.0"
+//! flate2 = "1.0.7"
 //! heck = "0.3.0"
+//! tar = "0.4.22"
 //! toml = "0.4.5"
 //! walkdir = "2.0.1"
 //! zip = "=0.2.6"
 //! ```
 extern crate clap;
 extern crate colored;
+extern crate flate2;
 extern crate heck;
+extern crate tar;
 extern crate toml;
 extern crate walkdir;
 extern crate zip;
 
 use clap::{App, Arg};
 use colored::*;
+use flate2::write::GzEncoder;
+use flate2::Compression;
 use heck::ShoutySnakeCase;
 use std::env;
 use std::fs::File;
@@ -27,8 +33,8 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::str;
 use walkdir::WalkDir;
-use zip::ZipWriter;
 use zip::write::FileOptions;
+use zip::ZipWriter;
 
 const TARGET_LINUX_X86: &str = "i686-unknown-linux-gnu";
 const TARGET_LINUX_X64: &str = "x86_64-unknown-linux-gnu";
@@ -95,7 +101,6 @@ const ARCHS: &[Arch] = &[
         toolchain: "",
     },
 ];
-
 
 #[cfg(all(target_os = "linux", target_arch = "x86"))]
 const HOST_ARCH_NAME: &str = "linux-x86";
@@ -258,8 +263,7 @@ fn main() {
                     strip_libs(toolchain_path, Some(arch), &libs);
                 }
                 libs
-            })
-            .peekable();
+            }).peekable();
 
         if arch_libs.peek().is_some() {
             let lib_name = format!("lib{}.a", krate);
@@ -288,26 +292,17 @@ fn main() {
         }
     }
 
-    // Create library archive.
     if !libs.is_empty() {
-        let archive_name = {
-            let mock = if mock { "-mock" } else { "" };
-            format!("{}{}-{}-{}.zip", krate, mock, version_string, arch_name)
-        };
-        let path: PathBuf = [dest_dir, &archive_name].iter().collect();
-
-        let file = File::create(path).unwrap();
-        let mut archive = ZipWriter::new(file);
-
-        for path in libs {
-            println!("Adding {:?} to {:?}", path, archive_name);
-            archive
-                .start_file(path.file_name().unwrap().to_string_lossy(), file_options)
-                .unwrap();
-
-            let mut file = File::open(path).unwrap();
-            io::copy(&mut file, &mut archive).unwrap();
-        }
+        package_artifacts_as_zip(
+            &arch_name,
+            &krate,
+            &dest_dir,
+            &libs,
+            &version_string,
+            mock,
+            file_options,
+        );
+        package_artifacts_as_tar_gz(&arch_name, &krate, &dest_dir, &libs, &version_string, mock);
     }
 
     // Create bindings archive.
@@ -347,6 +342,64 @@ struct Arch {
     toolchain: &'static str,
 }
 
+fn package_artifacts_as_zip(
+    arch_name: &str,
+    krate: &str,
+    dest_dir: &str,
+    libs: &[PathBuf],
+    version_string: &str,
+    mock: bool,
+    file_options: FileOptions,
+) {
+    let archive_name = get_archive_name(&arch_name, &krate, "zip", &version_string, mock);
+    let path: PathBuf = [dest_dir, &archive_name].iter().collect();
+    let file = File::create(path).unwrap();
+    let mut archive = ZipWriter::new(file);
+    for path in libs {
+        println!("Adding {:?} to {:?}", path, archive_name);
+        archive
+            .start_file(path.file_name().unwrap().to_string_lossy(), file_options)
+            .unwrap();
+        let mut file = File::open(path).unwrap();
+        io::copy(&mut file, &mut archive).unwrap();
+    }
+}
+
+fn package_artifacts_as_tar_gz(
+    arch_name: &str,
+    krate: &str,
+    dest_dir: &str,
+    libs: &[PathBuf],
+    version_string: &str,
+    mock: bool,
+) {
+    let archive_name = get_archive_name(&arch_name, &krate, "tar.gz", &version_string, mock);
+    let path: PathBuf = [dest_dir, &archive_name].iter().collect();
+    let file = File::create(path).unwrap();
+    let enc = GzEncoder::new(file, Compression::default());
+    let mut archive = tar::Builder::new(enc);
+    for path in libs {
+        println!("Adding {:?} to {:?}", path, archive_name);
+        archive
+            .append_path_with_name(path, path.file_name().unwrap().to_str().unwrap())
+            .unwrap();
+    }
+}
+
+fn get_archive_name(
+    arch_name: &str,
+    krate: &str,
+    archive_type: &str,
+    version_string: &str,
+    mock: bool,
+) -> String {
+    let mock = if mock { "-mock" } else { "" };
+    format!(
+        "{}{}-{}-{}.{}",
+        krate, mock, version_string, arch_name, archive_type
+    )
+}
+
 fn get_version_string(krate: &str, commit: bool) -> String {
     if commit {
         // Get the current commit hash.
@@ -364,13 +417,12 @@ fn get_version_string(krate: &str, commit: bool) -> String {
         let mut file =
             File::open(Path::new(krate).join("Cargo.toml")).expect("failed to open Cargo.toml");
         let mut content = String::new();
-        file.read_to_string(&mut content).expect(
-            "failed to read Cargo.toml",
-        );
+        file.read_to_string(&mut content)
+            .expect("failed to read Cargo.toml");
 
-        let toml = content.parse::<Value>().expect(
-            "failed to parse Cargo.toml",
-        );
+        let toml = content
+            .parse::<Value>()
+            .expect("failed to parse Cargo.toml");
         toml["package"]["version"]
             .as_str()
             .expect("failed to read package version from Cargo.toml")
@@ -422,7 +474,7 @@ fn setup_env(toolchain_path: Option<&str>, arch: Option<&Arch>) {
             println!(
                 "{}: the environment variable {} is set, but points to \
                  non-existing file {}. This might cause linker failures.",
-                 "warning".yellow().bold(),
+                "warning".yellow().bold(),
                 name.bold(),
                 value.bold(),
             );
@@ -540,16 +592,15 @@ fn lipo<I: IntoIterator<Item = PathBuf>>(libs: I, output: &str) {
 }
 
 fn path_into_string(path: PathBuf) -> String {
-    path.into_os_string().into_string().unwrap().replace(
-        '\\',
-        "/",
-    )
+    path.into_os_string()
+        .into_string()
+        .unwrap()
+        .replace('\\', "/")
 }
 
 fn is_static_lib_required(target: Option<&str>) -> bool {
     match target {
-        Some(TARGET_IOS_ARM64) |
-        Some(TARGET_IOS_X64) => true,
+        Some(TARGET_IOS_ARM64) | Some(TARGET_IOS_X64) => true,
         Some(_) | None => false,
     }
 }
