@@ -546,9 +546,11 @@ fn authorisation_and_revocation() {
     // Get list of revoked apps, confirm our app is in it.
     let revoked_apps: Vec<AppExchangeInfo> =
         unsafe { unwrap!(call_vec(|ud, cb| auth_revoked_apps(auth_h, ud, cb))) };
-    assert!(revoked_apps
-        .iter()
-        .any(|revoked_app| revoked_app.id == app_id));
+    assert!(
+        revoked_apps
+            .iter()
+            .any(|revoked_app| revoked_app.id == app_id)
+    );
 
     // The app is no longer in the access container.
     unsafe {
@@ -557,7 +559,7 @@ fn authorisation_and_revocation() {
 
         // The app can no longer access the file.
         match fetch_file(&*auth_h, videos_md.clone(), file_name.as_str()) {
-            Err(AuthError::NfsError(NfsError::CoreError(CoreError::EncodeDecodeError(..)))) => (),
+            Err(AuthError::NfsError(NfsError::CoreError(CoreError::EncodeDecodeError(.)))) => (),
             x => panic!("Unexpected {:?}", x),
         }
     }
